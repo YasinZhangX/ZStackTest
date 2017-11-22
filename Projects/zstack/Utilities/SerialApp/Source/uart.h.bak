@@ -1,0 +1,17 @@
+#ifndef UART_H  
+#define UART_H  
+#ifdef __cplusplus  
+extern "C"  
+{  
+#endif  
+
+#include "hal_types.h"  
+#include <string.h>
+  
+void Uart_Handle( void );  
+void Uart_Reset( void );  
+  
+#ifdef __cplusplus  
+}  
+#endif  
+#endif /* UART_H */  

@@ -1,0 +1,669 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         21/Nov/2017  00:10:39 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\Source\uart.c             #
+#    Command line       =  -f D:\Zigbee\workspace\JustTry\ZStackTest\Projects #
+#                          \zstack\Utilities\SerialApp\CC2530DB\..\..\..\Tool #
+#                          s\CC2530DB\f8wCoord.cfg (-DCPU32MHZ                #
+#                          -DROOT=__near_func -DMAC_CFG_APP_PENDING_QUEUE=TRU #
+#                          E -DMAC_CFG_TX_DATA_MAX=5 -DMAC_CFG_TX_MAX=8       #
+#                          -DMAC_CFG_RX_MAX=5 -DZDO_COORDINATOR -DRTR_NWK)    #
+#                          -f D:\Zigbee\workspace\JustTry\ZStackTest\Projects #
+#                          \zstack\Utilities\SerialApp\CC2530DB\..\..\..\Tool #
+#                          s\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO -DSECURE=0   #
+#                          -DZG_SECURE_DYNAMIC=0 -DREFLECTOR                  #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
+#                          \ZStackTest\Projects\zstack\Utilities\SerialApp\So #
+#                          urce\uart.c -D HAL_UART=TRUE -D SERIAL_APP_PORT=0  #
+#                          -lC D:\Zigbee\workspace\JustTry\ZStackTest\Project #
+#                          s\zstack\Utilities\SerialApp\CC2530DB\CoordinatorE #
+#                          B\List\ -lA D:\Zigbee\workspace\JustTry\ZStackTest #
+#                          \Projects\zstack\Utilities\SerialApp\CC2530DB\Coor #
+#                          dinatorEB\List\ --diag_suppress Pe001,Pa010 -o     #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\CoordinatorEB\Ob #
+#                          j\ -e --no_code_motion --debug --core=plain        #
+#                          --dptr=16,1 --data_model=large                     #
+#                          --code_model=banked --calling_convention=xdata_ree #
+#                          ntrant --place_constants=data_rom                  #
+#                          --nr_virtual_regs 16 -I D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\C #
+#                          C2530DB\ -I D:\Zigbee\workspace\JustTry\ZStackTest #
+#                          \Projects\zstack\Utilities\SerialApp\CC2530DB\..\S #
+#                          ource\ -I D:\Zigbee\workspace\JustTry\ZStackTest\P #
+#                          rojects\zstack\Utilities\SerialApp\CC2530DB\..\..\ #
+#                          ..\ZMain\TI2530DB\ -I D:\Zigbee\workspace\JustTry\ #
+#                          ZStackTest\Projects\zstack\Utilities\SerialApp\CC2 #
+#                          530DB\..\..\..\..\..\Components\hal\include\ -I    #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\hal\target\CC2530EB\ -I                  #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\mac\include\ -I                          #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\mac\high_level\ -I                       #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\mac\low_level\srf04\ -I                  #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\mac\low_level\srf04\single_chip\ -I      #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\mt\ -I D:\Zigbee\workspace\JustTry\ZStac #
+#                          kTest\Projects\zstack\Utilities\SerialApp\CC2530DB #
+#                          \..\..\..\..\..\Components\osal\include\ -I        #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\saddr\ -I                       #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\sdata\ -I                       #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\stack\af\ -I D:\Zigbee\workspace\JustTry #
+#                          \ZStackTest\Projects\zstack\Utilities\SerialApp\CC #
+#                          2530DB\..\..\..\..\..\Components\stack\nwk\ -I     #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\stack\sapi\ -I                           #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\stack\sec\ -I D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\C #
+#                          C2530DB\..\..\..\..\..\Components\stack\sys\ -I    #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\stack\zdo\ -I D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\C #
+#                          C2530DB\..\..\..\..\..\Components\zmac\ -I         #
+#                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\..\..\..\..\..\C #
+#                          omponents\zmac\f8w\ -Ohz --require_prototypes      #
+#    List file          =  D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\CoordinatorEB\Li #
+#                          st\uart.lst                                        #
+#    Object file        =  D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
+#                          tack\Utilities\SerialApp\CC2530DB\CoordinatorEB\Ob #
+#                          j\uart.r51                                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Source\uart.c
+      1          #include <string.h>
+      2          #include <stdio.h>
+      3          
+      4          #include "ZComDef.h"
+      5          #include "hal_types.h"  
+      6          #include "hal_led.h"
+      7          #include "hal_uart.h"
+      8          #include "OnBoard.h"
+      9          
+     10          #include "uart.h"
+     11          
+     12          void GetIeeeAddr(uint8 * pIeeeAddr, uint8 *pStr);
+     13          void Delay_ms(uint8 Time);
+     14          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     15          void Uart0_Handle(uint8* ZStackTest_TxBuf)
+   \                     Uart0_Handle:
+     16          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   FE           MOV     R6,A
+   \   000007   EB           MOV     A,R3
+   \   000008   FF           MOV     R7,A
+     17            if (strstr((const char*)ZStackTest_TxBuf, "LED1ON") != NULL)
+   \   000009                ; Setup parameters for call to function strstr
+   \   000009   7C..         MOV     R4,#`?<Constant "LED1ON">` & 0xff
+   \   00000B   7D..         MOV     R5,#(`?<Constant "LED1ON">` >> 8) & 0xff
+   \   00000D   12....       LCALL   ??Subroutine4_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_9:
+   \   000010   6007         JZ      ??Uart0_Handle_0
+     18            {
+     19              HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
+   \   000012                ; Setup parameters for call to function HalLedSet
+   \   000012   7A01         MOV     R2,#0x1
+   \   000014   7901         MOV     R1,#0x1
+   \   000016   12....       LCALL   ??HalLedSet?relay
+     20            }
+     21            if (strstr((const char*)ZStackTest_TxBuf, "LED1OFF") != NULL)
+   \                     ??Uart0_Handle_0:
+   \   000019                ; Setup parameters for call to function strstr
+   \   000019   7C..         MOV     R4,#`?<Constant "LED1OFF">` & 0xff
+   \   00001B   7D..         MOV     R5,#(`?<Constant "LED1OFF">` >> 8) & 0xff
+   \   00001D   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_4:
+   \   000020   6007         JZ      ??Uart0_Handle_1
+     22            {
+     23              HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
+   \   000022                ; Setup parameters for call to function HalLedSet
+   \   000022   7A00         MOV     R2,#0x0
+   \   000024   7901         MOV     R1,#0x1
+   \   000026   12....       LCALL   ??HalLedSet?relay
+     24            }
+     25            if (strstr((const char*)ZStackTest_TxBuf, "LED2ON") != NULL)
+   \                     ??Uart0_Handle_1:
+   \   000029                ; Setup parameters for call to function strstr
+   \   000029   7C..         MOV     R4,#`?<Constant "LED2ON">` & 0xff
+   \   00002B   7D..         MOV     R5,#(`?<Constant "LED2ON">` >> 8) & 0xff
+   \   00002D   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_5:
+   \   000030   6007         JZ      ??Uart0_Handle_2
+     26            {
+     27              HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+   \   000032                ; Setup parameters for call to function HalLedSet
+   \   000032   7A01         MOV     R2,#0x1
+   \   000034   7902         MOV     R1,#0x2
+   \   000036   12....       LCALL   ??HalLedSet?relay
+     28            }
+     29            if (strstr((const char*)ZStackTest_TxBuf, "LED2OFF") != NULL)
+   \                     ??Uart0_Handle_2:
+   \   000039                ; Setup parameters for call to function strstr
+   \   000039   7C..         MOV     R4,#`?<Constant "LED2OFF">` & 0xff
+   \   00003B   7D..         MOV     R5,#(`?<Constant "LED2OFF">` >> 8) & 0xff
+   \   00003D   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_6:
+   \   000040   6007         JZ      ??Uart0_Handle_3
+     30            {
+     31              HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+   \   000042                ; Setup parameters for call to function HalLedSet
+   \   000042   7A00         MOV     R2,#0x0
+   \   000044   7902         MOV     R1,#0x2
+   \   000046   12....       LCALL   ??HalLedSet?relay
+     32            }
+     33            if (strstr((const char*)ZStackTest_TxBuf, "LED3ON") != NULL)
+   \                     ??Uart0_Handle_3:
+   \   000049                ; Setup parameters for call to function strstr
+   \   000049   7C..         MOV     R4,#`?<Constant "LED3ON">` & 0xff
+   \   00004B   7D..         MOV     R5,#(`?<Constant "LED3ON">` >> 8) & 0xff
+   \   00004D   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_7:
+   \   000050   6007         JZ      ??Uart0_Handle_4
+     34            {
+     35              HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
+   \   000052                ; Setup parameters for call to function HalLedSet
+   \   000052   7A01         MOV     R2,#0x1
+   \   000054   7904         MOV     R1,#0x4
+   \   000056   12....       LCALL   ??HalLedSet?relay
+     36            }
+     37            if (strstr((const char*)ZStackTest_TxBuf, "LED3OFF") != NULL)
+   \                     ??Uart0_Handle_4:
+   \   000059                ; Setup parameters for call to function strstr
+   \   000059   7C..         MOV     R4,#`?<Constant "LED3OFF">` & 0xff
+   \   00005B   7D..         MOV     R5,#(`?<Constant "LED3OFF">` >> 8) & 0xff
+   \   00005D   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_8:
+   \   000060   6007         JZ      ??Uart0_Handle_5
+     38            {
+     39              HalLedSet(HAL_LED_3, HAL_LED_MODE_OFF);
+   \   000062                ; Setup parameters for call to function HalLedSet
+   \   000062   7A00         MOV     R2,#0x0
+   \   000064   7904         MOV     R1,#0x4
+   \   000066   12....       LCALL   ??HalLedSet?relay
+     40            }
+     41          }
+   \                     ??Uart0_Handle_5:
+   \   000069                REQUIRE ?Subroutine0
+   \   000069                ; // Fall through to label ?Subroutine0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   7F02         MOV     R7,#0x2
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   EE           MOV     A,R6
+   \   000001   FA           MOV     R2,A
+   \   000002   EF           MOV     A,R7
+   \   000003   FB           MOV     R3,A
+   \   000004                REQUIRE ??Subroutine4_0
+   \   000004                ; // Fall through to label ??Subroutine4_0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine4_0:
+   \   000000   12....       LCALL   ??strstr?relay
+   \   000003   8B..         MOV     ?V0 + 1,R3
+   \   000005   EA           MOV     A,R2
+   \   000006   45..         ORL     A,?V0 + 1
+   \   000008   22           RET
+     42          
+     43          //通过串口输出短地址 IEEE
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     44          void PrintAddrInfo(uint16 shortAddr, uint8 *pIeeeAddr)
+   \                     PrintAddrInfo:
+     45          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 47
+   \   000005   74D1         MOV     A,#-0x2f
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   EC           MOV     A,R4
+   \   00000B   FE           MOV     R6,A
+   \   00000C   ED           MOV     A,R5
+   \   00000D   FF           MOV     R7,A
+     46              uint8 strIeeeAddr[17] = {0};
+   \   00000E   741E         MOV     A,#0x1e
+   \   000010   12....       LCALL   ?XSTACK_DISP0_8
+   \   000013   AC82         MOV     R4,DPL
+   \   000015   AD83         MOV     R5,DPH
+   \   000017   7583..       MOV     DPH,#(`?<Constant {0}>` >> 8) & 0xff
+   \   00001A   7582..       MOV     DPL,#`?<Constant {0}>` & 0xff
+   \   00001D   7411         MOV     A,#0x11
+   \   00001F   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+     47              char  buff[30] = {0};    
+   \   000022   85..82       MOV     DPL,?XSP + 0
+   \   000025   85..83       MOV     DPH,?XSP + 1
+   \   000028   AC82         MOV     R4,DPL
+   \   00002A   AD83         MOV     R5,DPH
+   \   00002C   7583..       MOV     DPH,#(`?<Constant {0}>_1` >> 8) & 0xff
+   \   00002F   7582..       MOV     DPL,#`?<Constant {0}>_1` & 0xff
+   \   000032   741E         MOV     A,#0x1e
+   \   000034   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+     48              
+     49              //获得短地址   
+     50              sprintf(buff, "shortAddr:%04X   IEEE:", shortAddr);  
+   \   000037                ; Setup parameters for call to function sprintf
+   \   000037   8A..         MOV     ?V0 + 0,R2
+   \   000039   8B..         MOV     ?V0 + 1,R3
+   \   00003B   78..         MOV     R0,#?V0 + 0
+   \   00003D   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000040   7C..         MOV     R4,#`?<Constant "shortAddr:%04X   IEEE:">` & 0xff
+   \   000042   7D..         MOV     R5,#(`?<Constant "shortAddr:%04X   IEEE:">` >> 8) & 0xff
+   \   000044   7402         MOV     A,#0x2
+   \   000046   12....       LCALL   ?XSTACK_DISP0_8
+   \   000049   AA82         MOV     R2,DPL
+   \   00004B   AB83         MOV     R3,DPH
+   \   00004D   12....       LCALL   ??sprintf?relay
+   \   000050   7402         MOV     A,#0x2
+   \   000052   12....       LCALL   ?DEALLOC_XSTACK8
+     51           
+     52              //获得IEEE地址
+     53              GetIeeeAddr(pIeeeAddr, strIeeeAddr);
+   \   000055                ; Setup parameters for call to function GetIeeeAddr
+   \   000055   741E         MOV     A,#0x1e
+   \   000057   12....       LCALL   ?XSTACK_DISP0_8
+   \   00005A   AC82         MOV     R4,DPL
+   \   00005C   AD83         MOV     R5,DPH
+   \   00005E   EE           MOV     A,R6
+   \   00005F   FA           MOV     R2,A
+   \   000060   EF           MOV     A,R7
+   \   000061   FB           MOV     R3,A
+   \   000062   12....       LCALL   ??GetIeeeAddr?relay
+     54          
+     55              HalUARTWrite (SERIAL_APP_PORT, (uint8 *)buff, strlen(buff));
+   \   000065                ; Setup parameters for call to function HalUARTWrite
+   \   000065                ; Setup parameters for call to function strlen
+   \   000065   85..82       MOV     DPL,?XSP + 0
+   \   000068   85..83       MOV     DPH,?XSP + 1
+   \   00006B   AA82         MOV     R2,DPL
+   \   00006D   AB83         MOV     R3,DPH
+   \   00006F   12....       LCALL   ??strlen?relay
+   \   000072   EA           MOV     A,R2
+   \   000073   FC           MOV     R4,A
+   \   000074   EB           MOV     A,R3
+   \   000075   FD           MOV     R5,A
+   \   000076   85..82       MOV     DPL,?XSP + 0
+   \   000079   85..83       MOV     DPH,?XSP + 1
+   \   00007C   AA82         MOV     R2,DPL
+   \   00007E   AB83         MOV     R3,DPH
+   \   000080   7900         MOV     R1,#0x0
+   \   000082   12....       LCALL   ??HalUARTWrite?relay
+     56              Delay_ms(10);
+   \   000085                ; Setup parameters for call to function Delay_ms
+   \   000085   790A         MOV     R1,#0xa
+   \   000087   12....       LCALL   ??Delay_ms?relay
+     57              HalUARTWrite (SERIAL_APP_PORT, strIeeeAddr, 16); 
+   \   00008A                ; Setup parameters for call to function HalUARTWrite
+   \   00008A   7C10         MOV     R4,#0x10
+   \   00008C   7D00         MOV     R5,#0x0
+   \   00008E   741E         MOV     A,#0x1e
+   \   000090   12....       LCALL   ?XSTACK_DISP0_8
+   \   000093   AA82         MOV     R2,DPL
+   \   000095   AB83         MOV     R3,DPH
+   \   000097   7900         MOV     R1,#0x0
+   \   000099   12....       LCALL   ??HalUARTWrite?relay
+     58              HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
+   \   00009C                ; Setup parameters for call to function HalUARTWrite
+   \   00009C   7C02         MOV     R4,#0x2
+   \   00009E   7D00         MOV     R5,#0x0
+   \   0000A0   7A..         MOV     R2,#`?<Constant "\\r\\n">` & 0xff
+   \   0000A2   7B..         MOV     R3,#(`?<Constant "\\r\\n">` >> 8) & 0xff
+   \   0000A4   7900         MOV     R1,#0x0
+   \   0000A6   12....       LCALL   ??HalUARTWrite?relay
+     59          }
+   \   0000A9   742F         MOV     A,#0x2f
+   \   0000AB   12....       LCALL   ?DEALLOC_XSTACK8
+   \   0000AE   02....       LJMP    ?Subroutine0 & 0xFFFF
+     60          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     61          void GetIeeeAddr(uint8 * pIeeeAddr, uint8 *pStr)
+   \                     GetIeeeAddr:
+     62          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   F8           MOV     R0,A
+   \   000007   EB           MOV     A,R3
+   \   000008   F9           MOV     R1,A
+     63            uint8 i;
+     64            uint8 *xad = pIeeeAddr;
+     65          
+     66            for (i = 0; i < Z_EXTADDR_LEN*2; xad--)
+   \   000009   75..00       MOV     ?V0 + 0,#0x0
+     67            {
+     68              uint8 ch;
+     69              ch = (*xad >> 4) & 0x0F;
+   \                     ??GetIeeeAddr_0:
+   \   00000C   8882         MOV     DPL,R0
+   \   00000E   8983         MOV     DPH,R1
+   \   000010   E0           MOVX    A,@DPTR
+   \   000011   C4           SWAP    A
+   \   000012   12....       LCALL   ?Subroutine2 & 0xFFFF
+     70              *pStr++ = ch + (( ch < 10 ) ? '0' : '7');
+   \                     ??CrossCallReturnLabel_0:
+   \   000015   AC82         MOV     R4,DPL
+   \   000017   AD83         MOV     R5,DPH
+   \   000019   E5..         MOV     A,?V0 + 1
+   \   00001B   C3           CLR     C
+   \   00001C   940A         SUBB    A,#0xa
+   \   00001E   5004         JNC     ??GetIeeeAddr_1
+   \   000020   7E30         MOV     R6,#0x30
+   \   000022   8002         SJMP    ??GetIeeeAddr_2
+   \                     ??GetIeeeAddr_1:
+   \   000024   7E37         MOV     R6,#0x37
+   \                     ??GetIeeeAddr_2:
+   \   000026   12....       LCALL   ?Subroutine3 & 0xFFFF
+     71              i++;
+     72              ch = *xad & 0x0F;
+   \                     ??CrossCallReturnLabel_2:
+   \   000029   8882         MOV     DPL,R0
+   \   00002B   8983         MOV     DPH,R1
+   \   00002D   E0           MOVX    A,@DPTR
+   \   00002E   12....       LCALL   ?Subroutine2 & 0xFFFF
+     73              *pStr++ = ch + (( ch < 10 ) ? '0' : '7');
+     74              i++;
+     75            }
+   \                     ??CrossCallReturnLabel_1:
+   \   000031   0C           INC     R4
+   \   000032   AD83         MOV     R5,DPH
+   \   000034   E5..         MOV     A,?V0 + 1
+   \   000036   C3           CLR     C
+   \   000037   940A         SUBB    A,#0xa
+   \   000039   5004         JNC     ??GetIeeeAddr_3
+   \   00003B   7E30         MOV     R6,#0x30
+   \   00003D   8002         SJMP    ??GetIeeeAddr_4
+   \                     ??GetIeeeAddr_3:
+   \   00003F   7E37         MOV     R6,#0x37
+   \                     ??GetIeeeAddr_4:
+   \   000041   12....       LCALL   ?Subroutine3 & 0xFFFF
+   \                     ??CrossCallReturnLabel_3:
+   \   000044   E8           MOV     A,R0
+   \   000045   24FF         ADD     A,#-0x1
+   \   000047   18           DEC     R0
+   \   000048   E9           MOV     A,R1
+   \   000049   34FF         ADDC    A,#-0x1
+   \   00004B   F9           MOV     R1,A
+   \   00004C   E5..         MOV     A,?V0 + 0
+   \   00004E   C3           CLR     C
+   \   00004F   9410         SUBB    A,#0x10
+   \   000051   40B9         JC      ??GetIeeeAddr_0
+     76          }
+   \   000053   02....       LJMP    ?Subroutine0 & 0xFFFF
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine3:
+   \   000000   EE           MOV     A,R6
+   \   000001   25..         ADD     A,?V0 + 1
+   \   000003   8A82         MOV     DPL,R2
+   \   000005   8B83         MOV     DPH,R3
+   \   000007   F0           MOVX    @DPTR,A
+   \   000008   05..         INC     ?V0 + 0
+   \   00000A   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine2:
+   \   000000   540F         ANL     A,#0xf
+   \   000002   F5..         MOV     ?V0 + 1,A
+   \   000004   EC           MOV     A,R4
+   \   000005   FA           MOV     R2,A
+   \   000006   ED           MOV     A,R5
+   \   000007   FB           MOV     R3,A
+   \   000008   8A82         MOV     DPL,R2
+   \   00000A   8B83         MOV     DPH,R3
+   \   00000C   A3           INC     DPTR
+   \   00000D   22           RET
+     77          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     78          void Delay_ms(uint8 Time)//n ms延时
+   \                     Delay_ms:
+     79          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+   \   000006   FF           MOV     R7,A
+     80            unsigned char i;
+     81            while(Time--)
+   \                     ??Delay_ms_0:
+   \   000007   8F..         MOV     ?V0 + 0,R7
+   \   000009   74FF         MOV     A,#-0x1
+   \   00000B   25..         ADD     A,?V0 + 0
+   \   00000D   1F           DEC     R7
+   \   00000E   04           INC     A
+   \   00000F   600F         JZ      ??Delay_ms_1
+     82            {
+     83              for(i=0;i<100;i++)
+   \   000011   7E64         MOV     R6,#0x64
+     84               MicroWait(10);
+   \                     ??Delay_ms_2:
+   \   000013                ; Setup parameters for call to function Onboard_wait
+   \   000013   7A0A         MOV     R2,#0xa
+   \   000015   7B00         MOV     R3,#0x0
+   \   000017   12....       LCALL   ??Onboard_wait?relay
+   \   00001A   1E           DEC     R6
+   \   00001B   EE           MOV     A,R6
+   \   00001C   60E9         JZ      ??Delay_ms_0
+   \   00001E   80F3         SJMP    ??Delay_ms_2
+     85            }
+     86          }
+   \                     ??Delay_ms_1:
+   \   000020   7F01         MOV     R7,#0x1
+   \   000022   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Uart0_Handle?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Uart0_Handle
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??PrintAddrInfo?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    PrintAddrInfo
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??GetIeeeAddr?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    GetIeeeAddr
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Delay_ms?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Delay_ms
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED1ON">`:
+   \   000000   4C454431     DB "LED1ON"
+   \            4F4E00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED1OFF">`:
+   \   000000   4C454431     DB "LED1OFF"
+   \            4F464600
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED2ON">`:
+   \   000000   4C454432     DB "LED2ON"
+   \            4F4E00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED2OFF">`:
+   \   000000   4C454432     DB "LED2OFF"
+   \            4F464600
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED3ON">`:
+   \   000000   4C454433     DB "LED3ON"
+   \            4F4E00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED3OFF">`:
+   \   000000   4C454433     DB "LED3OFF"
+   \            4F464600
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant {0}>`:
+   \   000000   00           DB 0
+   \   000001   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
+   \            00000000
+   \   000009   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
+   \            00000000
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant {0}>_1`:
+   \   000000   00           DB 0
+   \   000001   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
+   \            00000000
+   \   000009   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
+   \            00000000
+   \   000011   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
+   \            00000000
+   \   000019   00000000     DB 0, 0, 0, 0, 0
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "shortAddr:%04X   IEEE:">`:
+   \   000000   73686F72     DB "shortAddr:%04X   IEEE:"
+   \            74416464
+   \            723A2530
+   \            34582020
+   \            20494545
+   \            453A00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "\\r\\n">`:
+   \   000000   0D0A00       DB "\015\012"
+
+   Maximum stack usage in bytes:
+
+     Function          ISTACK PSTACK XSTACK
+     --------          ------ ------ ------
+     Delay_ms              0      0     66
+       -> Onboard_wait     0      0     18
+     GetIeeeAddr           1      0     67
+     PrintAddrInfo         2      0     59
+       -> sprintf          0      0    118
+       -> GetIeeeAddr      0      0    114
+       -> strlen           0      0    114
+       -> HalUARTWrite     0      0    114
+       -> Delay_ms         0      0    114
+       -> HalUARTWrite     0      0    114
+       -> HalUARTWrite     0      0    114
+     Uart0_Handle          0      0     10
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+       -> strstr           0      0     20
+       -> HalLedSet        0      0     20
+
+
+   Segment part sizes:
+
+     Function/Label                       Bytes
+     --------------                       -----
+     Uart0_Handle                          105
+     ?Subroutine0                            5
+     ?Subroutine1                            4
+     ??Subroutine4_0                         9
+     PrintAddrInfo                         177
+     GetIeeeAddr                            86
+     ?Subroutine3                           11
+     ?Subroutine2                           14
+     Delay_ms                               37
+     ??Uart0_Handle?relay                    6
+     ??PrintAddrInfo?relay                   6
+     ??GetIeeeAddr?relay                     6
+     ??Delay_ms?relay                        6
+     ?<Constant "LED1ON">                    7
+     ?<Constant "LED1OFF">                   8
+     ?<Constant "LED2ON">                    7
+     ?<Constant "LED2OFF">                   8
+     ?<Constant "LED3ON">                    7
+     ?<Constant "LED3OFF">                   8
+     ?<Constant {0}>                        17
+     ?<Constant {0}>_1                      30
+     ?<Constant "shortAddr:%04X   IEEE:">   23
+     ?<Constant "\r\n">                      3
+
+ 
+ 448 bytes in segment BANKED_CODE
+  24 bytes in segment BANK_RELAYS
+ 118 bytes in segment XDATA_ROM_C
+ 
+ 472 bytes of CODE  memory
+ 118 bytes of CONST memory
+
+Errors: none
+Warnings: none
