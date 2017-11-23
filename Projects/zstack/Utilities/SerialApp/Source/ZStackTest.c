@@ -22,7 +22,7 @@
   its documentation for any purpose.
 
   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-  PROVIDED “AS IS?WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+  PROVIDED ï¿½AS IS?WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
@@ -229,7 +229,7 @@ void ZStackTest_Init( uint8 task_id )
   uartConfig.intEnable            = TRUE;              // 2x30 don't care - see uart driver.
   uartConfig.callBackFunc         = ZStackTest_CallBack;
   HalUARTOpen (SERIAL_APP_PORT, &uartConfig);
-  HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);  
+  HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);
 
 #if defined ( LCD_SUPPORTED )
   HalLcdWriteString( "ZStackTest", HAL_LCD_LINE_2 );
@@ -269,12 +269,12 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
                   || (ZStackTest_NwkState == DEV_END_DEVICE) )
               {
               	HalUARTWrite(SERIAL_APP_PORT, "Connect!", 8);
-				HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
+				        HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
                 HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-      		PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-      		HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
-      		NLME_GetCoordExtAddr(pIeeeAddr);
-      		PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+      		      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+      		      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+      		      NLME_GetCoordExtAddr(pIeeeAddr);
+      		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
               }
 		break;
       case ZDO_CB_MSG:
