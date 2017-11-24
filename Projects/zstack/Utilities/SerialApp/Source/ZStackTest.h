@@ -64,11 +64,17 @@ extern "C"
 #define ZStackTest_FLAGS              0
 
 #define ZStackTest_MAX_CLUSTERS       2
-#define ZStackTest_CLUSTERID1         1
-#define ZStackTest_CLUSTERID2         2
+#define ZStackTest_CLUSTERID1         5
+#define ZStackTest_CLUSTERID2         6
+#define SAMPLEAPP_PERIODIC_CLUSTERID  1
+#define SAMPLEAPP_FLASH_CLUSTERID     2
+#define SAMPLEAPP_COM_CLUSTERID       3
+#define SAMPLEAPP_P2P_CLUSTERID       4
 
+// Application Events (OSAL) - These are bit weighted definitions.
 #define ZStackTest_SEND_EVT           0x0001
 #define ZStackTest_RESP_EVT           0x0002
+#define ZStackTest_KEY_PRESS_EVT      0x0004
 
 // OTA Flow Control Delays
 #define ZStackTest_ACK_DELAY          1
@@ -82,6 +88,15 @@ extern "C"
 //Project profile
 #define FIRST_PART                   TRUE
 #define SECOND_PART                  FALSE
+
+// Key Press Delay
+#define ZStackTest_KEY_PRESS_DELAY   1500     // delay 1.5 seconds
+
+// Group ID for Flash Command
+#define ZStackTest_FLASH_GROUP                 0x0001
+
+// Flash Command Duration - in milliseconds
+#define ZStackTest_FLASH_DURATION              1000
 
 /*********************************************************************
  * MACROS

@@ -174,6 +174,9 @@ uint8 ZStackTest_TaskID;    // Task ID for internal task/event processing.
 /*********************************************************************
  * LOCAL VARIABLES
  */
+static bool KeyFlag = 0;
+static uint8 shift;
+static uint8 keys;
 
 static uint8 ZStackTest_MsgID;
 
@@ -283,6 +286,8 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
 
       case KEY_CHANGE:
         ZStackTest_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
+        shift = ((keyChange_t *)MSGpkt)->state;
+        keys = ((keyChange_t *)MSGpkt)->keys;
         break;
 
       case AF_INCOMING_MSG_CMD:
@@ -309,6 +314,12 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
   {
     ZStackTest_Resp();
     return ( events ^ ZStackTest_RESP_EVT );
+  }
+
+  if (events & ZStackTest_KEY_PRESS_EVT)
+  {
+    ZStackTest_HandleKeys( shift, keys );
+    return ( events ^ ZStackTest_KEY_PRESS_EVT );
   }
 
   return ( 0 );  // Discard unknown events.
@@ -383,7 +394,30 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_6 )
     {
-      HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
+      #if FIRST_PART
+        HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
+        if(KeyFlag == 0)
+        {
+          KeyFlag = 1;
+          osal_start_timerEx( ZStackTest_TaskID,
+                              ZStackTest_KEY_PRESS_EVT,
+                              ZStackTest_KEY_PRESS_DELAY );
+        }
+        else
+        {
+          KeyFlag = 0;
+          if (HAL_PUSH_BUTTON1()) {
+            HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
+            PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+            HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+            NLME_GetCoordExtAddr(pIeeeAddr);
+            PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+          }
+          osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
+        }
+      #elif (SECOND_PART)
+
+      #endif
     }
     if ( keys & HAL_KEY_SW_1 )
     {
