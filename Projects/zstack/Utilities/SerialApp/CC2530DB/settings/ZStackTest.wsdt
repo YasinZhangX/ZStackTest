@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>ZStackTest/EndDeviceEB</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>ZStackTest/CoordinatorEB</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -12,7 +12,7 @@
           
           
           
-        <Column0>364</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>315</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -32,7 +32,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>ZStackTest</ExpandedNode><ExpandedNode>ZStackTest/App</ExpandedNode><ExpandedNode>ZStackTest/HAL</ExpandedNode><ExpandedNode>ZStackTest/HAL/Common</ExpandedNode><ExpandedNode>ZStackTest/OSAL</ExpandedNode><ExpandedNode>ZStackTest/ZMain</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>ZStackTest</ExpandedNode><ExpandedNode>ZStackTest/App</ExpandedNode><ExpandedNode>ZStackTest/HAL</ExpandedNode><ExpandedNode>ZStackTest/HAL/Common</ExpandedNode><ExpandedNode>ZStackTest/HAL/Target</ExpandedNode><ExpandedNode>ZStackTest/HAL/Target/CC2530EB</ExpandedNode><ExpandedNode>ZStackTest/HAL/Target/CC2530EB/Config</ExpandedNode><ExpandedNode>ZStackTest/ZMain</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -42,14 +42,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ZMain\TI2530DB\ZMain.c</Filename><XPos>0</XPos><YPos>64</YPos><SelStart>3264</SelStart><SelEnd>3264</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_board_cfg.h</Filename><XPos>0</XPos><YPos>440</YPos><SelStart>19309</SelStart><SelEnd>19309</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\uart.c</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>1441</SelStart><SelEnd>1441</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\uart.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>199</SelStart><SelEnd>199</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\ZStackTest.h</Filename><XPos>0</XPos><YPos>82</YPos><SelStart>3636</SelStart><SelEnd>3636</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\ZStackTest.c</Filename><XPos>0</XPos><YPos>239</YPos><SelStart>8880</SelStart><SelEnd>8880</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ZMain\TI2530DB\OnBoard.c</Filename><XPos>0</XPos><YPos>234</YPos><SelStart>7556</SelStart><SelEnd>7556</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_key.c</Filename><XPos>0</XPos><YPos>287</YPos><SelStart>12492</SelStart><SelEnd>12492</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\zdo\ZDApp.c</Filename><XPos>0</XPos><YPos>2125</YPos><SelStart>58491</SelStart><SelEnd>58491</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_uart.c</Filename><XPos>0</XPos><YPos>182</YPos><SelStart>6234</SelStart><SelEnd>6234</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\af\AF.h</Filename><XPos>0</XPos><YPos>172</YPos><SelStart>8111</SelStart><SelEnd>8111</SelEnd></Tab><ActiveTab>10</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\af\AF.c</Filename><XPos>0</XPos><YPos>539</YPos><SelStart>17373</SelStart><SelEnd>17373</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\ZMain\TI2530DB\ZMain.c</Filename><XPos>0</XPos><YPos>130</YPos><SelStart>3264</SelStart><SelEnd>3264</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\uart.c</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>1441</SelStart><SelEnd>1441</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\uart.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>199</SelStart><SelEnd>199</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\ZStackTest.h</Filename><XPos>0</XPos><YPos>49</YPos><SelStart>3129</SelStart><SelEnd>3129</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\ZStackTest.c</Filename><XPos>0</XPos><YPos>370</YPos><SelStart>12265</SelStart><SelEnd>12265</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\af\AF.h</Filename><XPos>0</XPos><YPos>172</YPos><SelStart>8111</SelStart><SelEnd>8111</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\af\AF.c</Filename><XPos>0</XPos><YPos>539</YPos><SelStart>17373</SelStart><SelEnd>17373</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_key.c</Filename><XPos>0</XPos><YPos>389</YPos><SelStart>13211</SelStart><SelEnd>13211</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_board_cfg.h</Filename><XPos>0</XPos><YPos>472</YPos><SelStart>19118</SelStart><SelEnd>19118</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\stack\zdo\ZDApp.c</Filename><XPos>0</XPos><YPos>2122</YPos><SelStart>58850</SelStart><SelEnd>58850</SelEnd></Tab><ActiveTab>9</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\hal\target\CC2530EB\hal_led.c</Filename><XPos>0</XPos><YPos>279</YPos><SelStart>10743</SelStart><SelEnd>10743</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-076e2010><key>iaridepm.enu1</key></Toolbar-076e2010></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>693</Bottom><Right>459</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>204918</sizeHorzCY><sizeVertCX>240104</sizeVertCX><sizeVertCY>712090</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>235</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>237</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>242828</sizeHorzCY><sizeVertCX>176563</sizeVertCX><sizeVertCY>384221</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-06922188><key>iaridepm.enu1</key></Toolbar-06922188></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>693</Bottom><Right>389</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>204918</sizeHorzCY><sizeVertCX>203646</sizeVertCX><sizeVertCY>712090</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>235</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>237</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>242828</sizeHorzCY><sizeVertCX>176563</sizeVertCX><sizeVertCY>384221</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

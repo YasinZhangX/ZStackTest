@@ -113,20 +113,20 @@
 #define LED1_BV           BV(0)
 #define LED1_SBIT         P1_0
 #define LED1_DDR          P1DIR
-#define LED1_POLARITY     ACTIVE_LOW
+#define LED1_POLARITY     ACTIVE_HIGH
 
 #if defined (HAL_BOARD_CC2530EB_REV17)
   /* D2 */
   #define LED2_BV           BV(1)
   #define LED2_SBIT         P1_1
   #define LED2_DDR          P1DIR
-  #define LED2_POLARITY     ACTIVE_LOW
+  #define LED2_POLARITY     ACTIVE_HIGH
 
   /* D3*/
   #define LED3_BV           BV(4)
-  #define LED3_SBIT         P0_4
+  #define LED3_SBIT         P1_4
   #define LED3_DDR          P0DIR
-  #define LED3_POLARITY     ACTIVE_LOW
+  #define LED3_POLARITY     ACTIVE_HIGH
 #endif
 
 /* ------------------------------------------------------------------------------------------------

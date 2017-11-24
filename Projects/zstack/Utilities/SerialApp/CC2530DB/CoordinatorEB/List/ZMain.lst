@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Nov/2017  23:17:36 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         24/Nov/2017  15:12:57 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -172,11 +172,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
      47          #endif
      48          #include "hal_adc.h"
 
-   \                                 In  segment SFR_AN, at 0x80
-   \   union <unnamed> volatile __sfr _A_P0
-   \                     _A_P0:
-   \   000000                DS 1
-
    \                                 In  segment SFR_AN, at 0x8f
    \   unsigned char volatile __sfr P0INP
    \                     P0INP:
@@ -287,11 +282,11 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
    \   00002A   906270       MOV     DPTR,#0x6270
    \   00002D   7408         MOV     A,#0x8
    \   00002F   F0           MOVX    @DPTR,A
-   \   000030   D290         SETB    0x90.0
+   \   000030   C290         CLR     0x90.0
    \   000032   43FE01       ORL     0xfe,#0x1
-   \   000035   D291         SETB    0x90.1
+   \   000035   C291         CLR     0x90.1
    \   000037   43FE02       ORL     0xfe,#0x2
-   \   00003A   D284         SETB    0x80.4
+   \   00003A   C294         CLR     0x90.4
    \   00003C   43FD10       ORL     0xfd,#0x10
    \   00003F   438F01       ORL     0x8f,#0x1
      86          
@@ -395,7 +390,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
    \   00007F                REQUIRE CLKCONSTA
    \   00007F                REQUIRE _A_P1
    \   00007F                REQUIRE P1DIR
-   \   00007F                REQUIRE _A_P0
    \   00007F                REQUIRE P0DIR
    \   00007F                REQUIRE P0INP
     143          } // main()
@@ -882,7 +876,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
 
      Function/Label                                 Bytes
      --------------                                 -----
-     _A_P0                                             1
      P0INP                                             1
      _A_P1                                             1
      SLEEPSTA                                          1
@@ -901,12 +894,12 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
  
  523 bytes in segment BANKED_CODE
   12 bytes in segment BANK_RELAYS
-   9 bytes in segment SFR_AN
+   8 bytes in segment SFR_AN
    8 bytes in segment XDATA_ROM_C
  
  535 bytes of CODE  memory
    8 bytes of CONST memory
-   0 bytes of DATA  memory (+ 9 bytes shared)
+   0 bytes of DATA  memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: none
