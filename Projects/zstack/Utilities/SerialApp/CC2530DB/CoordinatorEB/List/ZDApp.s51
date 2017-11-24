@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        21/Nov/2017  00:18:22 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        24/Nov/2017  15:12:54 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -4624,8 +4624,8 @@ ZDApp_InitUserDesc:
         MOV     R4,#0x0
         MOV     R5,#0x0
         MOV     R2,#-0x7f
-        LCALL   ?Subroutine31 & 0xFFFF
-??CrossCallReturnLabel_37:
+        LCALL   ?Subroutine32 & 0xFFFF
+??CrossCallReturnLabel_40:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 27)
         MOV     A,R1
@@ -7002,8 +7002,8 @@ ZDApp_RestoreNwkKey:
         MOV     R4,#0x0
         MOV     R5,#0x0
         MOV     R2,#-0x7e
-        LCALL   ?Subroutine31 & 0xFFFF
-??CrossCallReturnLabel_38:
+        LCALL   ?Subroutine32 & 0xFFFF
+??CrossCallReturnLabel_41:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 33)
         MOV     A,R1
@@ -7367,9 +7367,9 @@ ZDApp_LeaveCtrlInit:
         MOV     R4,#0x0
         MOV     R5,#0x0
         MOV     R2,#-0x7b
-        LCALL   ?Subroutine31 & 0xFFFF
+        LCALL   ?Subroutine32 & 0xFFFF
 // 1672   }
-??CrossCallReturnLabel_39:
+??CrossCallReturnLabel_42:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 10)
 // 1673 }
@@ -7378,10 +7378,10 @@ ZDApp_LeaveCtrlInit:
         CFI EndBlock cfiBlock85
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine31:
+?Subroutine32:
         CFI Block cfiCond86 Using cfiCommon0
         CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_37
+        CFI Conditional ??CrossCallReturnLabel_40
         CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-10)))
         CFI VB load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-8)))
@@ -7396,7 +7396,7 @@ ZDApp_LeaveCtrlInit:
         CFI CFA_XSP16 add(XSP16, 31)
         CFI Block cfiCond87 Using cfiCommon0
         CFI (cfiCond87) NoFunction
-        CFI (cfiCond87) Conditional ??CrossCallReturnLabel_38
+        CFI (cfiCond87) Conditional ??CrossCallReturnLabel_41
         CFI (cfiCond87) R6 load(1, XDATA, add(CFA_XSP16, literal(-12)))
         CFI (cfiCond87) VB load(1, XDATA, add(CFA_XSP16, literal(-11)))
         CFI (cfiCond87) V0 load(1, XDATA, add(CFA_XSP16, literal(-10)))
@@ -7413,7 +7413,7 @@ ZDApp_LeaveCtrlInit:
         CFI (cfiCond87) CFA_XSP16 add(XSP16, 37)
         CFI Block cfiCond88 Using cfiCommon0
         CFI (cfiCond88) NoFunction
-        CFI (cfiCond88) Conditional ??CrossCallReturnLabel_39
+        CFI (cfiCond88) Conditional ??CrossCallReturnLabel_42
         CFI (cfiCond88) R6 load(1, XDATA, add(CFA_XSP16, literal(-10)))
         CFI (cfiCond88) VB load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond88) V0 load(1, XDATA, add(CFA_XSP16, literal(-8)))
@@ -7428,7 +7428,7 @@ ZDApp_LeaveCtrlInit:
         CFI (cfiCond88) CFA_XSP16 add(XSP16, 14)
         CFI Block cfiCond89 Using cfiCommon0
         CFI (cfiCond89) NoFunction
-        CFI (cfiCond89) Conditional ??CrossCallReturnLabel_40
+        CFI (cfiCond89) Conditional ??CrossCallReturnLabel_43
         CFI (cfiCond89) R6 load(1, XDATA, add(CFA_XSP16, literal(-10)))
         CFI (cfiCond89) VB load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond89) V0 load(1, XDATA, add(CFA_XSP16, literal(-8)))
@@ -8390,8 +8390,8 @@ ZDApp_DeviceConfigured:
         MOV     R4,#0x14
         MOV     R5,#0x0
         MOV     R2,#0x21
-        LCALL   ?Subroutine31 & 0xFFFF
-??CrossCallReturnLabel_40:
+        LCALL   ?Subroutine32 & 0xFFFF
+??CrossCallReturnLabel_43:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 12)
 // 1897 
@@ -9244,17 +9244,6 @@ ZDO_NetworkFormationConfirmCB:
         ARGFRAME XSTACK, 9, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL ZDO_NetworkFormationConfirmCB, HalLedSet
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 9, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 9, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL ZDO_NetworkFormationConfirmCB, osal_set_event
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -9292,7 +9281,7 @@ ZDO_NetworkFormationConfirmCB:
 // 2137     // LED on shows Coordinator started
 // 2138     HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
         ; Setup parameters for call to function HalLedSet
-        LCALL   ?Subroutine33 & 0xFFFF
+        LCALL   ?Subroutine31 & 0xFFFF
 // 2139 
 // 2140     // LED off forgets HOLD_AUTO_START
 // 2141     HalLedSet (HAL_LED_4, HAL_LED_MODE_OFF);
@@ -9302,30 +9291,24 @@ ZDO_NetworkFormationConfirmCB:
 // 2145 #endif
 // 2146 
 // 2147     if ( devState == DEV_HOLD )
-??CrossCallReturnLabel_44:
-        JNZ     ??ZDO_NetworkFormationConfirmCB_1
+??CrossCallReturnLabel_37:
+        JNZ     ??ZDO_NetworkFormationConfirmCB_0
 // 2148     {
 // 2149       // Began with HOLD_AUTO_START
 // 2150       devState = DEV_COORD_STARTING;
         MOV     A,#0x8
         MOVX    @DPTR,A
-        SJMP    ??ZDO_NetworkFormationConfirmCB_1
 // 2151     }
 // 2152   }
 // 2153 #if defined(BLINK_LEDS)
 // 2154   else
 // 2155   {
-// 2156     HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
-??ZDO_NetworkFormationConfirmCB_0:
-        ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x4
-        MOV     R1,#0x4
-        LCALL   ??HalLedSet?relay
+// 2156     //HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
 // 2157   }
 // 2158 #endif
 // 2159 
 // 2160   osal_set_event( ZDAppTaskID, ZDO_NETWORK_START );
-??ZDO_NetworkFormationConfirmCB_1:
+??ZDO_NetworkFormationConfirmCB_0:
         ; Setup parameters for call to function osal_set_event
         MOV     R2,#0x2
         LJMP    ?Subroutine0 & 0xFFFF
@@ -9771,8 +9754,8 @@ ZDO_beaconNotifyIndCB:
         CLR     C
         SUBB    A,R0
         JNC     ??ZDO_beaconNotifyIndCB_11
-        LCALL   ?Subroutine32 & 0xFFFF
-??CrossCallReturnLabel_41:
+        LCALL   ?Subroutine33 & 0xFFFF
+??CrossCallReturnLabel_44:
         LCALL   ??Subroutine53_0 & 0xFFFF
 ??CrossCallReturnLabel_112:
         CLR     C
@@ -9809,8 +9792,8 @@ ZDO_beaconNotifyIndCB:
         INC     DPTR
         MOVX    A,@DPTR
         MOV     R0,A
-        LCALL   ?Subroutine32 & 0xFFFF
-??CrossCallReturnLabel_42:
+        LCALL   ?Subroutine33 & 0xFFFF
+??CrossCallReturnLabel_45:
         LCALL   ??Subroutine53_0 & 0xFFFF
 ??CrossCallReturnLabel_113:
         CLR     C
@@ -9887,9 +9870,9 @@ ZDO_beaconNotifyIndCB:
 ??CrossCallReturnLabel_18:
         MOVX    @DPTR,A
 // 2294         pNwkDesc->chosenRouterDepth       = pBeacon->depth;
-        LCALL   ?Subroutine32 & 0xFFFF
+        LCALL   ?Subroutine33 & 0xFFFF
 // 2295       }
-??CrossCallReturnLabel_43:
+??CrossCallReturnLabel_46:
         LCALL   ??Subroutine51_0 & 0xFFFF
 ??CrossCallReturnLabel_105:
         LCALL   ?Subroutine19 & 0xFFFF
@@ -9948,10 +9931,10 @@ ZDO_beaconNotifyIndCB:
 // 2304 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine32:
+?Subroutine33:
         CFI Block cfiCond116 Using cfiCommon0
         CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_41
+        CFI Conditional ??CrossCallReturnLabel_44
         CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-14)))
         CFI VB load(1, XDATA, add(CFA_XSP16, literal(-13)))
         CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-12)))
@@ -9970,7 +9953,7 @@ ZDO_beaconNotifyIndCB:
         CFI CFA_XSP16 add(XSP16, 14)
         CFI Block cfiCond117 Using cfiCommon0
         CFI (cfiCond117) NoFunction
-        CFI (cfiCond117) Conditional ??CrossCallReturnLabel_42
+        CFI (cfiCond117) Conditional ??CrossCallReturnLabel_45
         CFI (cfiCond117) R6 load(1, XDATA, add(CFA_XSP16, literal(-14)))
         CFI (cfiCond117) VB load(1, XDATA, add(CFA_XSP16, literal(-13)))
         CFI (cfiCond117) V0 load(1, XDATA, add(CFA_XSP16, literal(-12)))
@@ -9989,7 +9972,7 @@ ZDO_beaconNotifyIndCB:
         CFI (cfiCond117) CFA_XSP16 add(XSP16, 14)
         CFI Block cfiCond118 Using cfiCommon0
         CFI (cfiCond118) NoFunction
-        CFI (cfiCond118) Conditional ??CrossCallReturnLabel_43
+        CFI (cfiCond118) Conditional ??CrossCallReturnLabel_46
         CFI (cfiCond118) R6 load(1, XDATA, add(CFA_XSP16, literal(-14)))
         CFI (cfiCond118) VB load(1, XDATA, add(CFA_XSP16, literal(-13)))
         CFI (cfiCond118) V0 load(1, XDATA, add(CFA_XSP16, literal(-12)))
@@ -10583,17 +10566,6 @@ ZDO_StartRouterConfirmCB:
         ARGFRAME XSTACK, 9, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL ZDO_StartRouterConfirmCB, HalLedSet
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 9, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 9, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL ZDO_StartRouterConfirmCB, osal_set_event
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -10631,34 +10603,28 @@ ZDO_StartRouterConfirmCB:
 // 2322     // LED on shows Router started
 // 2323     HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
         ; Setup parameters for call to function HalLedSet
-        LCALL   ?Subroutine33 & 0xFFFF
+        LCALL   ?Subroutine31 & 0xFFFF
 // 2324     // LED off forgets HOLD_AUTO_START
 // 2325     HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF);
 // 2326     if ( devState == DEV_HOLD )
-??CrossCallReturnLabel_45:
-        JNZ     ??ZDO_StartRouterConfirmCB_1
+??CrossCallReturnLabel_38:
+        JNZ     ??ZDO_StartRouterConfirmCB_0
 // 2327     {
 // 2328       // Began with HOLD_AUTO_START
 // 2329       devState = DEV_END_DEVICE;
         MOV     A,#0x6
         MOVX    @DPTR,A
-        SJMP    ??ZDO_StartRouterConfirmCB_1
 // 2330     }
 // 2331   }
 // 2332 #if defined(BLINK_LEDS)
 // 2333   else
 // 2334   {
-// 2335     HalLedSet( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
-??ZDO_StartRouterConfirmCB_0:
-        ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x4
-        MOV     R1,#0x4
-        LCALL   ??HalLedSet?relay
+// 2335     //HalLedSet( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
 // 2336   }
 // 2337 #endif
 // 2338 
 // 2339   osal_set_event( ZDAppTaskID, ZDO_ROUTER_START );
-??ZDO_StartRouterConfirmCB_1:
+??ZDO_StartRouterConfirmCB_0:
         ; Setup parameters for call to function osal_set_event
         MOV     R2,#0x20
         LJMP    ?Subroutine0 & 0xFFFF
@@ -10666,10 +10632,10 @@ ZDO_StartRouterConfirmCB:
 // 2340 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine33:
+?Subroutine31:
         CFI Block cfiCond152 Using cfiCommon0
         CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_44
+        CFI Conditional ??CrossCallReturnLabel_37
         CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -10683,7 +10649,7 @@ ZDO_StartRouterConfirmCB:
         CFI CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond153 Using cfiCommon0
         CFI (cfiCond153) NoFunction
-        CFI (cfiCond153) Conditional ??CrossCallReturnLabel_45
+        CFI (cfiCond153) Conditional ??CrossCallReturnLabel_38
         CFI (cfiCond153) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond153) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond153) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -10697,7 +10663,7 @@ ZDO_StartRouterConfirmCB:
         CFI (cfiCond153) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond154 Using cfiCommon0
         CFI (cfiCond154) NoFunction
-        CFI (cfiCond154) Conditional ??CrossCallReturnLabel_46
+        CFI (cfiCond154) Conditional ??CrossCallReturnLabel_39
         CFI (cfiCond154) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond154) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond154) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -10770,17 +10736,6 @@ ZDO_JoinConfirmCB:
         ARGFRAME XSTACK, 14, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL ZDO_JoinConfirmCB, HalLedSet
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 14, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 14, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL ZDO_JoinConfirmCB, ZDApp_SendMsg
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -10824,18 +10779,17 @@ ZDO_JoinConfirmCB:
 // 2361     // LED on shows device joined
 // 2362     HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
         ; Setup parameters for call to function HalLedSet
-        LCALL   ?Subroutine33 & 0xFFFF
+        LCALL   ?Subroutine31 & 0xFFFF
 // 2363     // LED off forgets HOLD_AUTO_START
 // 2364     HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF);
 // 2365     if ( (devState == DEV_HOLD) )
-??CrossCallReturnLabel_46:
-        JNZ     ??ZDO_JoinConfirmCB_1
+??CrossCallReturnLabel_39:
+        JNZ     ??ZDO_JoinConfirmCB_0
 // 2366     {
 // 2367       // Began with HOLD_AUTO_START
 // 2368       devState = DEV_NWK_JOINING;
         MOV     A,#0x3
         MOVX    @DPTR,A
-        SJMP    ??ZDO_JoinConfirmCB_1
 // 2369     }
 // 2370 
 // 2371     if ( !ZG_SECURE_ENABLED )
@@ -10847,22 +10801,17 @@ ZDO_JoinConfirmCB:
 // 2377   else
 // 2378   {
 // 2379 #if defined(BLINK_LEDS)
-// 2380     HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
-??ZDO_JoinConfirmCB_0:
-        ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x4
-        MOV     R1,#0x4
-        LCALL   ??HalLedSet?relay
+// 2380     //HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
 // 2381 #endif
 // 2382   }
 // 2383 
 // 2384   // Pass the join confirm to higher layer if callback registered
 // 2385   if (zdoCBFunc[ZDO_JOIN_CNF_CBID] != NULL )
-??ZDO_JoinConfirmCB_1:
+??ZDO_JoinConfirmCB_0:
         MOV     DPTR,#zdoCBFunc + 8
         LCALL   ?Subroutine12 & 0xFFFF
 ??CrossCallReturnLabel_11:
-        JZ      ??ZDO_JoinConfirmCB_2
+        JZ      ??ZDO_JoinConfirmCB_1
 // 2386   {
 // 2387     zdoJoinCnf_t joinCnf;
 // 2388 
@@ -10904,7 +10853,7 @@ ZDO_JoinConfirmCB:
 // 2395 
 // 2396   // Notify ZDApp
 // 2397   ZDApp_SendMsg( ZDAppTaskID, ZDO_NWK_JOIN_IND, sizeof(osal_event_hdr_t), (byte*)NULL );
-??ZDO_JoinConfirmCB_2:
+??ZDO_JoinConfirmCB_1:
         ; Setup parameters for call to function ZDApp_SendMsg
         MOV     R4,#0x0
         MOV     R5,#0x0
@@ -15194,14 +15143,14 @@ __Constant_3e8:
 // 3039 /*********************************************************************
 // 3040 *********************************************************************/
 // 
-// 5 200 bytes in segment BANKED_CODE
+// 5 173 bytes in segment BANKED_CODE
 //   390 bytes in segment BANK_RELAYS
 //    12 bytes in segment XDATA_I
 //    12 bytes in segment XDATA_ID
 //     8 bytes in segment XDATA_ROM_C
 //    53 bytes in segment XDATA_Z
 // 
-// 5 602 bytes of CODE  memory
+// 5 575 bytes of CODE  memory
 //     0 bytes of CONST memory (+ 8 bytes shared)
 //    65 bytes of XDATA memory
 //

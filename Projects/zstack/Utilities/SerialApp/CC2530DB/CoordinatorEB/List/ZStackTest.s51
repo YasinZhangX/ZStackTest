@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        22/Nov/2017  21:19:43 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        24/Nov/2017  15:12:43 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -636,7 +636,7 @@ ZStackTest_ProcessEvent SYMBOL "ZStackTest_ProcessEvent"
 //   22   its documentation for any purpose.
 //   23 
 //   24   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-//   25   PROVIDED “AS IS?WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+//   25   PROVIDED ï¿½AS IS?WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
 //   26   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
 //   27   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
 //   28   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
@@ -1087,7 +1087,7 @@ ZStackTest_Init:
         MOV     R3,DPH
         MOV     R1,#0x0
         LCALL   ??HalUARTOpen?relay
-//  232   HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);  
+//  232   HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);
         ; Setup parameters for call to function HalUARTWrite
         MOV     R4,#0xc
         MOV     R5,#0x0
@@ -1390,12 +1390,12 @@ ZStackTest_ProcessEvent:
 //  269                   || (ZStackTest_NwkState == DEV_END_DEVICE) )
 //  270               {
 //  271               	HalUARTWrite(SERIAL_APP_PORT, "Connect!", 8);
-//  272 				HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
+//  272 				        HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
 //  273                 HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-//  274       		PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-//  275       		HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
-//  276       		NLME_GetCoordExtAddr(pIeeeAddr);
-//  277       		PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+//  274       		      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+//  275       		      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+//  276       		      NLME_GetCoordExtAddr(pIeeeAddr);
+//  277       		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
 //  278               }
 //  279 		break;
 //  280       case ZDO_CB_MSG:
