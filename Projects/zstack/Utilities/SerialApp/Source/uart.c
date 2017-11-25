@@ -1,11 +1,14 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "AF.h"
 #include "ZComDef.h"
-#include "hal_types.h"  
+#include "OnBoard.h"
+#include "ZStackTest.h"
+
+#include "hal_types.h"
 #include "hal_led.h"
 #include "hal_uart.h"
-#include "OnBoard.h"
 
 #include "uart.h"
 
@@ -14,47 +17,72 @@ void Delay_ms(uint8 Time);
 
 void Uart0_Handle(uint8* ZStackTest_TxBuf)
 {
-  if (strstr((const char*)ZStackTest_TxBuf, "LED1ON") != NULL)
+  uint8 cmd[256]={0};
+  uint8 tmpbuf[256]={0};
+
+  if(strstr((const char *)ZStackTest_TxBuf,"LED")!=NULL)  //receive cmd "LED"
   {
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
+    if (strstr((const char*)ZStackTest_TxBuf, "LED1ON") != NULL)
+    {
+      HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
+    }
+    if (strstr((const char*)ZStackTest_TxBuf, "LED1OFF") != NULL)
+    {
+      HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
+    }
+    if (strstr((const char*)ZStackTest_TxBuf, "LED2ON") != NULL)
+    {
+      HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+    }
+    if (strstr((const char*)ZStackTest_TxBuf, "LED2OFF") != NULL)
+    {
+      HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+    }
+    if (strstr((const char*)ZStackTest_TxBuf, "LED3ON") != NULL)
+    {
+      HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
+    }
+    if (strstr((const char*)ZStackTest_TxBuf, "LED3OFF") != NULL)
+    {
+      HalLedSet(HAL_LED_3, HAL_LED_MODE_OFF);
+    }
   }
-  if (strstr((const char*)ZStackTest_TxBuf, "LED1OFF") != NULL)
+
+  if(strstr((const char *)ZStackTest_TxBuf,"AT") != NULL)  //receive cmd "AT"
   {
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
-  }
-  if (strstr((const char*)ZStackTest_TxBuf, "LED2ON") != NULL)
-  {
-    HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-  }
-  if (strstr((const char*)ZStackTest_TxBuf, "LED2OFF") != NULL)
-  {
-    HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
-  }
-  if (strstr((const char*)ZStackTest_TxBuf, "LED3ON") != NULL)
-  {
-    HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
-  }
-  if (strstr((const char*)ZStackTest_TxBuf, "LED3OFF") != NULL)
-  {
-    HalLedSet(HAL_LED_3, HAL_LED_MODE_OFF);
+    sscanf((const char*)ZStackTest_TxBuf, "%*[^+]%*c%[^#]%*c%s", cmd, tmpbuf);
+    if (strstr((const char*)cmd, "GETADDR") != NULL) {
+      char addrbuff[20] = {0};
+      sprintf(addrbuff, "SelfshortAddr:%04X", NLME_GetShortAddr());
+      HalUARTWrite (SERIAL_APP_PORT, (uint8 *)addrbuff, strlen(addrbuff));
+    }
+    if (strstr((const char*)cmd, "P2P") != NULL) {
+      ZStackTest_Send_P2P_Message();
+    }
+    if (strstr((const char*)cmd, "BROADCAST") != NULL) {
+      ZStackTest_Send_Broadcast_Message();
+    }
+    if (strstr((const char*)cmd, "GROUP") != NULL) {
+      ZStackTest_Send_Group_Message();
+    }
   }
 }
 
-//通过串口输出短地址 IEEE
+//Print short address and IEEE address from UART
 void PrintAddrInfo(uint16 shortAddr, uint8 *pIeeeAddr)
 {
     uint8 strIeeeAddr[17] = {0};
-    char  buff[30] = {0};    
-    
-    //获得短地址   
-    sprintf(buff, "shortAddr:%04X   IEEE:", shortAddr);  
- 
-    //获得IEEE地址
+    char  buff[30] = {0};
+
+    //print shortAddr to buff
+    sprintf(buff, "shortAddr:%04X   IEEE:", shortAddr);
+
+    //print IEEE address to strIeeeAddr
     GetIeeeAddr(pIeeeAddr, strIeeeAddr);
 
     HalUARTWrite (SERIAL_APP_PORT, (uint8 *)buff, strlen(buff));
     Delay_ms(10);
-    HalUARTWrite (SERIAL_APP_PORT, strIeeeAddr, 16); 
+    HalUARTWrite (SERIAL_APP_PORT, strIeeeAddr, 16);
     HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
 }
 
@@ -75,7 +103,7 @@ void GetIeeeAddr(uint8 * pIeeeAddr, uint8 *pStr)
   }
 }
 
-void Delay_ms(uint8 Time)//n ms延时
+void Delay_ms(uint8 Time) // Delay for n ms
 {
   unsigned char i;
   while(Time--)

@@ -211,6 +211,9 @@ static void ZStackTest_Send(void);
 static void ZStackTest_Resp(void);
 static void ZStackTest_CallBack(uint8 port, uint8 event);
 static void AddressInit(void);
+static void ZStackTest_Send_P2P_Message(void);
+static void ZStackTest_Send_Broadcast_Message(void);
+static void ZStackTest_Send_Group_Message(void);
 
 /*********************************************************************
  * @fn      ZStackTest_Init
@@ -432,38 +435,6 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
         }
       #elif (SECOND_PART)
         ZStackTest_Send_P2P_Message();
-        //ZStackTest_Send_Broadcast_Message();
-        //ZStackTest_Send_Group_Message();
-        if(KeyFlag == 0)
-        {
-          KeyFlag = 1;
-          osal_start_timerEx( ZStackTest_TaskID,
-                              ZStackTest_KEY_PRESS_EVT,
-                              ZStackTest_KEY_PRESS_DELAY );
-        }
-        else
-        {
-          KeyFlag = 0;
-          if (HAL_PUSH_BUTTON1()) {
-            aps_Group_t *grp;
-            grp = aps_FindGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
-            if ( grp )
-            {
-              // Remove from the group
-              aps_RemoveGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
-              HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
-            }
-            else
-            {
-              // Add to the flash group
-              aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
-              HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-            }
-            (void) shift;
-            (void) keys;
-          }
-          osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
-        }
       #endif
     }
     if ( keys & HAL_KEY_SW_1 )
@@ -673,8 +644,7 @@ void AddressInit()
 {
   ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
   ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
-  ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
-
+  ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调器
   ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
   ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
   ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
@@ -689,7 +659,6 @@ void AddressInit()
   ZStackTest_Group.name[0] = 6; // First byte is string length
   osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
   aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
-  HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
 }
 
 /*********************************************************************
@@ -705,8 +674,7 @@ void ZStackTest_Send_P2P_Message( void )
 {
   uint8 data[12]="p2p_message";
 
-  if ( AF_DataRequest( &ZStackTest_P2P_DstAddr,
-                       (endPointDesc_t *)&ZStackTest_epDesc,
+  if ( AF_DataRequest( &ZStackTest_P2P_DstAddr, &ZStackTest_epDesc,
                        ZStackTest_P2P_CLUSTERID,
                        11,
                        data,
@@ -733,7 +701,7 @@ void ZStackTest_Send_P2P_Message( void )
 void ZStackTest_Send_Broadcast_Message( void )
 {
   uint8 data[] = "broadcast_message";
-  if ( AF_DataRequest( &ZStackTest_Broadcast_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+  if ( AF_DataRequest( &ZStackTest_Broadcast_DstAddr, &ZStackTest_epDesc,
                        ZStackTest_BROADCAST_CLUSTERID,
                        17,
                        data,
@@ -761,7 +729,7 @@ void ZStackTest_Send_Group_Message( void )
 {
   uint8 data[] = "group_message";
 
-  if ( AF_DataRequest( &ZStackTest_Group_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+  if ( AF_DataRequest( &ZStackTest_Group_DstAddr, &ZStackTest_epDesc,
                        ZStackTest_GROUP_CLUSTERID,
                        13,
                        data,

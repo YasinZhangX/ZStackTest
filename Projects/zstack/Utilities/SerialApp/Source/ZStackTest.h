@@ -63,18 +63,19 @@ extern "C"
 #define ZStackTest_DEVICE_VERSION     0
 #define ZStackTest_FLAGS              0
 
-#define ZStackTest_MAX_CLUSTERS       2
-#define ZStackTest_CLUSTERID1         5
-#define ZStackTest_CLUSTERID2         6
-#define SAMPLEAPP_PERIODIC_CLUSTERID  1
-#define SAMPLEAPP_FLASH_CLUSTERID     2
-#define SAMPLEAPP_COM_CLUSTERID       3
-#define SAMPLEAPP_P2P_CLUSTERID       4
+#define ZStackTest_MAX_CLUSTERS         4
+#define ZStackTest_P2P_CLUSTERID        1
+#define ZStackTest_BROADCAST_CLUSTERID  2
+#define ZStackTest_GROUP_CLUSTERID      3
+#define ZStackTest_CLUSTERID2           4
 
 // Application Events (OSAL) - These are bit weighted definitions.
 #define ZStackTest_SEND_EVT           0x0001
 #define ZStackTest_RESP_EVT           0x0002
 #define ZStackTest_KEY_PRESS_EVT      0x0004
+#define ZStackTest_P2P_EVT            0x0008
+#define ZStackTest_BROADCAST_EVT      0x0010
+#define ZStackTest_GROUP_EVT          0x0020
 
 // OTA Flow Control Delays
 #define ZStackTest_ACK_DELAY          1
@@ -86,17 +87,14 @@ extern "C"
 #define OTA_SER_BUSY                (ZSuccess+2)
 
 //Project profile
-#define FIRST_PART                   TRUE
-#define SECOND_PART                  FALSE
+#define FIRST_PART                   FALSE
+#define SECOND_PART                  TRUE
 
 // Key Press Delay
 #define ZStackTest_KEY_PRESS_DELAY   1500     // delay 1.5 seconds
 
 // Group ID for Flash Command
-#define ZStackTest_FLASH_GROUP                 0x0001
-
-// Flash Command Duration - in milliseconds
-#define ZStackTest_FLASH_DURATION              1000
+#define ZStackTest_GROUP                 0x0001
 
 /*********************************************************************
  * MACROS
@@ -120,6 +118,13 @@ extern void ZStackTest_Init( byte task_id );
  * Task Event Processor for the Serial Transfer Application
  */
 extern UINT16 ZStackTest_ProcessEvent( byte task_id, UINT16 events );
+
+/*
+ * Message Send Functions
+ */
+extern void ZStackTest_Send_P2P_Message(void);
+extern void ZStackTest_Send_Broadcast_Message(void);
+extern void ZStackTest_Send_Group_Message(void);
 
 /*********************************************************************
 *********************************************************************/

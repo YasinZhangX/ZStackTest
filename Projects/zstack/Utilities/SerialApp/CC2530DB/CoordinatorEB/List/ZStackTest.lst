@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         24/Nov/2017  16:10:39 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  01:25:37 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -198,470 +198,567 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
      67          #include "ZDApp.h"
      68          #include "ZDObject.h"
      69          #include "ZDProfile.h"
-     70          
-     71          #include "hal_drivers.h"
-     72          #include "hal_key.h"
-     73          #if defined ( LCD_SUPPORTED )
-     74          #include "hal_lcd.h"
-     75          #endif
-     76          #include "hal_led.h"
-     77          #include "hal_uart.h"
-     78          
-     79          #include "uart.h"
-     80          
-     81          /*********************************************************************
-     82           * MACROS
-     83           */
-     84          
-     85          /*********************************************************************
-     86           * CONSTANTS
-     87           */
-     88          
-     89          #if !defined( SERIAL_APP_PORT )
-     90          #define SERIAL_APP_PORT  0
-     91          #endif
-     92          
-     93          #if !defined( SERIAL_APP_BAUD )
-     94          #define SERIAL_APP_BAUD  HAL_UART_BR_38400
-     95          //#define SERIAL_APP_BAUD  HAL_UART_BR_115200
-     96          #endif
-     97          
-     98          // When the Rx buf space is less than this threshold, invoke the Rx callback.
-     99          #if !defined( SERIAL_APP_THRESH )
-    100          #define SERIAL_APP_THRESH  64
-    101          #endif
-    102          
-    103          #if !defined( SERIAL_APP_RX_SZ )
-    104          #define SERIAL_APP_RX_SZ  128
-    105          #endif
-    106          
-    107          #if !defined( SERIAL_APP_TX_SZ )
-    108          #define SERIAL_APP_TX_SZ  128
-    109          #endif
-    110          
-    111          // Millisecs of idle time after a byte is received before invoking Rx callback.
-    112          #if !defined( SERIAL_APP_IDLE )
-    113          #define SERIAL_APP_IDLE  6
-    114          #endif
-    115          
-    116          // Loopback Rx bytes to Tx for throughput testing.
-    117          #if !defined( SERIAL_APP_LOOPBACK )
-    118          #define SERIAL_APP_LOOPBACK  FALSE
-    119          #endif
-    120          
-    121          // This is the max byte count per OTA message.
-    122          #if !defined( SERIAL_APP_TX_MAX )
-    123          #define SERIAL_APP_TX_MAX  80
-    124          #endif
-    125          
-    126          #define SERIAL_APP_RSP_CNT  4
-    127          
-    128          // This list should be filled with Application specific Cluster IDs.
+     70          #include "aps_groups.h"
+     71          
+     72          #include "hal_drivers.h"
+     73          #include "hal_key.h"
+     74          #if defined ( LCD_SUPPORTED )
+     75          #include "hal_lcd.h"
+     76          #endif
+     77          #include "hal_led.h"
+     78          #include "hal_uart.h"
+     79          
+     80          #include "uart.h"
+     81          
+     82          /*********************************************************************
+     83           * MACROS
+     84           */
+     85          
+     86          /*********************************************************************
+     87           * CONSTANTS
+     88           */
+     89          
+     90          #if !defined( SERIAL_APP_PORT )
+     91          #define SERIAL_APP_PORT  0
+     92          #endif
+     93          
+     94          #if !defined( SERIAL_APP_BAUD )
+     95          #define SERIAL_APP_BAUD  HAL_UART_BR_38400
+     96          //#define SERIAL_APP_BAUD  HAL_UART_BR_115200
+     97          #endif
+     98          
+     99          // When the Rx buf space is less than this threshold, invoke the Rx callback.
+    100          #if !defined( SERIAL_APP_THRESH )
+    101          #define SERIAL_APP_THRESH  64
+    102          #endif
+    103          
+    104          #if !defined( SERIAL_APP_RX_SZ )
+    105          #define SERIAL_APP_RX_SZ  128
+    106          #endif
+    107          
+    108          #if !defined( SERIAL_APP_TX_SZ )
+    109          #define SERIAL_APP_TX_SZ  128
+    110          #endif
+    111          
+    112          // Millisecs of idle time after a byte is received before invoking Rx callback.
+    113          #if !defined( SERIAL_APP_IDLE )
+    114          #define SERIAL_APP_IDLE  6
+    115          #endif
+    116          
+    117          // Loopback Rx bytes to Tx for throughput testing.
+    118          #if !defined( SERIAL_APP_LOOPBACK )
+    119          #define SERIAL_APP_LOOPBACK  FALSE
+    120          #endif
+    121          
+    122          // This is the max byte count per OTA message.
+    123          #if !defined( SERIAL_APP_TX_MAX )
+    124          #define SERIAL_APP_TX_MAX  80
+    125          #endif
+    126          
+    127          #define SERIAL_APP_RSP_CNT  4
+    128          
+    129          // This list should be filled with Application specific Cluster IDs.
 
    \                                 In  segment XDATA_ROM_C, align 1
-    129          const cId_t ZStackTest_ClusterList[ZStackTest_MAX_CLUSTERS] =
+    130          const cId_t ZStackTest_ClusterList[ZStackTest_MAX_CLUSTERS] =
    \                     ZStackTest_ClusterList:
-   \   000000   0500         DW 5
-   \   000002   0600         DW 6
-    130          {
-    131            ZStackTest_CLUSTERID1,
-    132            ZStackTest_CLUSTERID2
-    133          };
-    134          
+   \   000000   0100         DW 1
+   \   000002   0200         DW 2
+   \   000004   0300         DW 3
+   \   000006   0400         DW 4
+    131          {
+    132            ZStackTest_P2P_CLUSTERID,
+    133            ZStackTest_BROADCAST_CLUSTERID,
+    134            ZStackTest_GROUP_CLUSTERID,
+    135            ZStackTest_CLUSTERID2
+    136          };
+    137          
 
    \                                 In  segment XDATA_ROM_C, align 1
-    135          const SimpleDescriptionFormat_t ZStackTest_SimpleDesc =
+    138          const SimpleDescriptionFormat_t ZStackTest_SimpleDesc =
    \                     ZStackTest_SimpleDesc:
    \   000000   0B           DB 11
    \   000001   050F         DW 3845
    \   000003   0100         DW 1
    \   000005   00           DB 0
-   \   000006   02           DB 2
+   \   000006   04           DB 4
    \   000007   ....         DW ZStackTest_ClusterList
-   \   000009   02           DB 2
+   \   000009   04           DB 4
    \   00000A   ....         DW ZStackTest_ClusterList
-    136          {
-    137            ZStackTest_ENDPOINT,              //  int   Endpoint;
-    138            ZStackTest_PROFID,                //  uint16 AppProfId[2];
-    139            ZStackTest_DEVICEID,              //  uint16 AppDeviceId[2];
-    140            ZStackTest_DEVICE_VERSION,        //  int   AppDevVer:4;
-    141            ZStackTest_FLAGS,                 //  int   AppFlags:4;
-    142            ZStackTest_MAX_CLUSTERS,          //  byte  AppNumInClusters;
-    143            (cId_t *)ZStackTest_ClusterList,  //  byte *pAppInClusterList;
-    144            ZStackTest_MAX_CLUSTERS,          //  byte  AppNumOutClusters;
-    145            (cId_t *)ZStackTest_ClusterList   //  byte *pAppOutClusterList;
-    146          };
-    147          
+    139          {
+    140            ZStackTest_ENDPOINT,              //  int   Endpoint;
+    141            ZStackTest_PROFID,                //  uint16 AppProfId[2];
+    142            ZStackTest_DEVICEID,              //  uint16 AppDeviceId[2];
+    143            ZStackTest_DEVICE_VERSION,        //  int   AppDevVer:4;
+    144            ZStackTest_FLAGS,                 //  int   AppFlags:4;
+    145            ZStackTest_MAX_CLUSTERS,          //  byte  AppNumInClusters;
+    146            (cId_t *)ZStackTest_ClusterList,  //  byte *pAppInClusterList;
+    147            ZStackTest_MAX_CLUSTERS,          //  byte  AppNumOutClusters;
+    148            (cId_t *)ZStackTest_ClusterList   //  byte *pAppOutClusterList;
+    149          };
+    150          
 
    \                                 In  segment XDATA_ROM_C, align 1
-    148          const endPointDesc_t ZStackTest_epDesc =
+    151          const endPointDesc_t ZStackTest_epDesc =
    \                     ZStackTest_epDesc:
    \   000000   0B           DB 11
    \   000001   ....         DW ZStackTest_TaskID
    \   000003   ....         DW ZStackTest_SimpleDesc
    \   000005   00           DB 0
-    149          {
-    150            ZStackTest_ENDPOINT,
-    151            &ZStackTest_TaskID,
-    152            (SimpleDescriptionFormat_t *)&ZStackTest_SimpleDesc,
-    153            noLatencyReqs
-    154          };
-    155          
-    156          /*********************************************************************
-    157           * TYPEDEFS
-    158           */
-    159          
-    160          /*********************************************************************
-    161           * GLOBAL VARIABLES
-    162           */
-    163          
+    152          {
+    153            ZStackTest_ENDPOINT,
+    154            &ZStackTest_TaskID,
+    155            (SimpleDescriptionFormat_t *)&ZStackTest_SimpleDesc,
+    156            noLatencyReqs
+    157          };
+    158          
+    159          /*********************************************************************
+    160           * TYPEDEFS
+    161           */
+    162          
+    163          /*********************************************************************
+    164           * GLOBAL VARIABLES
+    165           */
+    166          
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    164          uint8 ZStackTest_TaskID;    // Task ID for internal task/event processing.
+    167          uint8 ZStackTest_TaskID;    // Task ID for internal task/event processing.
    \                     ZStackTest_TaskID:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    165          
-    166          /*********************************************************************
-    167           * EXTERNAL VARIABLES
-    168           */
-    169          
-    170          /*********************************************************************
-    171           * EXTERNAL FUNCTIONS
-    172           */
-    173          
-    174          /*********************************************************************
-    175           * LOCAL VARIABLES
-    176           */
+    168          
+    169          /*********************************************************************
+    170           * EXTERNAL VARIABLES
+    171           */
+    172          
+    173          /*********************************************************************
+    174           * EXTERNAL FUNCTIONS
+    175           */
+    176          
+    177          /*********************************************************************
+    178           * LOCAL VARIABLES
+    179           */
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    177          static bool KeyFlag = 0;
+    180          static bool KeyFlag = 0;
    \                     KeyFlag:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    178          static uint8 shift;
+    181          static uint8 shift;
    \                     shift:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    179          static uint8 keys;
+    182          static uint8 keys;
    \                     keys:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    180          
+    183          
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    181          static uint8 ZStackTest_MsgID;
-   \                     ZStackTest_MsgID:
+    184          static uint8 ZStackTest_TransID;
+   \                     ZStackTest_TransID:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    182          
-    183          static afAddrType_t ZStackTest_TxAddr;
+    185          
+    186          static afAddrType_t ZStackTest_TxAddr;
                                      ^
 Warning[Pe550]: variable "ZStackTest_TxAddr" was set but never used
+    187          static uint8 ZStackTest_TxSeq;
+                              ^
+Warning[Pe177]: variable "ZStackTest_TxSeq" was declared but never referenced
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    184          static uint8 ZStackTest_TxSeq;
-   \                     ZStackTest_TxSeq:
-   \   000000                DS 1
-   \   000001                REQUIRE __INIT_XDATA_Z
-
-   \                                 In  segment XDATA_Z, align 1, keep-with-next
-    185          static uint8 ZStackTest_TxBuf[SERIAL_APP_TX_MAX+1];
+    188          static uint8 ZStackTest_TxBuf[SERIAL_APP_TX_MAX+1];
    \                     ZStackTest_TxBuf:
    \   000000                DS 81
    \   000051                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    186          static uint8 ZStackTest_TxLen;
+    189          static uint8 ZStackTest_TxLen;
    \                     ZStackTest_TxLen:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    187          
+    190          
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    188          static afAddrType_t ZStackTest_RxAddr;
+    191          static afAddrType_t ZStackTest_RxAddr;
    \                     ZStackTest_RxAddr:
    \   000000                DS 12
    \   00000C                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    189          static uint8 ZStackTest_RxSeq;
+    192          static uint8 ZStackTest_RxSeq;
+                              ^
+Warning[Pe550]: variable "ZStackTest_RxSeq" was set but never used
    \                     ZStackTest_RxSeq:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    190          static uint8 ZStackTest_RspBuf[SERIAL_APP_RSP_CNT];
+    193          static uint8 ZStackTest_RspBuf[SERIAL_APP_RSP_CNT];
    \                     ZStackTest_RspBuf:
    \   000000                DS 4
    \   000004                REQUIRE __INIT_XDATA_Z
-    191          
+    194          
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
-    192          static devStates_t ZStackTest_NwkState;
+    195          static devStates_t ZStackTest_NwkState;
    \                     ZStackTest_NwkState:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    193          
-    194          /*********************************************************************
-    195           * LOCAL FUNCTIONS
-    196           */
-    197          
-    198          static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
-    199          static void ZStackTest_HandleKeys( uint8 shift, uint8 keys );
-    200          static void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt );
-    201          static void ZStackTest_Send(void);
-    202          static void ZStackTest_Resp(void);
-    203          static void ZStackTest_CallBack(uint8 port, uint8 event);
-    204          
-    205          /*********************************************************************
-    206           * @fn      ZStackTest_Init
-    207           *
-    208           * @brief   This is called during OSAL tasks' initialization.
-    209           *
-    210           * @param   task_id - the Task ID assigned by OSAL.
-    211           *
-    212           * @return  none
-    213           */
+    196          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+    197          static afAddrType_t ZStackTest_P2P_DstAddr;       //单播
+   \                     ZStackTest_P2P_DstAddr:
+   \   000000                DS 12
+   \   00000C                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+    198          static afAddrType_t ZStackTest_Broadcast_DstAddr; //广播
+   \                     ZStackTest_Broadcast_DstAddr:
+   \   000000                DS 12
+   \   00000C                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+    199          static afAddrType_t ZStackTest_Group_DstAddr;     //组播
+   \                     ZStackTest_Group_DstAddr:
+   \   000000                DS 12
+   \   00000C                REQUIRE __INIT_XDATA_Z
+    200          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+    201          static aps_Group_t ZStackTest_Group;
+   \                     ZStackTest_Group:
+   \   000000                DS 18
+   \   000012                REQUIRE __INIT_XDATA_Z
+    202          
+    203          /*********************************************************************
+    204           * LOCAL FUNCTIONS
+    205           */
+    206          
+    207          static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
+    208          static void ZStackTest_HandleKeys( uint8 shift, uint8 keys );
+    209          static void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt );
+    210          static void ZStackTest_Send(void);
+    211          static void ZStackTest_Resp(void);
+    212          static void ZStackTest_CallBack(uint8 port, uint8 event);
+    213          static void AddressInit(void);
+    214          
+    215          /*********************************************************************
+    216           * @fn      ZStackTest_Init
+    217           *
+    218           * @brief   This is called during OSAL tasks' initialization.
+    219           *
+    220           * @param   task_id - the Task ID assigned by OSAL.
+    221           *
+    222           * @return  none
+    223           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    214          void ZStackTest_Init( uint8 task_id )
+    224          void ZStackTest_Init( uint8 task_id )
    \                     ZStackTest_Init:
-    215          {
-   \   000000   74F7         MOV     A,#-0x9
+    225          {
+   \   000000   74F5         MOV     A,#-0xb
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
+   \   000005                ; Saved register size: 11
    \   000005                ; Auto size: 29
    \   000005   74E3         MOV     A,#-0x1d
    \   000007   12....       LCALL   ?ALLOC_XSTACK8
    \   00000A   E9           MOV     A,R1
    \   00000B   FE           MOV     R6,A
-    216            halUARTCfg_t uartConfig;
-    217          
-    218            ZStackTest_TaskID = task_id;
+    226            halUARTCfg_t uartConfig;
+    227          
+    228            ZStackTest_TaskID = task_id;
    \   00000C   90....       MOV     DPTR,#ZStackTest_TaskID
    \   00000F   F0           MOVX    @DPTR,A
-    219            ZStackTest_RxSeq = 0xC3;
+    229            ZStackTest_RxSeq = 0xC3;
    \   000010   90....       MOV     DPTR,#ZStackTest_RxSeq
    \   000013   74C3         MOV     A,#-0x3d
    \   000015   F0           MOVX    @DPTR,A
-    220          
-    221            afRegister( (endPointDesc_t *)&ZStackTest_epDesc );
-   \   000016                ; Setup parameters for call to function afRegister
-   \   000016   7A..         MOV     R2,#ZStackTest_epDesc & 0xff
-   \   000018   7B..         MOV     R3,#(ZStackTest_epDesc >> 8) & 0xff
-   \   00001A   12....       LCALL   ??afRegister?relay
-    222          
-    223            RegisterForKeys( task_id );
-   \   00001D                ; Setup parameters for call to function RegisterForKeys
-   \   00001D   EE           MOV     A,R6
-   \   00001E   F9           MOV     R1,A
-   \   00001F   12....       LCALL   ??RegisterForKeys?relay
-    224          
-    225            uartConfig.configured           = TRUE;              // 2x30 don't care - see uart driver.
-   \   000022   85..82       MOV     DPL,?XSP + 0
-   \   000025   85..83       MOV     DPH,?XSP + 1
-   \   000028   7401         MOV     A,#0x1
-   \   00002A   F0           MOVX    @DPTR,A
-    226            uartConfig.baudRate             = SERIAL_APP_BAUD;
-   \   00002B   12....       LCALL   ?XSTACK_DISP0_8
-   \   00002E   7402         MOV     A,#0x2
-   \   000030   F0           MOVX    @DPTR,A
-    227            uartConfig.flowControl          = FALSE;
-   \   000031   12....       LCALL   ?XSTACK_DISP0_8
-   \   000034   E4           CLR     A
+    230            ZStackTest_TransID = 0;
+   \   000016   90....       MOV     DPTR,#ZStackTest_TransID
+   \   000019   E4           CLR     A
+   \   00001A   F0           MOVX    @DPTR,A
+    231          
+    232            AddressInit();
+   \   00001B   90....       MOV     DPTR,#ZStackTest_P2P_DstAddr + 8
+   \   00001E   7402         MOV     A,#0x2
+   \   000020   F0           MOVX    @DPTR,A
+   \   000021   A3           INC     DPTR
+   \   000022   740B         MOV     A,#0xb
+   \   000024   F0           MOVX    @DPTR,A
+   \   000025   90....       MOV     DPTR,#ZStackTest_P2P_DstAddr
+   \   000028   E4           CLR     A
+   \   000029   F0           MOVX    @DPTR,A
+   \   00002A   A3           INC     DPTR
+   \   00002B   F0           MOVX    @DPTR,A
+   \   00002C   90....       MOV     DPTR,#ZStackTest_Broadcast_DstAddr + 8
+   \   00002F   740F         MOV     A,#0xf
+   \   000031   F0           MOVX    @DPTR,A
+   \   000032   A3           INC     DPTR
+   \   000033   740B         MOV     A,#0xb
    \   000035   F0           MOVX    @DPTR,A
-    228            uartConfig.flowControlThreshold = SERIAL_APP_THRESH; // 2x30 don't care - see uart driver.
-   \   000036   7403         MOV     A,#0x3
-   \   000038   12....       LCALL   ?XSTACK_DISP0_8
-   \   00003B   7440         MOV     A,#0x40
+   \   000036   90....       MOV     DPTR,#ZStackTest_Broadcast_DstAddr
+   \   000039   74FF         MOV     A,#-0x1
+   \   00003B   F0           MOVX    @DPTR,A
+   \   00003C   A3           INC     DPTR
    \   00003D   F0           MOVX    @DPTR,A
-   \   00003E   A3           INC     DPTR
-   \   00003F   E4           CLR     A
-   \   000040   F0           MOVX    @DPTR,A
-    229            uartConfig.rx.maxBufSize        = SERIAL_APP_RX_SZ;  // 2x30 don't care - see uart driver.
-   \   000041   740A         MOV     A,#0xa
-   \   000043   12....       LCALL   ?XSTACK_DISP0_8
-   \   000046   7480         MOV     A,#-0x80
-   \   000048   F0           MOVX    @DPTR,A
-   \   000049   A3           INC     DPTR
-   \   00004A   E4           CLR     A
-   \   00004B   F0           MOVX    @DPTR,A
-    230            uartConfig.tx.maxBufSize        = SERIAL_APP_TX_SZ;  // 2x30 don't care - see uart driver.
-   \   00004C   7412         MOV     A,#0x12
-   \   00004E   12....       LCALL   ?XSTACK_DISP0_8
-   \   000051   7480         MOV     A,#-0x80
-   \   000053   F0           MOVX    @DPTR,A
-   \   000054   A3           INC     DPTR
-   \   000055   E4           CLR     A
-   \   000056   F0           MOVX    @DPTR,A
-    231            uartConfig.idleTimeout          = SERIAL_APP_IDLE;   // 2x30 don't care - see uart driver.
-   \   000057   7405         MOV     A,#0x5
-   \   000059   12....       LCALL   ?XSTACK_DISP0_8
-   \   00005C   7406         MOV     A,#0x6
-   \   00005E   F0           MOVX    @DPTR,A
-    232            uartConfig.intEnable            = TRUE;              // 2x30 don't care - see uart driver.
-   \   00005F   7416         MOV     A,#0x16
-   \   000061   12....       LCALL   ?XSTACK_DISP0_8
-   \   000064   7401         MOV     A,#0x1
-   \   000066   F0           MOVX    @DPTR,A
-    233            uartConfig.callBackFunc         = ZStackTest_CallBack;
-   \   000067   741B         MOV     A,#0x1b
-   \   000069   12....       LCALL   ?XSTACK_DISP0_8
-   \   00006C   74..         MOV     A,#??ZStackTest_CallBack?relay & 0xff
-   \   00006E   F0           MOVX    @DPTR,A
-   \   00006F   A3           INC     DPTR
-   \   000070   74..         MOV     A,#(??ZStackTest_CallBack?relay >> 8) & 0xff
-   \   000072   12....       LCALL   ?Subroutine2 & 0xFFFF
-    234            HalUARTOpen (SERIAL_APP_PORT, &uartConfig);
-   \                     ??CrossCallReturnLabel_2:
-   \   000075   AA82         MOV     R2,DPL
-   \   000077   AB83         MOV     R3,DPH
-   \   000079   7900         MOV     R1,#0x0
-   \   00007B   12....       LCALL   ??HalUARTOpen?relay
-    235            HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);
-   \   00007E                ; Setup parameters for call to function HalUARTWrite
-   \   00007E   7C0C         MOV     R4,#0xc
-   \   000080   7D00         MOV     R5,#0x0
-   \   000082   7A..         MOV     R2,#`?<Constant "Init Uart0\\r\\n">` & 0xff
-   \   000084   7B..         MOV     R3,#(`?<Constant "Init Uart0\\r\\n">` >> 8) & 0xff
-   \   000086   7900         MOV     R1,#0x0
-   \   000088   12....       LCALL   ??HalUARTWrite?relay
-    236          
-    237          #if defined ( LCD_SUPPORTED )
-    238            HalLcdWriteString( "ZStackTest", HAL_LCD_LINE_2 );
-    239          #endif
-    240          
-    241            ZDO_RegisterForZDOMsg( ZStackTest_TaskID, End_Device_Bind_rsp );
-   \   00008B                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   00008B   7A20         MOV     R2,#0x20
-   \   00008D   7B80         MOV     R3,#-0x80
-   \   00008F   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   000092   E0           MOVX    A,@DPTR
+   \   00003E   90....       MOV     DPTR,#ZStackTest_Group_DstAddr + 8
+   \   000041   7401         MOV     A,#0x1
+   \   000043   F0           MOVX    @DPTR,A
+   \   000044   A3           INC     DPTR
+   \   000045   740B         MOV     A,#0xb
+   \   000047   F0           MOVX    @DPTR,A
+   \   000048   90....       MOV     DPTR,#ZStackTest_Group_DstAddr
+   \   00004B   7401         MOV     A,#0x1
+   \   00004D   F0           MOVX    @DPTR,A
+   \   00004E   A3           INC     DPTR
+   \   00004F   E4           CLR     A
+   \   000050   F0           MOVX    @DPTR,A
+   \   000051   90....       MOV     DPTR,#ZStackTest_Group
+   \   000054   04           INC     A
+   \   000055   F0           MOVX    @DPTR,A
+   \   000056   A3           INC     DPTR
+   \   000057   E4           CLR     A
+   \   000058   F0           MOVX    @DPTR,A
+   \   000059   A3           INC     DPTR
+   \   00005A   7406         MOV     A,#0x6
+   \   00005C   F0           MOVX    @DPTR,A
+   \   00005D                ; Setup parameters for call to function osal_memcpy
+   \   00005D   75....       MOV     ?V0 + 0,#`?<Constant "Group1">` & 0xff
+   \   000060   75....       MOV     ?V0 + 1,#(`?<Constant "Group1">` >> 8) & 0xff
+   \   000063   75..00       MOV     ?V0 + 2,#0x0
+   \   000066   78..         MOV     R0,#?V0 + 0
+   \   000068   12....       LCALL   ?PUSH_XSTACK_I_THREE
+   \   00006B   7C06         MOV     R4,#0x6
+   \   00006D   7D00         MOV     R5,#0x0
+   \   00006F   7A..         MOV     R2,#(ZStackTest_Group + 3) & 0xff
+   \   000071   7B..         MOV     R3,#((ZStackTest_Group + 3) >> 8) & 0xff
+   \   000073   12....       LCALL   ??osal_memcpy?relay
+   \   000076   7403         MOV     A,#0x3
+   \   000078   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00007B                ; Setup parameters for call to function aps_AddGroup
+   \   00007B   7A..         MOV     R2,#ZStackTest_Group & 0xff
+   \   00007D   7B..         MOV     R3,#(ZStackTest_Group >> 8) & 0xff
+   \   00007F   790B         MOV     R1,#0xb
+   \   000081   12....       LCALL   ??aps_AddGroup?relay
+   \   000084                ; Setup parameters for call to function HalLedSet
+   \   000084   7A01         MOV     R2,#0x1
+   \   000086   7902         MOV     R1,#0x2
+   \   000088   12....       LCALL   ??HalLedSet?relay
+    233          
+    234            afRegister( (endPointDesc_t *)&ZStackTest_epDesc );
+   \   00008B                ; Setup parameters for call to function afRegister
+   \   00008B   7A..         MOV     R2,#ZStackTest_epDesc & 0xff
+   \   00008D   7B..         MOV     R3,#(ZStackTest_epDesc >> 8) & 0xff
+   \   00008F   12....       LCALL   ??afRegister?relay
+    235          
+    236            RegisterForKeys( task_id );
+   \   000092                ; Setup parameters for call to function RegisterForKeys
+   \   000092   EE           MOV     A,R6
    \   000093   F9           MOV     R1,A
-   \   000094   12....       LCALL   ??ZDO_RegisterForZDOMsg?relay
-    242            ZDO_RegisterForZDOMsg( ZStackTest_TaskID, Match_Desc_rsp );
-   \   000097                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
-   \   000097   7A06         MOV     R2,#0x6
-   \   000099   7B80         MOV     R3,#-0x80
-   \   00009B   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   00009E   E0           MOVX    A,@DPTR
-   \   00009F   F9           MOV     R1,A
-   \   0000A0   12....       LCALL   ??ZDO_RegisterForZDOMsg?relay
-    243          }
-   \   0000A3   741D         MOV     A,#0x1d
-   \   0000A5   12....       LCALL   ?DEALLOC_XSTACK8
-   \   0000A8                REQUIRE ?Subroutine0
-   \   0000A8                ; // Fall through to label ?Subroutine0
+   \   000094   12....       LCALL   ??RegisterForKeys?relay
+    237          
+    238            uartConfig.configured           = TRUE;              // 2x30 don't care - see uart driver.
+   \   000097   85..82       MOV     DPL,?XSP + 0
+   \   00009A   85..83       MOV     DPH,?XSP + 1
+   \   00009D   7401         MOV     A,#0x1
+   \   00009F   F0           MOVX    @DPTR,A
+    239            uartConfig.baudRate             = SERIAL_APP_BAUD;
+   \   0000A0   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000A3   7402         MOV     A,#0x2
+   \   0000A5   F0           MOVX    @DPTR,A
+    240            uartConfig.flowControl          = FALSE;
+   \   0000A6   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000A9   E4           CLR     A
+   \   0000AA   F0           MOVX    @DPTR,A
+    241            uartConfig.flowControlThreshold = SERIAL_APP_THRESH; // 2x30 don't care - see uart driver.
+   \   0000AB   7403         MOV     A,#0x3
+   \   0000AD   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000B0   7440         MOV     A,#0x40
+   \   0000B2   F0           MOVX    @DPTR,A
+   \   0000B3   A3           INC     DPTR
+   \   0000B4   E4           CLR     A
+   \   0000B5   F0           MOVX    @DPTR,A
+    242            uartConfig.rx.maxBufSize        = SERIAL_APP_RX_SZ;  // 2x30 don't care - see uart driver.
+   \   0000B6   740A         MOV     A,#0xa
+   \   0000B8   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000BB   7480         MOV     A,#-0x80
+   \   0000BD   F0           MOVX    @DPTR,A
+   \   0000BE   A3           INC     DPTR
+   \   0000BF   E4           CLR     A
+   \   0000C0   F0           MOVX    @DPTR,A
+    243            uartConfig.tx.maxBufSize        = SERIAL_APP_TX_SZ;  // 2x30 don't care - see uart driver.
+   \   0000C1   7412         MOV     A,#0x12
+   \   0000C3   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000C6   7480         MOV     A,#-0x80
+   \   0000C8   F0           MOVX    @DPTR,A
+   \   0000C9   A3           INC     DPTR
+   \   0000CA   E4           CLR     A
+   \   0000CB   F0           MOVX    @DPTR,A
+    244            uartConfig.idleTimeout          = SERIAL_APP_IDLE;   // 2x30 don't care - see uart driver.
+   \   0000CC   7405         MOV     A,#0x5
+   \   0000CE   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000D1   7406         MOV     A,#0x6
+   \   0000D3   F0           MOVX    @DPTR,A
+    245            uartConfig.intEnable            = TRUE;              // 2x30 don't care - see uart driver.
+   \   0000D4   7416         MOV     A,#0x16
+   \   0000D6   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000D9   7401         MOV     A,#0x1
+   \   0000DB   F0           MOVX    @DPTR,A
+    246            uartConfig.callBackFunc         = ZStackTest_CallBack;
+   \   0000DC   741B         MOV     A,#0x1b
+   \   0000DE   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000E1   74..         MOV     A,#??ZStackTest_CallBack?relay & 0xff
+   \   0000E3   F0           MOVX    @DPTR,A
+   \   0000E4   A3           INC     DPTR
+   \   0000E5   74..         MOV     A,#(??ZStackTest_CallBack?relay >> 8) & 0xff
+   \   0000E7   12....       LCALL   ?Subroutine3 & 0xFFFF
+    247            HalUARTOpen (SERIAL_APP_PORT, &uartConfig);
+   \                     ??CrossCallReturnLabel_4:
+   \   0000EA   AA82         MOV     R2,DPL
+   \   0000EC   AB83         MOV     R3,DPH
+   \   0000EE   7900         MOV     R1,#0x0
+   \   0000F0   12....       LCALL   ??HalUARTOpen?relay
+    248            HalUARTWrite(SERIAL_APP_PORT, "Init Uart0\r\n", sizeof("Init Uart0\r\n")-1);
+   \   0000F3                ; Setup parameters for call to function HalUARTWrite
+   \   0000F3   7C0C         MOV     R4,#0xc
+   \   0000F5   7D00         MOV     R5,#0x0
+   \   0000F7   7A..         MOV     R2,#`?<Constant "Init Uart0\\r\\n">` & 0xff
+   \   0000F9   7B..         MOV     R3,#(`?<Constant "Init Uart0\\r\\n">` >> 8) & 0xff
+   \   0000FB   7900         MOV     R1,#0x0
+   \   0000FD   12....       LCALL   ??HalUARTWrite?relay
+    249          
+    250          #if defined ( LCD_SUPPORTED )
+    251            HalLcdWriteString( "ZStackTest", HAL_LCD_LINE_2 );
+    252          #endif
+    253          
+    254            ZDO_RegisterForZDOMsg( ZStackTest_TaskID, End_Device_Bind_rsp );
+   \   000100                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   000100   7A20         MOV     R2,#0x20
+   \   000102   7B80         MOV     R3,#-0x80
+   \   000104   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   000107   E0           MOVX    A,@DPTR
+   \   000108   F9           MOV     R1,A
+   \   000109   12....       LCALL   ??ZDO_RegisterForZDOMsg?relay
+    255            ZDO_RegisterForZDOMsg( ZStackTest_TaskID, Match_Desc_rsp );
+   \   00010C                ; Setup parameters for call to function ZDO_RegisterForZDOMsg
+   \   00010C   7A06         MOV     R2,#0x6
+   \   00010E   7B80         MOV     R3,#-0x80
+   \   000110   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   000113   E0           MOVX    A,@DPTR
+   \   000114   F9           MOV     R1,A
+   \   000115   12....       LCALL   ??ZDO_RegisterForZDOMsg?relay
+    256          }
+   \   000118   741D         MOV     A,#0x1d
+   \   00011A   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00011D   7F03         MOV     R7,#0x3
+   \   00011F   02....       LJMP    ?BANKED_LEAVE_XDATA
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine0:
-   \   000000   7F01         MOV     R7,#0x1
-   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine2:
+   \                     ?Subroutine3:
    \   000000   F0           MOVX    @DPTR,A
    \   000001                ; Setup parameters for call to function HalUARTOpen
    \   000001   85..82       MOV     DPL,?XSP + 0
    \   000004   85..83       MOV     DPH,?XSP + 1
    \   000007   22           RET
-    244          
-    245          /*********************************************************************
-    246           * @fn      ZStackTest_ProcessEvent
-    247           *
-    248           * @brief   Generic Application Task event processor.
-    249           *
-    250           * @param   task_id  - The OSAL assigned task ID.
-    251           * @param   events   - Bit map of events to process.
-    252           *
-    253           * @return  Event flags of all unprocessed events.
-    254           */
+    257          
+    258          /*********************************************************************
+    259           * @fn      ZStackTest_ProcessEvent
+    260           *
+    261           * @brief   Generic Application Task event processor.
+    262           *
+    263           * @param   task_id  - The OSAL assigned task ID.
+    264           * @param   events   - Bit map of events to process.
+    265           *
+    266           * @return  Event flags of all unprocessed events.
+    267           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    255          UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
+    268          UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
    \                     ZStackTest_ProcessEvent:
-    256          {
+    269          {
    \   000000   74F2         MOV     A,#-0xe
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 14
    \   000005                ; Auto size: 0
    \   000005   8A..         MOV     ?V0 + 0,R2
    \   000007   8B..         MOV     ?V0 + 1,R3
-    257            (void)task_id;  // Intentionally unreferenced parameter
-    258            uint8* pIeeeAddr = NULL;
-    259          
-    260            if ( events & SYS_EVENT_MSG )
+    270            (void)task_id;  // Intentionally unreferenced parameter
+    271            uint8* pIeeeAddr = NULL;
+    272          
+    273            if ( events & SYS_EVENT_MSG )
    \   000009   EB           MOV     A,R3
    \   00000A   5480         ANL     A,#0x80
    \   00000C   701F         JNZ     ??ZStackTest_ProcessEvent_0
-    261            {
-    262              afIncomingMSGPacket_t *MSGpkt;
-    263          
-    264              while ( (MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( ZStackTest_TaskID )) )
-    265              {
-    266                switch ( MSGpkt->hdr.event )
-    267                {
-    268                case ZDO_STATE_CHANGE:
-    269                        ZStackTest_NwkState = (devStates_t)(MSGpkt->hdr.status);
-    270                        if ( (ZStackTest_NwkState == DEV_ZB_COORD)
-    271                            || (ZStackTest_NwkState == DEV_ROUTER)
-    272                            || (ZStackTest_NwkState == DEV_END_DEVICE) )
-    273                        {
-    274                        	HalUARTWrite(SERIAL_APP_PORT, "Connect!", 8);
-    275          				        HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
-    276                          HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-    277                		      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-    278                		      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
-    279                		      NLME_GetCoordExtAddr(pIeeeAddr);
-    280                		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
-    281                        }
-    282          		break;
-    283                case ZDO_CB_MSG:
-    284                  //ZStackTest_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
-    285                  break;
-    286          
-    287                case KEY_CHANGE:
-    288                  ZStackTest_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
-    289                  shift = ((keyChange_t *)MSGpkt)->state;
-    290                  keys = ((keyChange_t *)MSGpkt)->keys;
-    291                  break;
-    292          
-    293                case AF_INCOMING_MSG_CMD:
-    294                  ZStackTest_ProcessMSGCmd( MSGpkt );
-    295                  break;
-    296          
-    297                default:
+    274            {
+    275              afIncomingMSGPacket_t *MSGpkt;
+    276          
+    277              while ( (MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( ZStackTest_TaskID )) )
+    278              {
+    279                switch ( MSGpkt->hdr.event )
+    280                {
+    281                case ZDO_STATE_CHANGE:
+    282                        ZStackTest_NwkState = (devStates_t)(MSGpkt->hdr.status);
+    283                        if ( (ZStackTest_NwkState == DEV_ZB_COORD)
+    284                            || (ZStackTest_NwkState == DEV_ROUTER)
+    285                            || (ZStackTest_NwkState == DEV_END_DEVICE) )
+    286                        {
+    287                        	HalUARTWrite(SERIAL_APP_PORT, "Connect!", 8);
+    288          				        HalUARTWrite (SERIAL_APP_PORT, "\r\n", 2);
+    289                          HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
+    290                		      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+    291                		      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+    292                		      NLME_GetCoordExtAddr(pIeeeAddr);
+    293                		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+    294                        }
+    295          		break;
+    296                case ZDO_CB_MSG:
+    297                  //ZStackTest_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
     298                  break;
-    299                }
-    300          
-    301                osal_msg_deallocate( (uint8 *)MSGpkt );
-    302              }
-    303          
-    304              return ( events ^ SYS_EVENT_MSG );
-    305            }
-    306          
-    307            if ( events & ZStackTest_SEND_EVT )
+    299          
+    300                case KEY_CHANGE:
+    301                  ZStackTest_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
+    302                  shift = ((keyChange_t *)MSGpkt)->state;
+    303                  keys = ((keyChange_t *)MSGpkt)->keys;
+    304                  break;
+    305          
+    306                case AF_INCOMING_MSG_CMD:
+    307                  ZStackTest_ProcessMSGCmd( MSGpkt );
+    308                  break;
+    309          
+    310                default:
+    311                  break;
+    312                }
+    313          
+    314                osal_msg_deallocate( (uint8 *)MSGpkt );
+    315              }
+    316          
+    317              return ( events ^ SYS_EVENT_MSG );
+    318            }
+    319          
+    320            if ( events & ZStackTest_SEND_EVT )
    \   00000E   EA           MOV     A,R2
    \   00000F   A2E0         MOV     C,0xE0 /* A   */.0
    \   000011   4003         JC      $+5
    \   000013   02....       LJMP    ??ZStackTest_ProcessEvent_1 & 0xFFFF
-    308            {
-    309              ZStackTest_Send();
+    321            {
+    322              ZStackTest_Send();
    \   000016                ; Setup parameters for call to function ZStackTest_Send
    \   000016   12....       LCALL   ??ZStackTest_Send?relay
-    310              return ( events ^ ZStackTest_SEND_EVT );
+    323              return ( events ^ ZStackTest_SEND_EVT );
    \   000019   E5..         MOV     A,?V0 + 0
    \   00001B   6401         XRL     A,#0x1
    \                     ??ZStackTest_ProcessEvent_2:
    \   00001D   FA           MOV     R2,A
    \   00001E   AB..         MOV     R3,?V0 + 1
    \   000020   02....       LJMP    ??ZStackTest_ProcessEvent_3 & 0xFFFF
-    311            }
+    324            }
    \                     ??ZStackTest_ProcessEvent_4:
    \   000023                ; Setup parameters for call to function ZStackTest_ProcessMSGCmd
    \   000023   12....       LCALL   ??ZStackTest_ProcessMSGCmd?relay
@@ -688,7 +785,7 @@ Warning[Pe550]: variable "ZStackTest_TxAddr" was set but never used
    \   000046   24E6         ADD     A,#-0x1a
    \   000048   60D9         JZ      ??ZStackTest_ProcessEvent_4
    \   00004A   245A         ADD     A,#0x5a
-   \   00004C   6052         JZ      ??ZStackTest_ProcessEvent_7
+   \   00004C   6043         JZ      ??ZStackTest_ProcessEvent_7
    \   00004E   24EF         ADD     A,#-0x11
    \   000050   70D4         JNZ     ??ZStackTest_ProcessEvent_5
    \   000052   A3           INC     DPTR
@@ -709,166 +806,157 @@ Warning[Pe550]: variable "ZStackTest_TxAddr" was set but never used
    \   000068   7D00         MOV     R5,#0x0
    \   00006A   7A..         MOV     R2,#`?<Constant "Connect!">` & 0xff
    \   00006C   7B..         MOV     R3,#(`?<Constant "Connect!">` >> 8) & 0xff
-   \   00006E   7900         MOV     R1,#0x0
-   \   000070   12....       LCALL   ??HalUARTWrite?relay
-   \   000073                ; Setup parameters for call to function HalUARTWrite
-   \   000073   7C02         MOV     R4,#0x2
-   \   000075   7D00         MOV     R5,#0x0
-   \   000077   7A..         MOV     R2,#`?<Constant "\\r\\n">` & 0xff
-   \   000079   7B..         MOV     R3,#(`?<Constant "\\r\\n">` >> 8) & 0xff
-   \   00007B   7900         MOV     R1,#0x0
-   \   00007D   12....       LCALL   ??HalUARTWrite?relay
-   \   000080                ; Setup parameters for call to function HalUARTWrite
-   \   000080   7C08         MOV     R4,#0x8
-   \   000082   7D00         MOV     R5,#0x0
-   \   000084   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
-   \   000086   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
-   \   000088   7900         MOV     R1,#0x0
-   \   00008A   12....       LCALL   ??HalUARTWrite?relay
-   \   00008D                ; Setup parameters for call to function NLME_GetExtAddr
-   \   00008D   12....       LCALL   ??NLME_GetExtAddr?relay
-   \   000090   8A..         MOV     ?V0 + 4,R2
-   \   000092   8B..         MOV     ?V0 + 5,R3
-   \   000094                ; Setup parameters for call to function PrintAddrInfo
-   \   000094                ; Setup parameters for call to function NLME_GetShortAddr
-   \   000094   12....       LCALL   ??NLME_GetShortAddr?relay
-   \   000097   AC..         MOV     R4,?V0 + 4
-   \   000099   AD..         MOV     R5,?V0 + 5
-   \   00009B   12....       LCALL   ?Subroutine7 & 0xFFFF
-   \                     ??CrossCallReturnLabel_13:
-   \   00009E   8086         SJMP    ??ZStackTest_ProcessEvent_5
+   \   00006E   12....       LCALL   ?Subroutine2 & 0xFFFF
+   \                     ??CrossCallReturnLabel_2:
+   \   000071                ; Setup parameters for call to function HalUARTWrite
+   \   000071   7C08         MOV     R4,#0x8
+   \   000073   7D00         MOV     R5,#0x0
+   \   000075   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
+   \   000077   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
+   \   000079   7900         MOV     R1,#0x0
+   \   00007B   12....       LCALL   ??HalUARTWrite?relay
+   \   00007E                ; Setup parameters for call to function NLME_GetExtAddr
+   \   00007E   12....       LCALL   ??NLME_GetExtAddr?relay
+   \   000081   8A..         MOV     ?V0 + 4,R2
+   \   000083   8B..         MOV     ?V0 + 5,R3
+   \   000085                ; Setup parameters for call to function PrintAddrInfo
+   \   000085                ; Setup parameters for call to function NLME_GetShortAddr
+   \   000085   12....       LCALL   ??NLME_GetShortAddr?relay
+   \   000088   AC..         MOV     R4,?V0 + 4
+   \   00008A   AD..         MOV     R5,?V0 + 5
+   \   00008C   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_0:
+   \   00008F   8095         SJMP    ??ZStackTest_ProcessEvent_5
    \                     ??ZStackTest_ProcessEvent_7:
-   \   0000A0   EA           MOV     A,R2
-   \   0000A1   2402         ADD     A,#0x2
-   \   0000A3   F8           MOV     R0,A
-   \   0000A4   EB           MOV     A,R3
-   \   0000A5   3400         ADDC    A,#0x0
-   \   0000A7   F9           MOV     R1,A
-   \   0000A8   E8           MOV     A,R0
-   \   0000A9   FE           MOV     R6,A
-   \   0000AA   E9           MOV     A,R1
-   \   0000AB   FF           MOV     R7,A
-   \   0000AC   EA           MOV     A,R2
-   \   0000AD   2403         ADD     A,#0x3
-   \   0000AF   08           INC     R0
-   \   0000B0   EB           MOV     A,R3
-   \   0000B1   3400         ADDC    A,#0x0
-   \   0000B3   F9           MOV     R1,A
-   \   0000B4   88..         MOV     ?V0 + 4,R0
-   \   0000B6   89..         MOV     ?V0 + 5,R1
-   \   0000B8                ; Setup parameters for call to function ZStackTest_HandleKeys
-   \   0000B8   8882         MOV     DPL,R0
-   \   0000BA   F583         MOV     DPH,A
+   \   000091   EA           MOV     A,R2
+   \   000092   2402         ADD     A,#0x2
+   \   000094   F8           MOV     R0,A
+   \   000095   EB           MOV     A,R3
+   \   000096   3400         ADDC    A,#0x0
+   \   000098   F9           MOV     R1,A
+   \   000099   E8           MOV     A,R0
+   \   00009A   FE           MOV     R6,A
+   \   00009B   E9           MOV     A,R1
+   \   00009C   FF           MOV     R7,A
+   \   00009D   EA           MOV     A,R2
+   \   00009E   2403         ADD     A,#0x3
+   \   0000A0   08           INC     R0
+   \   0000A1   EB           MOV     A,R3
+   \   0000A2   3400         ADDC    A,#0x0
+   \   0000A4   F9           MOV     R1,A
+   \   0000A5   88..         MOV     ?V0 + 4,R0
+   \   0000A7   89..         MOV     ?V0 + 5,R1
+   \   0000A9                ; Setup parameters for call to function ZStackTest_HandleKeys
+   \   0000A9   8882         MOV     DPL,R0
+   \   0000AB   F583         MOV     DPH,A
+   \   0000AD   E0           MOVX    A,@DPTR
+   \   0000AE   FA           MOV     R2,A
+   \   0000AF   8E82         MOV     DPL,R6
+   \   0000B1   8F83         MOV     DPH,R7
+   \   0000B3   E0           MOVX    A,@DPTR
+   \   0000B4   F9           MOV     R1,A
+   \   0000B5   12....       LCALL   ??ZStackTest_HandleKeys?relay
+   \   0000B8   8E82         MOV     DPL,R6
+   \   0000BA   8F83         MOV     DPH,R7
    \   0000BC   E0           MOVX    A,@DPTR
-   \   0000BD   FA           MOV     R2,A
-   \   0000BE   8E82         MOV     DPL,R6
-   \   0000C0   8F83         MOV     DPH,R7
-   \   0000C2   E0           MOVX    A,@DPTR
-   \   0000C3   F9           MOV     R1,A
-   \   0000C4   12....       LCALL   ??ZStackTest_HandleKeys?relay
-   \   0000C7   8E82         MOV     DPL,R6
-   \   0000C9   8F83         MOV     DPH,R7
-   \   0000CB   E0           MOVX    A,@DPTR
-   \   0000CC   90....       MOV     DPTR,#shift
-   \   0000CF   F0           MOVX    @DPTR,A
-   \   0000D0   85..82       MOV     DPL,?V0 + 4
-   \   0000D3   85..83       MOV     DPH,?V0 + 5
-   \   0000D6   E0           MOVX    A,@DPTR
-   \   0000D7   90....       MOV     DPTR,#keys
-   \   0000DA   F0           MOVX    @DPTR,A
-   \   0000DB   02....       LJMP    ??ZStackTest_ProcessEvent_5 & 0xFFFF
+   \   0000BD   90....       MOV     DPTR,#shift
+   \   0000C0   F0           MOVX    @DPTR,A
+   \   0000C1   85..82       MOV     DPL,?V0 + 4
+   \   0000C4   85..83       MOV     DPH,?V0 + 5
+   \   0000C7   E0           MOVX    A,@DPTR
+   \   0000C8   90....       MOV     DPTR,#keys
+   \   0000CB   F0           MOVX    @DPTR,A
+   \   0000CC   02....       LJMP    ??ZStackTest_ProcessEvent_5 & 0xFFFF
    \                     ??ZStackTest_ProcessEvent_6:
-   \   0000DE   AA..         MOV     R2,?V0 + 0
-   \   0000E0   E5..         MOV     A,?V0 + 1
-   \   0000E2   6480         XRL     A,#0x80
-   \   0000E4   FB           MOV     R3,A
-   \   0000E5   807C         SJMP    ??ZStackTest_ProcessEvent_3
-    312          
-    313            if ( events & ZStackTest_RESP_EVT )
+   \   0000CF   AA..         MOV     R2,?V0 + 0
+   \   0000D1   E5..         MOV     A,?V0 + 1
+   \   0000D3   6480         XRL     A,#0x80
+   \   0000D5   FB           MOV     R3,A
+   \   0000D6   8077         SJMP    ??ZStackTest_ProcessEvent_3
+    325          
+    326            if ( events & ZStackTest_RESP_EVT )
    \                     ??ZStackTest_ProcessEvent_1:
-   \   0000E7   5402         ANL     A,#0x2
-   \   0000E9   6059         JZ      ??ZStackTest_ProcessEvent_9
-    314            {
-    315              ZStackTest_Resp();
-   \   0000EB                ; Setup parameters for call to function AF_DataRequest
-   \   0000EB   75..1E       MOV     ?V0 + 2,#0x1e
-   \   0000EE   78..         MOV     R0,#?V0 + 2
-   \   0000F0   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000F3   75....       MOV     ?V0 + 2,#ZStackTest_MsgID & 0xff
-   \   0000F6   75....       MOV     ?V0 + 3,#(ZStackTest_MsgID >> 8) & 0xff
-   \   0000F9   78..         MOV     R0,#?V0 + 2
-   \   0000FB   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000FE   75....       MOV     ?V0 + 2,#ZStackTest_RspBuf & 0xff
-   \   000101   75....       MOV     ?V0 + 3,#(ZStackTest_RspBuf >> 8) & 0xff
-   \   000104   78..         MOV     R0,#?V0 + 2
-   \   000106   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000109   75..04       MOV     ?V0 + 2,#0x4
-   \   00010C   75..00       MOV     ?V0 + 3,#0x0
-   \   00010F   78..         MOV     R0,#?V0 + 2
-   \   000111   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000114   75..06       MOV     ?V0 + 2,#0x6
-   \   000117   78..         MOV     R0,#?V0 + 2
-   \   000119   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   00011C   7900         MOV     R1,#0x0
-   \   00011E   7C..         MOV     R4,#ZStackTest_epDesc & 0xff
-   \   000120   7D..         MOV     R5,#(ZStackTest_epDesc >> 8) & 0xff
-   \   000122   7A..         MOV     R2,#ZStackTest_RxAddr & 0xff
-   \   000124   7B..         MOV     R3,#(ZStackTest_RxAddr >> 8) & 0xff
-   \   000126   12....       LCALL   ??AF_DataRequest?relay
-   \   000129   7409         MOV     A,#0x9
-   \   00012B   12....       LCALL   ?DEALLOC_XSTACK8
-   \   00012E   E9           MOV     A,R1
-   \   00012F   600C         JZ      ??ZStackTest_ProcessEvent_10
-   \   000131                ; Setup parameters for call to function osal_set_event
-   \   000131   7A02         MOV     R2,#0x2
-   \   000133   7B00         MOV     R3,#0x0
-   \   000135   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   000138   E0           MOVX    A,@DPTR
-   \   000139   F9           MOV     R1,A
-   \   00013A   12....       LCALL   ??osal_set_event?relay
-    316              return ( events ^ ZStackTest_RESP_EVT );
+   \   0000D8   5402         ANL     A,#0x2
+   \   0000DA   6054         JZ      ??ZStackTest_ProcessEvent_9
+    327            {
+    328              ZStackTest_Resp();
+   \   0000DC                ; Setup parameters for call to function AF_DataRequest
+   \   0000DC   75..1E       MOV     ?V0 + 2,#0x1e
+   \   0000DF   78..         MOV     R0,#?V0 + 2
+   \   0000E1   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000E4   75....       MOV     ?V0 + 2,#ZStackTest_TransID & 0xff
+   \   0000E7   75....       MOV     ?V0 + 3,#(ZStackTest_TransID >> 8) & 0xff
+   \   0000EA   78..         MOV     R0,#?V0 + 2
+   \   0000EC   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000EF   75....       MOV     ?V0 + 2,#ZStackTest_RspBuf & 0xff
+   \   0000F2   75....       MOV     ?V0 + 3,#(ZStackTest_RspBuf >> 8) & 0xff
+   \   0000F5   78..         MOV     R0,#?V0 + 2
+   \   0000F7   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000FA   75..04       MOV     ?V0 + 2,#0x4
+   \   0000FD   75..00       MOV     ?V0 + 3,#0x0
+   \   000100   78..         MOV     R0,#?V0 + 2
+   \   000102   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000105   78..         MOV     R0,#?V0 + 2
+   \   000107   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00010A   7900         MOV     R1,#0x0
+   \   00010C   7C..         MOV     R4,#ZStackTest_epDesc & 0xff
+   \   00010E   7D..         MOV     R5,#(ZStackTest_epDesc >> 8) & 0xff
+   \   000110   7A..         MOV     R2,#ZStackTest_RxAddr & 0xff
+   \   000112   7B..         MOV     R3,#(ZStackTest_RxAddr >> 8) & 0xff
+   \   000114   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_9:
+   \   000117   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00011A   E9           MOV     A,R1
+   \   00011B   600C         JZ      ??ZStackTest_ProcessEvent_10
+   \   00011D                ; Setup parameters for call to function osal_set_event
+   \   00011D   7A02         MOV     R2,#0x2
+   \   00011F   7B00         MOV     R3,#0x0
+   \   000121   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   000124   E0           MOVX    A,@DPTR
+   \   000125   F9           MOV     R1,A
+   \   000126   12....       LCALL   ??osal_set_event?relay
+    329              return ( events ^ ZStackTest_RESP_EVT );
    \                     ??ZStackTest_ProcessEvent_10:
-   \   00013D   E5..         MOV     A,?V0 + 0
-   \   00013F   6402         XRL     A,#0x2
-   \   000141   02....       LJMP    ??ZStackTest_ProcessEvent_2 & 0xFFFF
-    317            }
-    318          
-    319            if (events & ZStackTest_KEY_PRESS_EVT)
+   \   000129   E5..         MOV     A,?V0 + 0
+   \   00012B   6402         XRL     A,#0x2
+   \   00012D   02....       LJMP    ??ZStackTest_ProcessEvent_2 & 0xFFFF
+    330            }
+    331          
+    332            if (events & ZStackTest_KEY_PRESS_EVT)
    \                     ??ZStackTest_ProcessEvent_9:
-   \   000144   EA           MOV     A,R2
-   \   000145   5404         ANL     A,#0x4
-   \   000147   6016         JZ      ??ZStackTest_ProcessEvent_11
-    320            {
-    321              ZStackTest_HandleKeys( shift, keys );
-   \   000149                ; Setup parameters for call to function ZStackTest_HandleKeys
-   \   000149   90....       MOV     DPTR,#keys
-   \   00014C   E0           MOVX    A,@DPTR
-   \   00014D   FA           MOV     R2,A
-   \   00014E   90....       MOV     DPTR,#shift
-   \   000151   E0           MOVX    A,@DPTR
-   \   000152   F9           MOV     R1,A
-   \   000153   12....       LCALL   ??ZStackTest_HandleKeys?relay
-    322              return ( events ^ ZStackTest_KEY_PRESS_EVT );
-   \   000156   E5..         MOV     A,?V0 + 0
-   \   000158   6404         XRL     A,#0x4
-   \   00015A   FA           MOV     R2,A
-   \   00015B   AB..         MOV     R3,?V0 + 1
-   \   00015D   8004         SJMP    ??ZStackTest_ProcessEvent_3
-    323            }
-    324          
-    325            return ( 0 );  // Discard unknown events.
+   \   000130   EA           MOV     A,R2
+   \   000131   5404         ANL     A,#0x4
+   \   000133   6016         JZ      ??ZStackTest_ProcessEvent_11
+    333            {
+    334              ZStackTest_HandleKeys( shift, keys );
+   \   000135                ; Setup parameters for call to function ZStackTest_HandleKeys
+   \   000135   90....       MOV     DPTR,#keys
+   \   000138   E0           MOVX    A,@DPTR
+   \   000139   FA           MOV     R2,A
+   \   00013A   90....       MOV     DPTR,#shift
+   \   00013D   E0           MOVX    A,@DPTR
+   \   00013E   F9           MOV     R1,A
+   \   00013F   12....       LCALL   ??ZStackTest_HandleKeys?relay
+    335              return ( events ^ ZStackTest_KEY_PRESS_EVT );
+   \   000142   E5..         MOV     A,?V0 + 0
+   \   000144   6404         XRL     A,#0x4
+   \   000146   FA           MOV     R2,A
+   \   000147   AB..         MOV     R3,?V0 + 1
+   \   000149   8004         SJMP    ??ZStackTest_ProcessEvent_3
+    336            }
+    337          
+    338            return ( 0 );  // Discard unknown events.
    \                     ??ZStackTest_ProcessEvent_11:
-   \   00015F   7A00         MOV     R2,#0x0
-   \   000161   7B00         MOV     R3,#0x0
+   \   00014B   7A00         MOV     R2,#0x0
+   \   00014D   7B00         MOV     R3,#0x0
    \                     ??ZStackTest_ProcessEvent_3:
-   \   000163   7F06         MOV     R7,#0x6
-   \   000165   02....       LJMP    ?BANKED_LEAVE_XDATA
-    326          }
+   \   00014F   7F06         MOV     R7,#0x6
+   \   000151   02....       LJMP    ?BANKED_LEAVE_XDATA
+    339          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine7:
+   \                     ?Subroutine1:
    \   000000   12....       LCALL   ??PrintAddrInfo?relay
-   \   000003                ; Setup parameters for call to function HalUARTWrite
    \   000003                ; Setup parameters for call to function HalUARTWrite
    \   000003                ; Setup parameters for call to function HalUARTWrite
    \   000003   7C08         MOV     R4,#0x8
@@ -879,12 +967,9 @@ Warning[Pe550]: variable "ZStackTest_TxAddr" was set but never used
    \   00000D   12....       LCALL   ??HalUARTWrite?relay
    \   000010                ; Setup parameters for call to function NLME_GetCoordExtAddr
    \   000010                ; Setup parameters for call to function NLME_GetCoordExtAddr
-   \   000010                ; Setup parameters for call to function NLME_GetCoordExtAddr
    \   000010   7A00         MOV     R2,#0x0
    \   000012   7B00         MOV     R3,#0x0
    \   000014   12....       LCALL   ??NLME_GetCoordExtAddr?relay
-   \   000017                ; Setup parameters for call to function PrintAddrInfo
-   \   000017                ; Setup parameters for call to function NLME_GetCoordShortAddr
    \   000017                ; Setup parameters for call to function PrintAddrInfo
    \   000017                ; Setup parameters for call to function NLME_GetCoordShortAddr
    \   000017                ; Setup parameters for call to function PrintAddrInfo
@@ -894,385 +979,440 @@ Warning[Pe550]: variable "ZStackTest_TxAddr" was set but never used
    \   00001C   7D00         MOV     R5,#0x0
    \   00001E   12....       LCALL   ??PrintAddrInfo?relay
    \   000021   22           RET
-    327          
-    328          /*********************************************************************
-    329           * @fn      ZStackTest_ProcessZDOMsgs()
-    330           *
-    331           * @brief   Process response messages
-    332           *
-    333           * @param   none
-    334           *
-    335           * @return  none
-    336           */
-    337          static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine2:
+   \   000000   7900         MOV     R1,#0x0
+   \   000002   12....       LCALL   ??HalUARTWrite?relay
+   \   000005                ; Setup parameters for call to function HalUARTWrite
+   \   000005                ; Setup parameters for call to function HalUARTWrite
+   \   000005   7C02         MOV     R4,#0x2
+   \   000007   7D00         MOV     R5,#0x0
+   \   000009   7A..         MOV     R2,#`?<Constant "\\r\\n">` & 0xff
+   \   00000B   7B..         MOV     R3,#(`?<Constant "\\r\\n">` >> 8) & 0xff
+   \   00000D   7900         MOV     R1,#0x0
+   \   00000F   12....       LCALL   ??HalUARTWrite?relay
+   \   000012   22           RET
+    340          
+    341          /*********************************************************************
+    342           * @fn      ZStackTest_ProcessZDOMsgs()
+    343           *
+    344           * @brief   Process response messages
+    345           *
+    346           * @param   none
+    347           *
+    348           * @return  none
+    349           */
+    350          static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
                              ^
 Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
           referenced
-    338          {
-    339            switch ( inMsg->clusterID )
-    340            {
-    341            case End_Device_Bind_rsp:
-    342              if ( ZDO_ParseBindRsp( inMsg ) == ZSuccess )
-    343              {
-    344                // Light LED
-    345                HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
-    346              }
-    347          #if defined(BLINK_LEDS)
-    348              else
-    349              {
-    350                // Flash LED to show failure
-    351                HalLedSet ( HAL_LED_4, HAL_LED_MODE_FLASH );
-    352              }
-    353          #endif
-    354              break;
-    355          
-    356            case Match_Desc_rsp:
-    357            {
-    358              ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( inMsg );
-    359              if ( pRsp )
-    360              {
-    361                if ( pRsp->status == ZSuccess && pRsp->cnt )
-    362                {
-    363                  ZStackTest_TxAddr.addrMode = (afAddrMode_t)Addr16Bit;
-    364                  ZStackTest_TxAddr.addr.shortAddr = pRsp->nwkAddr;
-    365                  // Take the first endpoint, Can be changed to search through endpoints
-    366                  ZStackTest_TxAddr.endPoint = pRsp->epList[0];
-    367          
-    368                  // Light LED
-    369                  HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
-    370                }
-    371                osal_mem_free( pRsp );
-    372              }
-    373            }
-    374            break;
-    375            }
-    376          }
-    377          
-    378          /*********************************************************************
-    379           * @fn      ZStackTest_HandleKeys
-    380           *
-    381           * @brief   Handles all key events for this device.
-    382           *
-    383           * @param   shift - true if in shift/alt.
-    384           * @param   keys  - bit field for key events.
-    385           *
-    386           * @return  none
-    387           */
+    351          {
+    352            switch ( inMsg->clusterID )
+    353            {
+    354            case End_Device_Bind_rsp:
+    355              if ( ZDO_ParseBindRsp( inMsg ) == ZSuccess )
+    356              {
+    357                // Light LED
+    358                HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+    359              }
+    360          #if defined(BLINK_LEDS)
+    361              else
+    362              {
+    363                // Flash LED to show failure
+    364                HalLedSet ( HAL_LED_4, HAL_LED_MODE_FLASH );
+    365              }
+    366          #endif
+    367              break;
+    368          
+    369            case Match_Desc_rsp:
+    370            {
+    371              ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( inMsg );
+    372              if ( pRsp )
+    373              {
+    374                if ( pRsp->status == ZSuccess && pRsp->cnt )
+    375                {
+    376                  ZStackTest_TxAddr.addrMode = (afAddrMode_t)Addr16Bit;
+    377                  ZStackTest_TxAddr.addr.shortAddr = pRsp->nwkAddr;
+    378                  // Take the first endpoint, Can be changed to search through endpoints
+    379                  ZStackTest_TxAddr.endPoint = pRsp->epList[0];
+    380          
+    381                  // Light LED
+    382                  HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+    383                }
+    384                osal_mem_free( pRsp );
+    385              }
+    386            }
+    387            break;
+    388            }
+    389          }
+    390          
+    391          /*********************************************************************
+    392           * @fn      ZStackTest_HandleKeys
+    393           *
+    394           * @brief   Handles all key events for this device.
+    395           *
+    396           * @param   shift - true if in shift/alt.
+    397           * @param   keys  - bit field for key events.
+    398           *
+    399           * @return  none
+    400           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    388          void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
+    401          void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
    \                     ZStackTest_HandleKeys:
-    389          {
+    402          {
    \   000000   74F3         MOV     A,#-0xd
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 13
    \   000005                ; Auto size: 9
    \   000005   74F7         MOV     A,#-0x9
    \   000007   12....       LCALL   ?ALLOC_XSTACK8
-   \   00000A   8A..         MOV     ?V0 + 0,R2
-    390            uint8* pIeeeAddr = NULL;
-    391            zAddrType_t txAddr;
-    392          
-    393            if ( shift )
+   \   00000A   8A..         MOV     ?V0 + 3,R2
+    403            uint8* pIeeeAddr = NULL;
+    404            zAddrType_t txAddr;
+    405          
+    406            if ( shift )
    \   00000C   E9           MOV     A,R1
-   \   00000D   605D         JZ      ??ZStackTest_HandleKeys_0
-    394            {
-    395              if ( keys & HAL_KEY_SW_6 )
-   \   00000F   EA           MOV     A,R2
-   \   000010   A2E5         MOV     C,0xE0 /* A   */.5
-   \   000012   503F         JNC     ??ZStackTest_HandleKeys_1
-    396              {
-    397                #if FIRST_PART
-    398                  HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
-   \   000014                ; Setup parameters for call to function HalLedSet
-   \   000014   7A08         MOV     R2,#0x8
-   \   000016   7901         MOV     R1,#0x1
-   \   000018   12....       LCALL   ??HalLedSet?relay
-    399                  if(KeyFlag == 0)
-   \   00001B   90....       MOV     DPTR,#KeyFlag
-   \   00001E   E0           MOVX    A,@DPTR
-   \   00001F   7015         JNZ     ??ZStackTest_HandleKeys_2
-    400                  {
-    401                    KeyFlag = 1;
-   \   000021   7401         MOV     A,#0x1
-   \   000023   F0           MOVX    @DPTR,A
-    402                    osal_start_timerEx( ZStackTest_TaskID,
-    403                                        ZStackTest_KEY_PRESS_EVT,
-    404                                        ZStackTest_KEY_PRESS_DELAY );
-   \   000024                ; Setup parameters for call to function osal_start_timerEx
-   \   000024   7CDC         MOV     R4,#-0x24
-   \   000026   7D05         MOV     R5,#0x5
-   \   000028   7A04         MOV     R2,#0x4
-   \   00002A   7B00         MOV     R3,#0x0
-   \   00002C   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   00002F   E0           MOVX    A,@DPTR
-   \   000030   F9           MOV     R1,A
-   \   000031   12....       LCALL   ??osal_start_timerEx?relay
-   \   000034   801D         SJMP    ??ZStackTest_HandleKeys_1
-    405                  }
-    406                  else
-    407                  {
-    408                    KeyFlag = 0;
+   \   00000D   7003         JNZ     $+5
+   \   00000F   02....       LJMP    ??ZStackTest_HandleKeys_0 & 0xFFFF
+    407            {
+    408              if ( keys & HAL_KEY_SW_6 )
+   \   000012   EA           MOV     A,R2
+   \   000013   A2E5         MOV     C,0xE0 /* A   */.5
+   \   000015   505C         JNC     ??ZStackTest_HandleKeys_1
+    409              {
+    410                #if FIRST_PART
+    411                  HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
+    412                  if(KeyFlag == 0)
+    413                  {
+    414                    KeyFlag = 1;
+    415                    osal_start_timerEx( ZStackTest_TaskID,
+    416                                        ZStackTest_KEY_PRESS_EVT,
+    417                                        ZStackTest_KEY_PRESS_DELAY );
+    418                  }
+    419                  else
+    420                  {
+    421                    KeyFlag = 0;
+    422                    if (HAL_PUSH_BUTTON1()) {
+    423                      HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
+    424                      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+    425                      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+    426                      NLME_GetCoordExtAddr(pIeeeAddr);
+    427                      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+    428                      (void) shift;
+    429                      (void) keys;
+    430                    }
+    431                    osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
+    432                  }
+    433                #elif (SECOND_PART)
+    434                  ZStackTest_Send_P2P_Message();
+   \   000017                ; Setup parameters for call to function ZStackTest_Send_P2P_Message
+   \   000017   12....       LCALL   ??ZStackTest_Send_P2P_Message?relay
+    435                  //ZStackTest_Send_Broadcast_Message();
+    436                  //ZStackTest_Send_Group_Message();
+    437                  if(KeyFlag == 0)
+   \   00001A   90....       MOV     DPTR,#KeyFlag
+   \   00001D   E0           MOVX    A,@DPTR
+   \   00001E   7015         JNZ     ??ZStackTest_HandleKeys_2
+    438                  {
+    439                    KeyFlag = 1;
+   \   000020   7401         MOV     A,#0x1
+   \   000022   F0           MOVX    @DPTR,A
+    440                    osal_start_timerEx( ZStackTest_TaskID,
+    441                                        ZStackTest_KEY_PRESS_EVT,
+    442                                        ZStackTest_KEY_PRESS_DELAY );
+   \   000023                ; Setup parameters for call to function osal_start_timerEx
+   \   000023   7CDC         MOV     R4,#-0x24
+   \   000025   7D05         MOV     R5,#0x5
+   \   000027   7A04         MOV     R2,#0x4
+   \   000029   7B00         MOV     R3,#0x0
+   \   00002B   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   00002E   E0           MOVX    A,@DPTR
+   \   00002F   F9           MOV     R1,A
+   \   000030   12....       LCALL   ??osal_start_timerEx?relay
+   \   000033   803E         SJMP    ??ZStackTest_HandleKeys_1
+    443                  }
+    444                  else
+    445                  {
+    446                    KeyFlag = 0;
    \                     ??ZStackTest_HandleKeys_2:
-   \   000036   E4           CLR     A
-   \   000037   F0           MOVX    @DPTR,A
-    409                    if (HAL_PUSH_BUTTON1()) {
-   \   000038   A281         MOV     C,0x80.1
-   \   00003A   400B         JC      ??CrossCallReturnLabel_0
-    410                      HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-   \   00003C                ; Setup parameters for call to function HalUARTWrite
-   \   00003C   7C08         MOV     R4,#0x8
-   \   00003E   FD           MOV     R5,A
-   \   00003F   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
-   \   000041   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
-   \   000043   F9           MOV     R1,A
-   \   000044   12....       LCALL   ?Subroutine1 & 0xFFFF
-    411                      PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-    412                      HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
-    413                      NLME_GetCoordExtAddr(pIeeeAddr);
-    414                      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
-    415                    }
-    416                    osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
-   \                     ??CrossCallReturnLabel_0:
-   \   000047                ; Setup parameters for call to function osal_stop_timerEx
-   \   000047   7A04         MOV     R2,#0x4
-   \   000049   7B00         MOV     R3,#0x0
-   \   00004B   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   00004E   E0           MOVX    A,@DPTR
-   \   00004F   F9           MOV     R1,A
-   \   000050   12....       LCALL   ??osal_stop_timerEx?relay
-    417                  }
-    418                #elif (SECOND_PART)
-    419          
-    420                #endif
-    421              }
-    422              if ( keys & HAL_KEY_SW_1 )
-   \                     ??ZStackTest_HandleKeys_1:
-   \   000053   E5..         MOV     A,?V0 + 0
-   \   000055   A2E0         MOV     C,0xE0 /* A   */.0
-   \   000057   4003         JC      $+5
-   \   000059   02....       LJMP    ??ZStackTest_HandleKeys_3 & 0xFFFF
-    423              {
-    424                HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-   \   00005C                ; Setup parameters for call to function HalUARTWrite
-   \   00005C   7C08         MOV     R4,#0x8
-   \   00005E   7D00         MOV     R5,#0x0
-   \   000060   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
-   \   000062   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
-   \   000064   7900         MOV     R1,#0x0
-   \   000066   12....       LCALL   ?Subroutine1 & 0xFFFF
-    425                PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-    426                HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
-    427                NLME_GetCoordExtAddr(pIeeeAddr);
-    428                PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
-    429              }
-    430              if ( keys & HAL_KEY_SW_2 )
-    431              {
-    432              }
-    433              if ( keys & HAL_KEY_SW_3 )
-    434              {
-    435              }
-    436              if ( keys & HAL_KEY_SW_4 )
-    437              {
-    438              }
-    439            }
-   \                     ??CrossCallReturnLabel_1:
-   \   000069   02....       LJMP    ??ZStackTest_HandleKeys_3 & 0xFFFF
-    440            else
-    441            {
-    442              if ( keys & HAL_KEY_SW_1 )
-    443              {
-    444              }
-    445          
-    446              if ( keys & HAL_KEY_SW_2 )
-   \                     ??ZStackTest_HandleKeys_0:
-   \   00006C   EA           MOV     A,R2
-   \   00006D   A2E1         MOV     C,0xE0 /* A   */.1
-   \   00006F   505C         JNC     ??ZStackTest_HandleKeys_4
-    447              {
-    448                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
-   \   000071                ; Setup parameters for call to function HalLedSet
-   \   000071   7A00         MOV     R2,#0x0
-   \   000073   7908         MOV     R1,#0x8
-   \   000075   12....       LCALL   ??HalLedSet?relay
-    449          
-    450                // Initiate an End Device Bind Request for the mandatory endpoint
-    451                txAddr.addrMode = Addr16Bit;
-   \   000078   7408         MOV     A,#0x8
-   \   00007A   12....       LCALL   ?XSTACK_DISP0_8
-   \   00007D   7402         MOV     A,#0x2
-   \   00007F   12....       LCALL   ?Subroutine2 & 0xFFFF
-    452                txAddr.addr.shortAddr = 0x0000; // Coordinator
-    453                ZDP_EndDeviceBindReq( &txAddr, NLME_GetShortAddr(),
-    454                                      ZStackTest_epDesc.endPoint,
-    455                                      ZStackTest_PROFID,
-    456                                      ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
-    457                                      ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
-    458                                      FALSE );
-    459              }
-   \                     ??CrossCallReturnLabel_3:
-   \   000082   E4           CLR     A
-   \   000083   12....       LCALL   ?Subroutine3 & 0xFFFF
-   \                     ??CrossCallReturnLabel_5:
-   \   000086                ; Setup parameters for call to function ZDP_EndDeviceBindReq
-   \   000086   F5..         MOV     ?V0 + 4,A
-   \   000088   78..         MOV     R0,#?V0 + 4
-   \   00008A   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   00008D   78..         MOV     R0,#?V0 + 2
-   \   00008F   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000092   75..02       MOV     ?V0 + 4,#0x2
-   \   000095   78..         MOV     R0,#?V0 + 4
-   \   000097   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   00009A   78..         MOV     R0,#?V0 + 2
-   \   00009C   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   00009F   75..02       MOV     ?V0 + 2,#0x2
-   \   0000A2   78..         MOV     R0,#?V0 + 2
-   \   0000A4   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000A7   75..05       MOV     ?V0 + 2,#0x5
-   \   0000AA   75..0F       MOV     ?V0 + 3,#0xf
-   \   0000AD   78..         MOV     R0,#?V0 + 2
-   \   0000AF   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000B2                ; Setup parameters for call to function NLME_GetShortAddr
-   \   0000B2   12....       LCALL   ??NLME_GetShortAddr?relay
-   \   0000B5   EA           MOV     A,R2
-   \   0000B6   FC           MOV     R4,A
-   \   0000B7   EB           MOV     A,R3
-   \   0000B8   FD           MOV     R5,A
-   \   0000B9   740B         MOV     A,#0xb
-   \   0000BB   F9           MOV     R1,A
-   \   0000BC   7409         MOV     A,#0x9
-   \   0000BE   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000C1   AA82         MOV     R2,DPL
-   \   0000C3   AB83         MOV     R3,DPH
-   \   0000C5   12....       LCALL   ??ZDP_EndDeviceBindReq?relay
-   \   0000C8   7409         MOV     A,#0x9
-   \   0000CA   12....       LCALL   ?DEALLOC_XSTACK8
-    460          
-    461              if ( keys & HAL_KEY_SW_3 )
-    462              {
-    463              }
-    464          
-    465              if ( keys & HAL_KEY_SW_4 )
+   \   000035   E4           CLR     A
+   \   000036   F0           MOVX    @DPTR,A
+    447                    if (HAL_PUSH_BUTTON1()) {
+   \   000037   A281         MOV     C,0x80.1
+   \   000039   402C         JC      ??ZStackTest_HandleKeys_3
+    448                      aps_Group_t *grp;
+    449                      grp = aps_FindGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
+    450                      if ( grp )
+   \   00003B                ; Setup parameters for call to function aps_FindGroup
+   \   00003B   7A01         MOV     R2,#0x1
+   \   00003D   FB           MOV     R3,A
+   \   00003E   790B         MOV     R1,#0xb
+   \   000040   12....       LCALL   ??aps_FindGroup?relay
+   \   000043   8B..         MOV     ?V0 + 1,R3
+   \   000045   EA           MOV     A,R2
+   \   000046   45..         ORL     A,?V0 + 1
+   \   000048   600D         JZ      ??ZStackTest_HandleKeys_4
+    451                      {
+    452                        // Remove from the group
+    453                        aps_RemoveGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
+   \   00004A                ; Setup parameters for call to function aps_RemoveGroup
+   \   00004A   7A01         MOV     R2,#0x1
+   \   00004C   7B00         MOV     R3,#0x0
+   \   00004E   790B         MOV     R1,#0xb
+   \   000050   12....       LCALL   ??aps_RemoveGroup?relay
+    454                        HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+   \   000053                ; Setup parameters for call to function HalLedSet
+   \   000053   7A00         MOV     R2,#0x0
+   \   000055   800B         SJMP    ??ZStackTest_HandleKeys_5
+    455                      }
+    456                      else
+    457                      {
+    458                        // Add to the flash group
+    459                        aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
    \                     ??ZStackTest_HandleKeys_4:
-   \   0000CD   E5..         MOV     A,?V0 + 0
-   \   0000CF   A2E3         MOV     C,0xE0 /* A   */.3
-   \   0000D1   5052         JNC     ??ZStackTest_HandleKeys_3
-    466              {
-    467                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
-   \   0000D3                ; Setup parameters for call to function HalLedSet
-   \   0000D3   7A00         MOV     R2,#0x0
-   \   0000D5   7908         MOV     R1,#0x8
-   \   0000D7   12....       LCALL   ??HalLedSet?relay
-    468          
-    469                // Initiate a Match Description Request (Service Discovery)
-    470                txAddr.addrMode = AddrBroadcast;
-   \   0000DA   7408         MOV     A,#0x8
-   \   0000DC   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000DF   740F         MOV     A,#0xf
-   \   0000E1   12....       LCALL   ?Subroutine2 & 0xFFFF
-    471                txAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
-    472                ZDP_MatchDescReq( &txAddr, NWK_BROADCAST_SHORTADDR,
-    473                                  ZStackTest_PROFID,
-    474                                  ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
-    475                                  ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
-    476                                  FALSE );
-    477              }
-    478            }
-   \                     ??CrossCallReturnLabel_4:
-   \   0000E4   74FF         MOV     A,#-0x1
-   \   0000E6   12....       LCALL   ?Subroutine3 & 0xFFFF
-   \                     ??CrossCallReturnLabel_6:
-   \   0000E9                ; Setup parameters for call to function ZDP_MatchDescReq
-   \   0000E9   75..00       MOV     ?V0 + 4,#0x0
-   \   0000EC   78..         MOV     R0,#?V0 + 4
-   \   0000EE   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000F1   78..         MOV     R0,#?V0 + 2
-   \   0000F3   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000F6   75..02       MOV     ?V0 + 4,#0x2
-   \   0000F9   78..         MOV     R0,#?V0 + 4
-   \   0000FB   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000FE   78..         MOV     R0,#?V0 + 2
-   \   000100   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000103   75..05       MOV     ?V0 + 2,#0x5
-   \   000106   75..0F       MOV     ?V0 + 3,#0xf
-   \   000109   78..         MOV     R0,#?V0 + 2
-   \   00010B   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   00010E   7902         MOV     R1,#0x2
-   \   000110   7CFF         MOV     R4,#-0x1
-   \   000112   7DFF         MOV     R5,#-0x1
-   \   000114   7408         MOV     A,#0x8
-   \   000116   12....       LCALL   ?XSTACK_DISP0_8
-   \   000119   AA82         MOV     R2,DPL
-   \   00011B   AB83         MOV     R3,DPH
-   \   00011D   12....       LCALL   ??ZDP_MatchDescReq?relay
-   \   000120   7408         MOV     A,#0x8
-   \   000122   12....       LCALL   ?DEALLOC_XSTACK8
-    479          }
+   \   000057                ; Setup parameters for call to function aps_AddGroup
+   \   000057   7A..         MOV     R2,#ZStackTest_Group & 0xff
+   \   000059   7B..         MOV     R3,#(ZStackTest_Group >> 8) & 0xff
+   \   00005B   790B         MOV     R1,#0xb
+   \   00005D   12....       LCALL   ??aps_AddGroup?relay
+    460                        HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+   \   000060                ; Setup parameters for call to function HalLedSet
+   \   000060   7A01         MOV     R2,#0x1
+   \                     ??ZStackTest_HandleKeys_5:
+   \   000062   7902         MOV     R1,#0x2
+   \   000064   12....       LCALL   ??HalLedSet?relay
+    461                      }
+    462                      (void) shift;
+    463                      (void) keys;
+    464                    }
+    465                    osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
    \                     ??ZStackTest_HandleKeys_3:
-   \   000125   7409         MOV     A,#0x9
-   \   000127   12....       LCALL   ?DEALLOC_XSTACK8
-   \   00012A   7F05         MOV     R7,#0x5
-   \   00012C   02....       LJMP    ?BANKED_LEAVE_XDATA
-   \   00012F                REQUIRE _A_P0
+   \   000067                ; Setup parameters for call to function osal_stop_timerEx
+   \   000067   7A04         MOV     R2,#0x4
+   \   000069   7B00         MOV     R3,#0x0
+   \   00006B   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   00006E   E0           MOVX    A,@DPTR
+   \   00006F   F9           MOV     R1,A
+   \   000070   12....       LCALL   ??osal_stop_timerEx?relay
+    466                  }
+    467                #endif
+    468              }
+    469              if ( keys & HAL_KEY_SW_1 )
+   \                     ??ZStackTest_HandleKeys_1:
+   \   000073   E5..         MOV     A,?V0 + 3
+   \   000075   A2E0         MOV     C,0xE0 /* A   */.0
+   \   000077   4003         JC      $+5
+   \   000079   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
+    470              {
+    471                HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
+   \   00007C                ; Setup parameters for call to function HalUARTWrite
+   \   00007C   7C08         MOV     R4,#0x8
+   \   00007E   7D00         MOV     R5,#0x0
+   \   000080   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
+   \   000082   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
+   \   000084   7900         MOV     R1,#0x0
+   \   000086   12....       LCALL   ??HalUARTWrite?relay
+    472                PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+   \   000089                ; Setup parameters for call to function NLME_GetExtAddr
+   \   000089   12....       LCALL   ??NLME_GetExtAddr?relay
+   \   00008C   8A..         MOV     ?V0 + 0,R2
+   \   00008E   8B..         MOV     ?V0 + 1,R3
+   \   000090                ; Setup parameters for call to function PrintAddrInfo
+   \   000090                ; Setup parameters for call to function NLME_GetShortAddr
+   \   000090   12....       LCALL   ??NLME_GetShortAddr?relay
+   \   000093   AC..         MOV     R4,?V0 + 0
+   \   000095   AD..         MOV     R5,?V0 + 1
+   \   000097   12....       LCALL   ?Subroutine1 & 0xFFFF
+    473                HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+    474                NLME_GetCoordExtAddr(pIeeeAddr);
+    475                PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+    476              }
+    477              if ( keys & HAL_KEY_SW_2 )
+    478              {
+    479              }
+    480              if ( keys & HAL_KEY_SW_3 )
+    481              {
+    482              }
+    483              if ( keys & HAL_KEY_SW_4 )
+    484              {
+    485              }
+    486            }
+   \                     ??CrossCallReturnLabel_1:
+   \   00009A   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
+    487            else
+    488            {
+    489              if ( keys & HAL_KEY_SW_1 )
+    490              {
+    491              }
+    492          
+    493              if ( keys & HAL_KEY_SW_2 )
+   \                     ??ZStackTest_HandleKeys_0:
+   \   00009D   EA           MOV     A,R2
+   \   00009E   A2E1         MOV     C,0xE0 /* A   */.1
+   \   0000A0   505C         JNC     ??ZStackTest_HandleKeys_7
+    494              {
+    495                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
+   \   0000A2                ; Setup parameters for call to function HalLedSet
+   \   0000A2   7A00         MOV     R2,#0x0
+   \   0000A4   7908         MOV     R1,#0x8
+   \   0000A6   12....       LCALL   ??HalLedSet?relay
+    496          
+    497                // Initiate an End Device Bind Request for the mandatory endpoint
+    498                txAddr.addrMode = Addr16Bit;
+   \   0000A9   7408         MOV     A,#0x8
+   \   0000AB   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000AE   7402         MOV     A,#0x2
+   \   0000B0   12....       LCALL   ?Subroutine3 & 0xFFFF
+    499                txAddr.addr.shortAddr = 0x0000; // Coordinator
+    500                ZDP_EndDeviceBindReq( &txAddr, NLME_GetShortAddr(),
+    501                                      ZStackTest_epDesc.endPoint,
+    502                                      ZStackTest_PROFID,
+    503                                      ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
+    504                                      ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
+    505                                      FALSE );
+    506              }
+   \                     ??CrossCallReturnLabel_5:
+   \   0000B3   E4           CLR     A
+   \   0000B4   12....       LCALL   ?Subroutine4 & 0xFFFF
+   \                     ??CrossCallReturnLabel_7:
+   \   0000B7                ; Setup parameters for call to function ZDP_EndDeviceBindReq
+   \   0000B7   F5..         MOV     ?V0 + 4,A
+   \   0000B9   78..         MOV     R0,#?V0 + 4
+   \   0000BB   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000BE   78..         MOV     R0,#?V0 + 0
+   \   0000C0   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000C3   75..04       MOV     ?V0 + 4,#0x4
+   \   0000C6   78..         MOV     R0,#?V0 + 4
+   \   0000C8   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000CB   78..         MOV     R0,#?V0 + 0
+   \   0000CD   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000D0   75..04       MOV     ?V0 + 0,#0x4
+   \   0000D3   78..         MOV     R0,#?V0 + 0
+   \   0000D5   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000D8   75..05       MOV     ?V0 + 0,#0x5
+   \   0000DB   75..0F       MOV     ?V0 + 1,#0xf
+   \   0000DE   78..         MOV     R0,#?V0 + 0
+   \   0000E0   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000E3                ; Setup parameters for call to function NLME_GetShortAddr
+   \   0000E3   12....       LCALL   ??NLME_GetShortAddr?relay
+   \   0000E6   EA           MOV     A,R2
+   \   0000E7   FC           MOV     R4,A
+   \   0000E8   EB           MOV     A,R3
+   \   0000E9   FD           MOV     R5,A
+   \   0000EA   740B         MOV     A,#0xb
+   \   0000EC   F9           MOV     R1,A
+   \   0000ED   7409         MOV     A,#0x9
+   \   0000EF   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000F2   AA82         MOV     R2,DPL
+   \   0000F4   AB83         MOV     R3,DPH
+   \   0000F6   12....       LCALL   ??ZDP_EndDeviceBindReq?relay
+   \   0000F9   7409         MOV     A,#0x9
+   \   0000FB   12....       LCALL   ?DEALLOC_XSTACK8
+    507          
+    508              if ( keys & HAL_KEY_SW_3 )
+    509              {
+    510              }
+    511          
+    512              if ( keys & HAL_KEY_SW_4 )
+   \                     ??ZStackTest_HandleKeys_7:
+   \   0000FE   E5..         MOV     A,?V0 + 3
+   \   000100   A2E3         MOV     C,0xE0 /* A   */.3
+   \   000102   5052         JNC     ??ZStackTest_HandleKeys_6
+    513              {
+    514                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
+   \   000104                ; Setup parameters for call to function HalLedSet
+   \   000104   7A00         MOV     R2,#0x0
+   \   000106   7908         MOV     R1,#0x8
+   \   000108   12....       LCALL   ??HalLedSet?relay
+    515          
+    516                // Initiate a Match Description Request (Service Discovery)
+    517                txAddr.addrMode = AddrBroadcast;
+   \   00010B   7408         MOV     A,#0x8
+   \   00010D   12....       LCALL   ?XSTACK_DISP0_8
+   \   000110   740F         MOV     A,#0xf
+   \   000112   12....       LCALL   ?Subroutine3 & 0xFFFF
+    518                txAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
+    519                ZDP_MatchDescReq( &txAddr, NWK_BROADCAST_SHORTADDR,
+    520                                  ZStackTest_PROFID,
+    521                                  ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
+    522                                  ZStackTest_MAX_CLUSTERS, (cId_t *)ZStackTest_ClusterList,
+    523                                  FALSE );
+    524              }
+    525            }
+   \                     ??CrossCallReturnLabel_6:
+   \   000115   74FF         MOV     A,#-0x1
+   \   000117   12....       LCALL   ?Subroutine4 & 0xFFFF
+   \                     ??CrossCallReturnLabel_8:
+   \   00011A                ; Setup parameters for call to function ZDP_MatchDescReq
+   \   00011A   75..00       MOV     ?V0 + 4,#0x0
+   \   00011D   78..         MOV     R0,#?V0 + 4
+   \   00011F   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   000122   78..         MOV     R0,#?V0 + 0
+   \   000124   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000127   75..04       MOV     ?V0 + 4,#0x4
+   \   00012A   78..         MOV     R0,#?V0 + 4
+   \   00012C   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   00012F   78..         MOV     R0,#?V0 + 0
+   \   000131   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000134   75..05       MOV     ?V0 + 0,#0x5
+   \   000137   75..0F       MOV     ?V0 + 1,#0xf
+   \   00013A   78..         MOV     R0,#?V0 + 0
+   \   00013C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00013F   7904         MOV     R1,#0x4
+   \   000141   7CFF         MOV     R4,#-0x1
+   \   000143   7DFF         MOV     R5,#-0x1
+   \   000145   7408         MOV     A,#0x8
+   \   000147   12....       LCALL   ?XSTACK_DISP0_8
+   \   00014A   AA82         MOV     R2,DPL
+   \   00014C   AB83         MOV     R3,DPH
+   \   00014E   12....       LCALL   ??ZDP_MatchDescReq?relay
+   \   000151   7408         MOV     A,#0x8
+   \   000153   12....       LCALL   ?DEALLOC_XSTACK8
+    526          }
+   \                     ??ZStackTest_HandleKeys_6:
+   \   000156   7409         MOV     A,#0x9
+   \   000158   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00015B   7F05         MOV     R7,#0x5
+   \   00015D   02....       LJMP    ?BANKED_LEAVE_XDATA
+   \   000160                REQUIRE _A_P0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine3:
+   \                     ?Subroutine4:
    \   000000   F0           MOVX    @DPTR,A
    \   000001   A3           INC     DPTR
    \   000002   F0           MOVX    @DPTR,A
-   \   000003   75....       MOV     ?V0 + 2,#ZStackTest_ClusterList & 0xff
-   \   000006   75....       MOV     ?V0 + 3,#(ZStackTest_ClusterList >> 8) & 0xff
+   \   000003   75....       MOV     ?V0 + 0,#ZStackTest_ClusterList & 0xff
+   \   000006   75....       MOV     ?V0 + 1,#(ZStackTest_ClusterList >> 8) & 0xff
    \   000009   22           RET
+    527          
+    528          /*********************************************************************
+    529           * @fn      ZStackTest_ProcessMSGCmd
+    530           *
+    531           * @brief   Data message processor callback. This function processes
+    532           *          any incoming data - probably from other devices. Based
+    533           *          on the cluster ID, perform the intended action.
+    534           *
+    535           * @param   pkt - pointer to the incoming message packet
+    536           *
+    537           * @return  TRUE if the 'pkt' parameter is being used and will be freed later,
+    538           *          FALSE otherwise.
+    539           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine1:
-   \   000000   12....       LCALL   ??HalUARTWrite?relay
-   \   000003                ; Setup parameters for call to function NLME_GetExtAddr
-   \   000003                ; Setup parameters for call to function NLME_GetExtAddr
-   \   000003   12....       LCALL   ??NLME_GetExtAddr?relay
-   \   000006   8A..         MOV     ?V0 + 2,R2
-   \   000008   8B..         MOV     ?V0 + 3,R3
-   \   00000A                ; Setup parameters for call to function PrintAddrInfo
-   \   00000A                ; Setup parameters for call to function NLME_GetShortAddr
-   \   00000A                ; Setup parameters for call to function PrintAddrInfo
-   \   00000A                ; Setup parameters for call to function NLME_GetShortAddr
-   \   00000A   12....       LCALL   ??NLME_GetShortAddr?relay
-   \   00000D   AC..         MOV     R4,?V0 + 2
-   \   00000F   AD..         MOV     R5,?V0 + 3
-   \   000011   12....       LCALL   ?Subroutine7 & 0xFFFF
-   \                     ??CrossCallReturnLabel_14:
-   \   000014   22           RET
-    480          
-    481          /*********************************************************************
-    482           * @fn      ZStackTest_ProcessMSGCmd
-    483           *
-    484           * @brief   Data message processor callback. This function processes
-    485           *          any incoming data - probably from other devices. Based
-    486           *          on the cluster ID, perform the intended action.
-    487           *
-    488           * @param   pkt - pointer to the incoming message packet
-    489           *
-    490           * @return  TRUE if the 'pkt' parameter is being used and will be freed later,
-    491           *          FALSE otherwise.
-    492           */
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    493          void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt )
+    540          void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt )
    \                     ZStackTest_ProcessMSGCmd:
-    494          {
-   \   000000   74F4         MOV     A,#-0xc
+    541          {
+   \   000000   74F6         MOV     A,#-0xa
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 12
+   \   000005                ; Saved register size: 10
    \   000005                ; Auto size: 0
    \   000005   EA           MOV     A,R2
    \   000006   FE           MOV     R6,A
    \   000007   EB           MOV     A,R3
    \   000008   FF           MOV     R7,A
-    495            uint8 stat;
-    496            uint8 seqnb;
-    497            uint8 delay;
-    498          
-    499            switch ( pkt->clusterId )
+    542            switch ( pkt->clusterId )
    \   000009   8E82         MOV     DPL,R6
    \   00000B   8F83         MOV     DPH,R7
    \   00000D   A3           INC     DPTR
@@ -1287,306 +1427,133 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
    \   000018   78..         MOV     R0,#?V0 + 0
    \   00001A   12....       LCALL   ?US_SWITCH_DENSE
    \                     `?<Jumptable for ZStackTest_ProcessMSGCmd>_0`:
-   \   00001D   0500         DW        5
-   \   00001F   01           DB        1
-   \   000020   ....         DW        ??ZStackTest_ProcessMSGCmd_0
-   \   000022   ....         DW        ??ZStackTest_ProcessMSGCmd_1
-   \   000024   ....         DW        ??ZStackTest_ProcessMSGCmd_2
-    500            {
-    501            // A message with a serial data block to be transmitted on the serial port.
-    502            case ZStackTest_CLUSTERID1:
-    503              // Store the address for sending and retrying.
-    504              osal_memcpy(&ZStackTest_RxAddr, &(pkt->srcAddr), sizeof( afAddrType_t ));
-   \                     ??ZStackTest_ProcessMSGCmd_1:
-   \   000026                ; Setup parameters for call to function osal_memcpy
-   \   000026   EE           MOV     A,R6
-   \   000027   2406         ADD     A,#0x6
-   \   000029   F5..         MOV     ?V0 + 0,A
-   \   00002B   EF           MOV     A,R7
-   \   00002C   3400         ADDC    A,#0x0
-   \   00002E   F5..         MOV     ?V0 + 1,A
-   \   000030   75..00       MOV     ?V0 + 2,#0x0
-   \   000033   78..         MOV     R0,#?V0 + 0
-   \   000035   12....       LCALL   ?PUSH_XSTACK_I_THREE
-   \   000038   7C0C         MOV     R4,#0xc
-   \   00003A   7D00         MOV     R5,#0x0
-   \   00003C   7A..         MOV     R2,#ZStackTest_RxAddr & 0xff
-   \   00003E   7B..         MOV     R3,#(ZStackTest_RxAddr >> 8) & 0xff
-   \   000040   12....       LCALL   ??osal_memcpy?relay
-   \   000043   7403         MOV     A,#0x3
-   \   000045   12....       LCALL   ?DEALLOC_XSTACK8
-    505          
-    506              seqnb = pkt->cmd.Data[0];
-   \   000048   12....       LCALL   ?Subroutine4 & 0xFFFF
-   \                     ??CrossCallReturnLabel_7:
-   \   00004B   F5..         MOV     ?V0 + 0,A
-    507          
-    508              // Keep message if not a repeat packet
-    509              if ( (seqnb > ZStackTest_RxSeq) ||                    // Normal
-    510                   ((seqnb < 0x80 ) && ( ZStackTest_RxSeq > 0x80)) ) // Wrap-around
-   \   00004D   90....       MOV     DPTR,#ZStackTest_RxSeq
-   \   000050   E0           MOVX    A,@DPTR
-   \   000051   C3           CLR     C
-   \   000052   95..         SUBB    A,?V0 + 0
-   \   000054   400D         JC      ??ZStackTest_ProcessMSGCmd_3
-   \   000056   E5..         MOV     A,?V0 + 0
-   \   000058   C3           CLR     C
-   \   000059   9480         SUBB    A,#-0x80
-   \   00005B   5040         JNC     ??ZStackTest_ProcessMSGCmd_4
-   \   00005D   E0           MOVX    A,@DPTR
-   \   00005E   C3           CLR     C
-   \   00005F   9481         SUBB    A,#-0x7f
-   \   000061   403A         JC      ??ZStackTest_ProcessMSGCmd_4
-    511              {
-    512                // Transmit the data on the serial port.
-    513                if ( HalUARTWrite( SERIAL_APP_PORT, pkt->cmd.Data+1, (pkt->cmd.DataLength-1) ) )
-   \                     ??ZStackTest_ProcessMSGCmd_3:
-   \   000063                ; Setup parameters for call to function HalUARTWrite
-   \   000063   EE           MOV     A,R6
-   \   000064   2420         ADD     A,#0x20
-   \   000066   F582         MOV     DPL,A
-   \   000068   EF           MOV     A,R7
-   \   000069   3400         ADDC    A,#0x0
-   \   00006B   F583         MOV     DPH,A
-   \   00006D   E0           MOVX    A,@DPTR
-   \   00006E   24FF         ADD     A,#-0x1
-   \   000070   FC           MOV     R4,A
-   \   000071   A3           INC     DPTR
-   \   000072   E0           MOVX    A,@DPTR
-   \   000073   34FF         ADDC    A,#-0x1
-   \   000075   FD           MOV     R5,A
-   \   000076   12....       LCALL   ?Subroutine6 & 0xFFFF
-   \                     ??CrossCallReturnLabel_11:
-   \   000079   E0           MOVX    A,@DPTR
-   \   00007A   2401         ADD     A,#0x1
-   \   00007C   FA           MOV     R2,A
-   \   00007D   A3           INC     DPTR
-   \   00007E   E0           MOVX    A,@DPTR
-   \   00007F   3400         ADDC    A,#0x0
-   \   000081   FB           MOV     R3,A
-   \   000082   7900         MOV     R1,#0x0
-   \   000084   12....       LCALL   ??HalUARTWrite?relay
-   \   000087   8B..         MOV     ?V0 + 3,R3
-   \   000089   EA           MOV     A,R2
-   \   00008A   45..         ORL     A,?V0 + 3
-   \   00008C   6009         JZ      ??ZStackTest_ProcessMSGCmd_5
-    514                {
-    515                  // Save for next incoming message
-    516                  ZStackTest_RxSeq = seqnb;
-   \   00008E   E5..         MOV     A,?V0 + 0
-   \   000090   90....       MOV     DPTR,#ZStackTest_RxSeq
-   \   000093   F0           MOVX    @DPTR,A
-    517                  stat = OTA_SUCCESS;
-   \   000094   E4           CLR     A
-   \   000095   8008         SJMP    ??ZStackTest_ProcessMSGCmd_6
-    518                }
-    519                else
-    520                {
-    521                  stat = OTA_SER_BUSY;
-   \                     ??ZStackTest_ProcessMSGCmd_5:
-   \   000097   7402         MOV     A,#0x2
-   \   000099   7810         MOV     R0,#0x10
-   \   00009B   8004         SJMP    ??ZStackTest_ProcessMSGCmd_7
-    522                }
-    523              }
-    524              else
-    525              {
-    526                stat = OTA_DUP_MSG;
-   \                     ??ZStackTest_ProcessMSGCmd_4:
-   \   00009D   7401         MOV     A,#0x1
-   \                     ??ZStackTest_ProcessMSGCmd_6:
-   \   00009F   7801         MOV     R0,#0x1
-    527              }
-    528          
-    529              // Select approproiate OTA flow-control delay.
-    530              delay = (stat == OTA_SER_BUSY) ? ZStackTest_NAK_DELAY : ZStackTest_ACK_DELAY;
-    531          
-    532              // Build & send OTA response message.
-    533              ZStackTest_RspBuf[0] = stat;
-   \                     ??ZStackTest_ProcessMSGCmd_7:
-   \   0000A1   90....       MOV     DPTR,#ZStackTest_RspBuf
-   \   0000A4   F0           MOVX    @DPTR,A
-    534              ZStackTest_RspBuf[1] = seqnb;
-   \   0000A5   E5..         MOV     A,?V0 + 0
-   \   0000A7   A3           INC     DPTR
-   \   0000A8   F0           MOVX    @DPTR,A
-    535              ZStackTest_RspBuf[2] = LO_UINT16( delay );
-   \   0000A9   E8           MOV     A,R0
-   \   0000AA   A3           INC     DPTR
-   \   0000AB   F0           MOVX    @DPTR,A
-    536              ZStackTest_RspBuf[3] = HI_UINT16( delay );
-   \   0000AC   A3           INC     DPTR
-   \   0000AD   E4           CLR     A
-   \   0000AE   F0           MOVX    @DPTR,A
-    537              osal_set_event( ZStackTest_TaskID, ZStackTest_RESP_EVT );
-   \   0000AF                ; Setup parameters for call to function osal_set_event
-   \   0000AF   7A02         MOV     R2,#0x2
-   \   0000B1   FB           MOV     R3,A
-   \   0000B2   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   0000B5   E0           MOVX    A,@DPTR
-   \   0000B6   F9           MOV     R1,A
-   \   0000B7   12....       LCALL   ??osal_set_event?relay
-    538              osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_RESP_EVT);
-   \   0000BA                ; Setup parameters for call to function osal_stop_timerEx
-   \   0000BA   7A02         MOV     R2,#0x2
-   \   0000BC   7B00         MOV     R3,#0x0
-   \                     ??ZStackTest_ProcessMSGCmd_8:
-   \   0000BE   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   0000C1   E0           MOVX    A,@DPTR
-   \   0000C2   F9           MOV     R1,A
-   \   0000C3   12....       LCALL   ??osal_stop_timerEx?relay
-    539              break;
-   \   0000C6   803D         SJMP    ??ZStackTest_ProcessMSGCmd_0
-    540          
-    541            // A response to a received serial data block.
-    542            case ZStackTest_CLUSTERID2:
-    543              if ((pkt->cmd.Data[1] == ZStackTest_TxSeq) &&
-    544                  ((pkt->cmd.Data[0] == OTA_SUCCESS) || (pkt->cmd.Data[0] == OTA_DUP_MSG)))
-   \                     ??ZStackTest_ProcessMSGCmd_2:
-   \   0000C8   12....       LCALL   ?Subroutine5 & 0xFFFF
-   \                     ??CrossCallReturnLabel_9:
-   \   0000CB   E0           MOVX    A,@DPTR
-   \   0000CC   F8           MOV     R0,A
-   \   0000CD   90....       MOV     DPTR,#ZStackTest_TxSeq
-   \   0000D0   E0           MOVX    A,@DPTR
-   \   0000D1   68           XRL     A,R0
-   \   0000D2   701D         JNZ     ??ZStackTest_ProcessMSGCmd_9
-   \   0000D4   12....       LCALL   ?Subroutine4 & 0xFFFF
-   \                     ??CrossCallReturnLabel_8:
-   \   0000D7   600E         JZ      ??ZStackTest_ProcessMSGCmd_10
-   \   0000D9   12....       LCALL   ?Subroutine6 & 0xFFFF
-   \                     ??CrossCallReturnLabel_12:
-   \   0000DC   A3           INC     DPTR
-   \   0000DD   E0           MOVX    A,@DPTR
-   \   0000DE   F583         MOV     DPH,A
-   \   0000E0   8882         MOV     DPL,R0
-   \   0000E2   E0           MOVX    A,@DPTR
-   \   0000E3   6401         XRL     A,#0x1
-   \   0000E5   700A         JNZ     ??ZStackTest_ProcessMSGCmd_9
-    545              {
-    546                ZStackTest_TxLen = 0;
-   \                     ??ZStackTest_ProcessMSGCmd_10:
-   \   0000E7   90....       MOV     DPTR,#ZStackTest_TxLen
-   \   0000EA   E4           CLR     A
-   \   0000EB   F0           MOVX    @DPTR,A
-    547                osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_SEND_EVT);
-   \   0000EC                ; Setup parameters for call to function osal_stop_timerEx
-   \   0000EC   7A01         MOV     R2,#0x1
-   \   0000EE   FB           MOV     R3,A
-   \   0000EF   80CD         SJMP    ??ZStackTest_ProcessMSGCmd_8
-    548              }
-    549              else
-    550              {
-    551                // Re-start timeout according to delay sent from other device.
-    552                delay = BUILD_UINT16( pkt->cmd.Data[2], pkt->cmd.Data[3] );
-    553                osal_start_timerEx( ZStackTest_TaskID, ZStackTest_SEND_EVT, delay );
-   \                     ??ZStackTest_ProcessMSGCmd_9:
-   \   0000F1                ; Setup parameters for call to function osal_start_timerEx
-   \   0000F1   12....       LCALL   ?Subroutine5 & 0xFFFF
-    554              }
-    555              break;
-    556          
-    557            default:
-    558              break;
-    559            }
-   \                     ??CrossCallReturnLabel_10:
-   \   0000F4   A3           INC     DPTR
-   \   0000F5   E0           MOVX    A,@DPTR
-   \   0000F6   FC           MOV     R4,A
-   \   0000F7   7D00         MOV     R5,#0x0
-   \   0000F9   7A01         MOV     R2,#0x1
-   \   0000FB   7B00         MOV     R3,#0x0
-   \   0000FD   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   000100   E0           MOVX    A,@DPTR
-   \   000101   F9           MOV     R1,A
-   \   000102   12....       LCALL   ??osal_start_timerEx?relay
-    560          }
+   \   00001D   0100         DW        1
+   \   00001F   02           DB        2
+   \   000020   ....         DW        ??CrossCallReturnLabel_3
+   \   000022   ....         DW        ??ZStackTest_ProcessMSGCmd_0
+   \   000024   ....         DW        ??ZStackTest_ProcessMSGCmd_1
+   \   000026   ....         DW        ??ZStackTest_ProcessMSGCmd_2
+    543            {
+    544            // Process P2P message
+    545            case ZStackTest_P2P_CLUSTERID:
+    546              HalUARTWrite(SERIAL_APP_PORT, "Rx(p2p):", 8);     //提示接收到数��?
    \                     ??ZStackTest_ProcessMSGCmd_0:
-   \   000105   7F04         MOV     R7,#0x4
-   \   000107   02....       LJMP    ?BANKED_LEAVE_XDATA
+   \   000028                ; Setup parameters for call to function HalUARTWrite
+   \   000028   7C08         MOV     R4,#0x8
+   \   00002A   7D00         MOV     R5,#0x0
+   \   00002C   7A..         MOV     R2,#`?<Constant "Rx(p2p):">` & 0xff
+   \   00002E   7B..         MOV     R3,#(`?<Constant "Rx(p2p):">` >> 8) & 0xff
+   \   000030   8012         SJMP    ??ZStackTest_ProcessMSGCmd_3
+    547              HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+    548              HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    549              break;
+    550          
+    551            // Process broadcast message
+    552            case ZStackTest_BROADCAST_CLUSTERID:
+    553              HalUARTWrite(SERIAL_APP_PORT, "Rx(broadcast):", 14);   //提示接收到数��?
+   \                     ??ZStackTest_ProcessMSGCmd_1:
+   \   000032                ; Setup parameters for call to function HalUARTWrite
+   \   000032   7C0E         MOV     R4,#0xe
+   \   000034   7D00         MOV     R5,#0x0
+   \   000036   7A..         MOV     R2,#`?<Constant "Rx(broadcast):">` & 0xff
+   \   000038   7B..         MOV     R3,#(`?<Constant "Rx(broadcast):">` >> 8) & 0xff
+   \   00003A   8008         SJMP    ??ZStackTest_ProcessMSGCmd_3
+    554              HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+    555              HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    556              break;
+    557          
+    558            // Process group messages
+    559            case ZStackTest_GROUP_CLUSTERID:
+    560              HalUARTWrite(SERIAL_APP_PORT, "Rx(group):", 10); //提示接收到数��?
+   \                     ??ZStackTest_ProcessMSGCmd_2:
+   \   00003C                ; Setup parameters for call to function HalUARTWrite
+   \   00003C   7C0A         MOV     R4,#0xa
+   \   00003E   7D00         MOV     R5,#0x0
+   \   000040   7A..         MOV     R2,#`?<Constant "Rx(group):">` & 0xff
+   \   000042   7B..         MOV     R3,#(`?<Constant "Rx(group):">` >> 8) & 0xff
+   \                     ??ZStackTest_ProcessMSGCmd_3:
+   \   000044   7900         MOV     R1,#0x0
+   \   000046   12....       LCALL   ??HalUARTWrite?relay
+    561              HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+   \   000049                ; Setup parameters for call to function HalUARTWrite
+   \   000049   EE           MOV     A,R6
+   \   00004A   2420         ADD     A,#0x20
+   \   00004C   F582         MOV     DPL,A
+   \   00004E   EF           MOV     A,R7
+   \   00004F   3400         ADDC    A,#0x0
+   \   000051   F583         MOV     DPH,A
+   \   000053   E0           MOVX    A,@DPTR
+   \   000054   FC           MOV     R4,A
+   \   000055   A3           INC     DPTR
+   \   000056   E0           MOVX    A,@DPTR
+   \   000057   FD           MOV     R5,A
+   \   000058   EE           MOV     A,R6
+   \   000059   2422         ADD     A,#0x22
+   \   00005B   F582         MOV     DPL,A
+   \   00005D   EF           MOV     A,R7
+   \   00005E   3400         ADDC    A,#0x0
+   \   000060   F583         MOV     DPH,A
+   \   000062   E0           MOVX    A,@DPTR
+   \   000063   FA           MOV     R2,A
+   \   000064   A3           INC     DPTR
+   \   000065   E0           MOVX    A,@DPTR
+   \   000066   FB           MOV     R3,A
+   \   000067   12....       LCALL   ?Subroutine2 & 0xFFFF
+    562              HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    563              break;
+    564          
+    565            default:
+    566              break;
+    567            }
+    568          }
+   \                     ??CrossCallReturnLabel_3:
+   \   00006A   02....       LJMP    ??Subroutine6_0 & 0xFFFF
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine6:
-   \   000000   12....       LCALL   ?Subroutine9 & 0xFFFF
-   \                     ??CrossCallReturnLabel_17:
-   \   000003   22           RET
+   \                     ??Subroutine6_0:
+   \   000000   7F02         MOV     R7,#0x2
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+    569          
+    570          /*********************************************************************
+    571           * @fn      ZStackTest_Send
+    572           *
+    573           * @brief   Send data OTA.
+    574           *
+    575           * @param   none
+    576           *
+    577           * @return  none
+    578           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine9:
-   \   000000   EE           MOV     A,R6
-   \   000001   2422         ADD     A,#0x22
-   \   000003   F582         MOV     DPL,A
-   \   000005   EF           MOV     A,R7
-   \   000006   3400         ADDC    A,#0x0
-   \   000008   F583         MOV     DPH,A
-   \   00000A   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine5:
-   \   000000   12....       LCALL   ?Subroutine8 & 0xFFFF
-   \                     ??CrossCallReturnLabel_16:
-   \   000003   A3           INC     DPTR
-   \   000004   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine4:
-   \   000000   12....       LCALL   ?Subroutine8 & 0xFFFF
-   \                     ??CrossCallReturnLabel_15:
-   \   000003   E0           MOVX    A,@DPTR
-   \   000004   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine8:
-   \   000000   12....       LCALL   ?Subroutine9 & 0xFFFF
-   \                     ??CrossCallReturnLabel_18:
-   \   000003   E0           MOVX    A,@DPTR
-   \   000004   F8           MOV     R0,A
-   \   000005   A3           INC     DPTR
-   \   000006   E0           MOVX    A,@DPTR
-   \   000007   F583         MOV     DPH,A
-   \   000009   8882         MOV     DPL,R0
-   \   00000B   22           RET
-    561          
-    562          /*********************************************************************
-    563           * @fn      ZStackTest_Send
-    564           *
-    565           * @brief   Send data OTA.
-    566           *
-    567           * @param   none
-    568           *
-    569           * @return  none
-    570           */
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    571          static void ZStackTest_Send(void)
+    579          static void ZStackTest_Send(void)
    \                     ZStackTest_Send:
-    572          {
+    580          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    573          #if SERIAL_APP_LOOPBACK
-    574            if (ZStackTest_TxLen < SERIAL_APP_TX_MAX)
-    575            {
-    576              ZStackTest_TxLen += HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf+ZStackTest_TxLen+1,
-    577                                              SERIAL_APP_TX_MAX-ZStackTest_TxLen);
-    578            }
-    579          
-    580            if (ZStackTest_TxLen)
-    581            {
-    582              (void)ZStackTest_TxAddr;
-    583              if (HalUARTWrite(SERIAL_APP_PORT, ZStackTest_TxBuf+1, ZStackTest_TxLen))
-    584              {
-    585                ZStackTest_TxLen = 0;
-    586              }
-    587              else
-    588              {
-    589                osal_set_event(ZStackTest_TaskID, ZStackTest_SEND_EVT);
-    590              }
-    591            }
-    592          #else
-    593            if (!ZStackTest_TxLen &&
-    594                (ZStackTest_TxLen = HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf, SERIAL_APP_TX_MAX)))
+    581          #if SERIAL_APP_LOOPBACK
+    582            if (ZStackTest_TxLen < SERIAL_APP_TX_MAX)
+    583            {
+    584              ZStackTest_TxLen += HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf+ZStackTest_TxLen+1,
+    585                                              SERIAL_APP_TX_MAX-ZStackTest_TxLen);
+    586            }
+    587          
+    588            if (ZStackTest_TxLen)
+    589            {
+    590              (void)ZStackTest_TxAddr;
+    591              if (HalUARTWrite(SERIAL_APP_PORT, ZStackTest_TxBuf+1, ZStackTest_TxLen))
+    592              {
+    593                ZStackTest_TxLen = 0;
+    594              }
+    595              else
+    596              {
+    597                osal_set_event(ZStackTest_TaskID, ZStackTest_SEND_EVT);
+    598              }
+    599            }
+    600          #else
+    601            if (!ZStackTest_TxLen &&
+    602                (ZStackTest_TxLen = HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf, SERIAL_APP_TX_MAX)))
    \   000004   90....       MOV     DPTR,#ZStackTest_TxLen
    \   000007   E0           MOVX    A,@DPTR
    \   000008   7012         JNZ     ??ZStackTest_Send_0
@@ -1600,22 +1567,22 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
    \   000017   EA           MOV     A,R2
    \   000018   90....       MOV     DPTR,#ZStackTest_TxLen
    \   00001B   F0           MOVX    @DPTR,A
-    595            {
-    596              // Pre-pend sequence number to the Tx message.
-    597              //ZStackTest_TxBuf[0] = ++ZStackTest_TxSeq;
-    598            }
-    599          
-    600            if (ZStackTest_TxLen)
+    603            {
+    604              // Pre-pend sequence number to the Tx message.
+    605              //ZStackTest_TxBuf[0] = ++ZStackTest_TxSeq;
+    606            }
+    607          
+    608            if (ZStackTest_TxLen)
    \                     ??ZStackTest_Send_0:
    \   00001C   E0           MOVX    A,@DPTR
    \   00001D   6019         JZ      ??ZStackTest_Send_1
-    601            {
-    602              Uart0_Handle(ZStackTest_TxBuf);
+    609            {
+    610              Uart0_Handle(ZStackTest_TxBuf);
    \   00001F                ; Setup parameters for call to function Uart0_Handle
    \   00001F   7A..         MOV     R2,#ZStackTest_TxBuf & 0xff
    \   000021   7B..         MOV     R3,#(ZStackTest_TxBuf >> 8) & 0xff
    \   000023   12....       LCALL   ??Uart0_Handle?relay
-    603              osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_RX_SZ);
+    611              osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_RX_SZ);
    \   000026                ; Setup parameters for call to function osal_memset
    \   000026   7C80         MOV     R4,#-0x80
    \   000028   7D00         MOV     R5,#0x0
@@ -1623,82 +1590,356 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
    \   00002C   7A..         MOV     R2,#ZStackTest_TxBuf & 0xff
    \   00002E   7B..         MOV     R3,#(ZStackTest_TxBuf >> 8) & 0xff
    \   000030   12....       LCALL   ??osal_memset?relay
-    604              ZStackTest_TxLen = 0;
+    612              ZStackTest_TxLen = 0;
    \   000033   90....       MOV     DPTR,#ZStackTest_TxLen
    \   000036   E4           CLR     A
    \   000037   F0           MOVX    @DPTR,A
-    605            }
-    606          #endif
-    607          }
+    613            }
+    614          #endif
+    615          }
    \                     ??ZStackTest_Send_1:
    \   000038   D083         POP     DPH
    \   00003A   D082         POP     DPL
    \   00003C   02....       LJMP    ?BRET
-    608          
-    609          /*********************************************************************
-    610           * @fn      ZStackTest_Resp
-    611           *
-    612           * @brief   Send data OTA.
-    613           *
-    614           * @param   none
-    615           *
-    616           * @return  none
-    617           */
-    618          static void ZStackTest_Resp(void)
-    619          {
-    620            if (afStatus_SUCCESS != AF_DataRequest(&ZStackTest_RxAddr,
-    621                                                   (endPointDesc_t *)&ZStackTest_epDesc,
-    622                                                   ZStackTest_CLUSTERID2,
-    623                                                   SERIAL_APP_RSP_CNT, ZStackTest_RspBuf,
-    624                                                   &ZStackTest_MsgID, 0, AF_DEFAULT_RADIUS))
-    625            {
-    626              osal_set_event(ZStackTest_TaskID, ZStackTest_RESP_EVT);
-    627            }
-    628          }
-    629          
-    630          /*********************************************************************
-    631           * @fn      ZStackTest_CallBack
-    632           *
-    633           * @brief   Send data OTA.
-    634           *
-    635           * @param   port - UART port.
-    636           * @param   event - the UART port event flag.
-    637           *
-    638           * @return  none
-    639           */
+    616          
+    617          /*********************************************************************
+    618           * @fn      ZStackTest_Resp
+    619           *
+    620           * @brief   Send data OTA.
+    621           *
+    622           * @param   none
+    623           *
+    624           * @return  none
+    625           */
+    626          static void ZStackTest_Resp(void)
+    627          {
+    628            if (afStatus_SUCCESS != AF_DataRequest(&ZStackTest_RxAddr,
+    629                                                   (endPointDesc_t *)&ZStackTest_epDesc,
+    630                                                   ZStackTest_CLUSTERID2,
+    631                                                   SERIAL_APP_RSP_CNT, ZStackTest_RspBuf,
+    632                                                   &ZStackTest_TransID, 0, AF_DEFAULT_RADIUS))
+    633            {
+    634              osal_set_event(ZStackTest_TaskID, ZStackTest_RESP_EVT);
+    635            }
+    636          }
+    637          
+    638          /*********************************************************************
+    639           * @fn      ZStackTest_CallBack
+    640           *
+    641           * @brief   Send data OTA.
+    642           *
+    643           * @param   port - UART port.
+    644           * @param   event - the UART port event flag.
+    645           *
+    646           * @return  none
+    647           */
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    640          static void ZStackTest_CallBack(uint8 port, uint8 event)
+    648          static void ZStackTest_CallBack(uint8 port, uint8 event)
    \                     ZStackTest_CallBack:
-    641          {
+    649          {
    \   000000   74F7         MOV     A,#-0x9
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 9
    \   000005                ; Auto size: 0
    \   000005   EA           MOV     A,R2
    \   000006   FE           MOV     R6,A
-    642            (void)port;
-    643          
-    644            if ((event & (HAL_UART_RX_FULL | HAL_UART_RX_ABOUT_FULL | HAL_UART_RX_TIMEOUT)) &&
-    645          #if SERIAL_APP_LOOPBACK
-    646                (ZStackTest_TxLen < SERIAL_APP_TX_MAX))
-    647          #else
-    648                !ZStackTest_TxLen)
+    650            (void)port;
+    651          
+    652            if ((event & (HAL_UART_RX_FULL | HAL_UART_RX_ABOUT_FULL | HAL_UART_RX_TIMEOUT)) &&
+    653          #if SERIAL_APP_LOOPBACK
+    654                (ZStackTest_TxLen < SERIAL_APP_TX_MAX))
+    655          #else
+    656                !ZStackTest_TxLen)
    \   000007   7407         MOV     A,#0x7
    \   000009   5E           ANL     A,R6
    \   00000A   6009         JZ      ??ZStackTest_CallBack_0
    \   00000C   90....       MOV     DPTR,#ZStackTest_TxLen
    \   00000F   E0           MOVX    A,@DPTR
    \   000010   7003         JNZ     ??ZStackTest_CallBack_0
-    649          #endif
-    650            {
-    651              ZStackTest_Send();
+    657          #endif
+    658            {
+    659              ZStackTest_Send();
    \   000012                ; Setup parameters for call to function ZStackTest_Send
    \   000012   12....       LCALL   ??ZStackTest_Send?relay
-    652            }
-    653          }
+    660            }
+    661          }
    \                     ??ZStackTest_CallBack_0:
-   \   000015   02....       LJMP    ?Subroutine0 & 0xFFFF
+   \   000015   7F01         MOV     R7,#0x1
+   \   000017   02....       LJMP    ?BANKED_LEAVE_XDATA
+    662          
+    663          /*********************************************************************
+    664           * @fn      AddressInit
+    665           *
+    666           * @brief   set address
+    667           *
+    668           * @param   none
+    669           *
+    670           * @return  none
+    671           */
+    672          void AddressInit()
+    673          {
+    674            ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
+    675            ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
+    676            ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
+    677          
+    678            ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
+    679            ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
+    680            ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
+    681          
+    682            // Setup for the flash command's destination address - Group 1
+    683            ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup;//组播
+    684            ZStackTest_Group_DstAddr.endPoint = ZStackTest_ENDPOINT;
+    685            ZStackTest_Group_DstAddr.addr.shortAddr = ZStackTest_GROUP;
+    686          
+    687            // Assign to group 1
+    688            ZStackTest_Group.ID = 0x0001;
+    689            ZStackTest_Group.name[0] = 6; // First byte is string length
+    690            osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
+    691            aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
+    692            HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+    693          }
+    694          
+    695          /*********************************************************************
+    696           * @fn      ZStackTest_Send_P2P_Message
+    697           *
+    698           * @brief   point to point.
+    699           *
+    700           * @param   none
+    701           *
+    702           * @return  none
+    703           */
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    704          void ZStackTest_Send_P2P_Message( void )
+   \                     ZStackTest_Send_P2P_Message:
+    705          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 12
+   \   000005   74F4         MOV     A,#-0xc
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+    706            uint8 data[12]="p2p_message";
+   \   00000A   85..82       MOV     DPL,?XSP + 0
+   \   00000D   85..83       MOV     DPH,?XSP + 1
+   \   000010   AC82         MOV     R4,DPL
+   \   000012   AD83         MOV     R5,DPH
+   \   000014   7583..       MOV     DPH,#(`?<Constant "p2p_message">` >> 8) & 0xff
+   \   000017   7582..       MOV     DPL,#`?<Constant "p2p_message">` & 0xff
+   \   00001A   740C         MOV     A,#0xc
+   \   00001C   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    707          
+    708            if ( AF_DataRequest( &ZStackTest_P2P_DstAddr,
+    709                                 (endPointDesc_t *)&ZStackTest_epDesc,
+    710                                 ZStackTest_P2P_CLUSTERID,
+    711                                 11,
+    712                                 data,
+    713                                 &ZStackTest_TransID,
+    714                                 AF_DISCV_ROUTE,
+    715                                 AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+   \   00001F                ; Setup parameters for call to function AF_DataRequest
+   \   00001F   75..1E       MOV     ?V0 + 0,#0x1e
+   \   000022   78..         MOV     R0,#?V0 + 0
+   \   000024   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   000027   75....       MOV     ?V0 + 0,#ZStackTest_TransID & 0xff
+   \   00002A   75....       MOV     ?V0 + 1,#(ZStackTest_TransID >> 8) & 0xff
+   \   00002D   78..         MOV     R0,#?V0 + 0
+   \   00002F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000032   7403         MOV     A,#0x3
+   \   000034   12....       LCALL   ?XSTACK_DISP0_8
+   \   000037   8582..       MOV     ?V0 + 0,DPL
+   \   00003A   8583..       MOV     ?V0 + 1,DPH
+   \   00003D   78..         MOV     R0,#?V0 + 0
+   \   00003F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000042   75..0B       MOV     ?V0 + 0,#0xb
+   \   000045   75..00       MOV     ?V0 + 1,#0x0
+   \   000048   78..         MOV     R0,#?V0 + 0
+   \   00004A   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00004D   75..01       MOV     ?V0 + 0,#0x1
+   \   000050   78..         MOV     R0,#?V0 + 0
+   \   000052   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000055   7920         MOV     R1,#0x20
+   \   000057   7C..         MOV     R4,#ZStackTest_epDesc & 0xff
+   \   000059   7D..         MOV     R5,#(ZStackTest_epDesc >> 8) & 0xff
+   \   00005B   7A..         MOV     R2,#ZStackTest_P2P_DstAddr & 0xff
+   \   00005D   7B..         MOV     R3,#(ZStackTest_P2P_DstAddr >> 8) & 0xff
+   \   00005F   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_10:
+   \   000062   12....       LCALL   ?DEALLOC_XSTACK8
+    716            {
+    717            }
+    718            else
+    719            {
+    720              // Error occurred in request to send.
+    721            }
+    722          }
+   \   000065   740C         MOV     A,#0xc
+   \   000067   02....       LJMP    ?Subroutine0 & 0xFFFF
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine5:
+   \   000000   12....       LCALL   ??AF_DataRequest?relay
+   \   000003   7409         MOV     A,#0x9
+   \   000005   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000003                REQUIRE ??Subroutine6_0
+   \   000003                ; // Fall through to label ??Subroutine6_0
+    723          
+    724          /*********************************************************************
+    725           * @fn      ZStackTest_Send_Broadcast_Message
+    726           *
+    727           * @brief   Send the broadcast message.
+    728           *
+    729           * @param   none
+    730           *
+    731           * @return  none
+    732           */
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    733          void ZStackTest_Send_Broadcast_Message( void )
+   \                     ZStackTest_Send_Broadcast_Message:
+    734          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 18
+   \   000005   74EE         MOV     A,#-0x12
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+    735            uint8 data[] = "broadcast_message";
+   \   00000A   85..82       MOV     DPL,?XSP + 0
+   \   00000D   85..83       MOV     DPH,?XSP + 1
+   \   000010   AC82         MOV     R4,DPL
+   \   000012   AD83         MOV     R5,DPH
+   \   000014   7583..       MOV     DPH,#(`?<Constant "broadcast_message">` >> 8) & 0xff
+   \   000017   7582..       MOV     DPL,#`?<Constant "broadcast_message">` & 0xff
+   \   00001A   7412         MOV     A,#0x12
+   \   00001C   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    736            if ( AF_DataRequest( &ZStackTest_Broadcast_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+    737                                 ZStackTest_BROADCAST_CLUSTERID,
+    738                                 17,
+    739                                 data,
+    740                                 &ZStackTest_TransID,
+    741                                 AF_DISCV_ROUTE,
+    742                                 AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+   \   00001F                ; Setup parameters for call to function AF_DataRequest
+   \   00001F   75..1E       MOV     ?V0 + 0,#0x1e
+   \   000022   78..         MOV     R0,#?V0 + 0
+   \   000024   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   000027   75....       MOV     ?V0 + 0,#ZStackTest_TransID & 0xff
+   \   00002A   75....       MOV     ?V0 + 1,#(ZStackTest_TransID >> 8) & 0xff
+   \   00002D   78..         MOV     R0,#?V0 + 0
+   \   00002F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000032   7403         MOV     A,#0x3
+   \   000034   12....       LCALL   ?XSTACK_DISP0_8
+   \   000037   8582..       MOV     ?V0 + 0,DPL
+   \   00003A   8583..       MOV     ?V0 + 1,DPH
+   \   00003D   78..         MOV     R0,#?V0 + 0
+   \   00003F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000042   75..11       MOV     ?V0 + 0,#0x11
+   \   000045   75..00       MOV     ?V0 + 1,#0x0
+   \   000048   78..         MOV     R0,#?V0 + 0
+   \   00004A   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00004D   75..02       MOV     ?V0 + 0,#0x2
+   \   000050   78..         MOV     R0,#?V0 + 0
+   \   000052   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000055   7920         MOV     R1,#0x20
+   \   000057   7C..         MOV     R4,#ZStackTest_epDesc & 0xff
+   \   000059   7D..         MOV     R5,#(ZStackTest_epDesc >> 8) & 0xff
+   \   00005B   7A..         MOV     R2,#ZStackTest_Broadcast_DstAddr & 0xff
+   \   00005D   7B..         MOV     R3,#(ZStackTest_Broadcast_DstAddr >> 8) & 0xff
+   \   00005F   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_11:
+   \   000062   12....       LCALL   ?DEALLOC_XSTACK8
+    743            {
+    744            }
+    745            else
+    746            {
+    747              // Error occurred in request to send.
+    748            }
+    749          }
+   \   000065   7412         MOV     A,#0x12
+   \   000067   80..         SJMP    ?Subroutine0
+    750          
+    751          /*********************************************************************
+    752           * @fn      ZStackTest_Send_Group_Message
+    753           *
+    754           * @brief   Send the group message to group 1.
+    755           *
+    756           * @param   flashTime - in milliseconds
+    757           *
+    758           * @return  none
+    759           */
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    760          void ZStackTest_Send_Group_Message( void )
+   \                     ZStackTest_Send_Group_Message:
+    761          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 14
+   \   000005   74F2         MOV     A,#-0xe
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+    762            uint8 data[] = "group_message";
+   \   00000A   85..82       MOV     DPL,?XSP + 0
+   \   00000D   85..83       MOV     DPH,?XSP + 1
+   \   000010   AC82         MOV     R4,DPL
+   \   000012   AD83         MOV     R5,DPH
+   \   000014   7583..       MOV     DPH,#(`?<Constant "group_message">` >> 8) & 0xff
+   \   000017   7582..       MOV     DPL,#`?<Constant "group_message">` & 0xff
+   \   00001A   740E         MOV     A,#0xe
+   \   00001C   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    763          
+    764            if ( AF_DataRequest( &ZStackTest_Group_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+    765                                 ZStackTest_GROUP_CLUSTERID,
+    766                                 13,
+    767                                 data,
+    768                                 &ZStackTest_TransID,
+    769                                 AF_DISCV_ROUTE,
+    770                                 AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+   \   00001F                ; Setup parameters for call to function AF_DataRequest
+   \   00001F   75..1E       MOV     ?V0 + 0,#0x1e
+   \   000022   78..         MOV     R0,#?V0 + 0
+   \   000024   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   000027   75....       MOV     ?V0 + 0,#ZStackTest_TransID & 0xff
+   \   00002A   75....       MOV     ?V0 + 1,#(ZStackTest_TransID >> 8) & 0xff
+   \   00002D   78..         MOV     R0,#?V0 + 0
+   \   00002F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000032   7403         MOV     A,#0x3
+   \   000034   12....       LCALL   ?XSTACK_DISP0_8
+   \   000037   8582..       MOV     ?V0 + 0,DPL
+   \   00003A   8583..       MOV     ?V0 + 1,DPH
+   \   00003D   78..         MOV     R0,#?V0 + 0
+   \   00003F   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000042   75..0D       MOV     ?V0 + 0,#0xd
+   \   000045   75..00       MOV     ?V0 + 1,#0x0
+   \   000048   78..         MOV     R0,#?V0 + 0
+   \   00004A   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00004D   75..03       MOV     ?V0 + 0,#0x3
+   \   000050   78..         MOV     R0,#?V0 + 0
+   \   000052   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000055   7920         MOV     R1,#0x20
+   \   000057   7C..         MOV     R4,#ZStackTest_epDesc & 0xff
+   \   000059   7D..         MOV     R5,#(ZStackTest_epDesc >> 8) & 0xff
+   \   00005B   7A..         MOV     R2,#ZStackTest_Group_DstAddr & 0xff
+   \   00005D   7B..         MOV     R3,#(ZStackTest_Group_DstAddr >> 8) & 0xff
+   \   00005F   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_12:
+   \   000062   12....       LCALL   ?DEALLOC_XSTACK8
+    771            {
+    772            }
+    773            else
+    774            {
+    775              // Error occurred in request to send.
+    776            }
+    777          }
+   \   000065   740E         MOV     A,#0xe
+   \   000067                REQUIRE ?Subroutine0
+   \   000067                ; // Fall through to label ?Subroutine0
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??ZStackTest_Init?relay:
@@ -1730,6 +1971,21 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
    \   000000   12....       LCALL   ?BDISPATCH
    \   000003   ......       DC24    ZStackTest_CallBack
 
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ZStackTest_Send_P2P_Message?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ZStackTest_Send_P2P_Message
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ZStackTest_Send_Broadcast_Message?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ZStackTest_Send_Broadcast_Message
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ZStackTest_Send_Group_Message?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ZStackTest_Send_Group_Message
+
    \                                 In  segment XDATA_ROM_C, align 1
    \                     `?<Constant "Init Uart0\\r\\n">`:
    \   000000   496E6974     DB "Init Uart0\015\012"
@@ -1758,139 +2014,209 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
    \   000000   50617265     DB "Parent: "
    \            6E743A20
    \            00      
-    654          
-    655          /*********************************************************************
-    656          *********************************************************************/
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "Rx(p2p):">`:
+   \   000000   52782870     DB "Rx(p2p):"
+   \            3270293A
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "Rx(broadcast):">`:
+   \   000000   52782862     DB "Rx(broadcast):"
+   \            726F6164
+   \            63617374
+   \            293A00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "Rx(group):">`:
+   \   000000   52782867     DB "Rx(group):"
+   \            726F7570
+   \            293A00  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "Group1">`:
+   \   000000   47726F75     DB "Group1"
+   \            703100  
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "p2p_message">`:
+   \   000000   7032705F     DB "p2p_message"
+   \            6D657373
+   \            61676500
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "broadcast_message">`:
+   \   000000   62726F61     DB "broadcast_message"
+   \            64636173
+   \            745F6D65
+   \            73736167
+   \            6500    
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "group_message">`:
+   \   000000   67726F75     DB "group_message"
+   \            705F6D65
+   \            73736167
+   \            6500    
+    778          
+    779          /*********************************************************************
+    780          *********************************************************************/
 
    Maximum stack usage in bytes:
 
-     Function                      ISTACK PSTACK XSTACK
-     --------                      ------ ------ ------
-     ZStackTest_CallBack               0      0      9
-       -> ZStackTest_Send              0      0     18
-     ZStackTest_HandleKeys             0      0     45
-       -> HalLedSet                    0      0     44
-       -> osal_start_timerEx           0      0     44
-       -> HalUARTWrite                 0      0     44
-       -> NLME_GetExtAddr              0      0     44
-       -> NLME_GetShortAddr            0      0     44
-       -> PrintAddrInfo                0      0     44
-       -> HalUARTWrite                 0      0     44
-       -> NLME_GetCoordExtAddr         0      0     44
-       -> NLME_GetCoordShortAddr       0      0     44
-       -> PrintAddrInfo                0      0     44
-       -> osal_stop_timerEx            0      0     44
-       -> HalUARTWrite                 0      0     44
-       -> NLME_GetExtAddr              0      0     44
-       -> NLME_GetShortAddr            0      0     44
-       -> PrintAddrInfo                0      0     44
-       -> HalUARTWrite                 0      0     44
-       -> NLME_GetCoordExtAddr         0      0     44
-       -> NLME_GetCoordShortAddr       0      0     44
-       -> PrintAddrInfo                0      0     44
-       -> HalLedSet                    0      0     44
-       -> NLME_GetShortAddr            0      0     62
-       -> ZDP_EndDeviceBindReq         0      0     62
-       -> HalLedSet                    0      0     44
-       -> ZDP_MatchDescReq             0      0     60
-     ZStackTest_Init                   0      0     38
-       -> afRegister                   0      0     76
-       -> RegisterForKeys              0      0     76
-       -> HalUARTOpen                  0      0     76
-       -> HalUARTWrite                 0      0     76
-       -> ZDO_RegisterForZDOMsg        0      0     76
-       -> ZDO_RegisterForZDOMsg        0      0     76
-     ZStackTest_ProcessEvent           0      0     23
-       -> ZStackTest_Send              0      0     28
-       -> ZStackTest_ProcessMSGCmd     0      0     28
-       -> osal_msg_deallocate          0      0     28
-       -> osal_msg_receive             0      0     28
-       -> HalUARTWrite                 0      0     28
-       -> HalUARTWrite                 0      0     28
-       -> HalUARTWrite                 0      0     28
-       -> NLME_GetExtAddr              0      0     28
-       -> NLME_GetShortAddr            0      0     28
-       -> PrintAddrInfo                0      0     28
-       -> HalUARTWrite                 0      0     28
-       -> NLME_GetCoordExtAddr         0      0     28
-       -> NLME_GetCoordShortAddr       0      0     28
-       -> PrintAddrInfo                0      0     28
-       -> ZStackTest_HandleKeys        0      0     28
-       -> AF_DataRequest               0      0     46
-       -> osal_set_event               0      0     28
-       -> ZStackTest_HandleKeys        0      0     28
-     ZStackTest_ProcessMSGCmd          0      0     29
-       -> osal_memcpy                  0      0     30
-       -> HalUARTWrite                 0      0     24
-       -> osal_set_event               0      0     24
-       -> osal_stop_timerEx            0      0     24
-       -> osal_stop_timerEx            0      0     24
-       -> osal_start_timerEx           0      0     24
-     ZStackTest_Send                   2      0     14
-       -> HalUARTRead                  4      0      0
-       -> Uart0_Handle                 4      0      0
-       -> osal_memset                  4      0      0
+     Function                       ISTACK PSTACK XSTACK
+     --------                       ------ ------ ------
+     ZStackTest_CallBack                0      0      9
+       -> ZStackTest_Send               0      0     18
+     ZStackTest_HandleKeys              0      0     45
+       -> ZStackTest_Send_P2P_Message
+                                        0      0     44
+       -> osal_start_timerEx            0      0     44
+       -> aps_FindGroup                 0      0     44
+       -> aps_RemoveGroup               0      0     44
+       -> HalLedSet                     0      0     44
+       -> aps_AddGroup                  0      0     44
+       -> HalLedSet                     0      0     44
+       -> osal_stop_timerEx             0      0     44
+       -> HalUARTWrite                  0      0     44
+       -> NLME_GetExtAddr               0      0     44
+       -> NLME_GetShortAddr             0      0     44
+       -> PrintAddrInfo                 0      0     44
+       -> HalUARTWrite                  0      0     44
+       -> NLME_GetCoordExtAddr          0      0     44
+       -> NLME_GetCoordShortAddr        0      0     44
+       -> PrintAddrInfo                 0      0     44
+       -> HalLedSet                     0      0     44
+       -> NLME_GetShortAddr             0      0     62
+       -> ZDP_EndDeviceBindReq          0      0     62
+       -> HalLedSet                     0      0     44
+       -> ZDP_MatchDescReq              0      0     60
+     ZStackTest_Init                    0      0     43
+       -> osal_memcpy                   0      0     86
+       -> aps_AddGroup                  0      0     80
+       -> HalLedSet                     0      0     80
+       -> afRegister                    0      0     80
+       -> RegisterForKeys               0      0     80
+       -> HalUARTOpen                   0      0     80
+       -> HalUARTWrite                  0      0     80
+       -> ZDO_RegisterForZDOMsg         0      0     80
+       -> ZDO_RegisterForZDOMsg         0      0     80
+     ZStackTest_ProcessEvent            0      0     23
+       -> ZStackTest_Send               0      0     28
+       -> ZStackTest_ProcessMSGCmd      0      0     28
+       -> osal_msg_deallocate           0      0     28
+       -> osal_msg_receive              0      0     28
+       -> HalUARTWrite                  0      0     28
+       -> HalUARTWrite                  0      0     28
+       -> HalUARTWrite                  0      0     28
+       -> NLME_GetExtAddr               0      0     28
+       -> NLME_GetShortAddr             0      0     28
+       -> PrintAddrInfo                 0      0     28
+       -> HalUARTWrite                  0      0     28
+       -> NLME_GetCoordExtAddr          0      0     28
+       -> NLME_GetCoordShortAddr        0      0     28
+       -> PrintAddrInfo                 0      0     28
+       -> ZStackTest_HandleKeys         0      0     28
+       -> AF_DataRequest                0      0     46
+       -> osal_set_event                0      0     28
+       -> ZStackTest_HandleKeys         0      0     28
+     ZStackTest_ProcessMSGCmd           0      0     24
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+       -> HalUARTWrite                  0      0     20
+     ZStackTest_Send                    2      0     14
+       -> HalUARTRead                   4      0      0
+       -> Uart0_Handle                  4      0      0
+       -> osal_memset                   4      0      0
+     ZStackTest_Send_Broadcast_Message
+                                        2      0     37
+       -> AF_DataRequest                0      0     74
+     ZStackTest_Send_Group_Message      2      0     33
+       -> AF_DataRequest                0      0     66
+     ZStackTest_Send_P2P_Message        2      0     53
+       -> AF_DataRequest                0      0     62
 
 
    Segment part sizes:
 
-     Function/Label                   Bytes
-     --------------                   -----
-     _A_P0                               1
-     ZStackTest_ClusterList              4
-     ZStackTest_SimpleDesc              12
-     ZStackTest_epDesc                   6
-     ZStackTest_TaskID                   1
-     KeyFlag                             1
-     shift                               1
-     keys                                1
-     ZStackTest_MsgID                    1
-     ZStackTest_TxSeq                    1
-     ZStackTest_TxBuf                   81
-     ZStackTest_TxLen                    1
-     ZStackTest_RxAddr                  12
-     ZStackTest_RxSeq                    1
-     ZStackTest_RspBuf                   4
-     ZStackTest_NwkState                 1
-     ZStackTest_Init                   168
-     ?Subroutine0                        5
-     ?Subroutine2                        8
-     ZStackTest_ProcessEvent           360
-     ?Subroutine7                       34
-     ZStackTest_HandleKeys             303
-     ?Subroutine3                       10
-     ?Subroutine1                       21
-     ZStackTest_ProcessMSGCmd          266
-     ?Subroutine6                        4
-     ?Subroutine9                       11
-     ?Subroutine5                        5
-     ?Subroutine4                        5
-     ?Subroutine8                       12
-     ZStackTest_Send                    63
-     ZStackTest_CallBack                24
-     ??ZStackTest_Init?relay             6
-     ??ZStackTest_ProcessEvent?relay     6
-     ??ZStackTest_HandleKeys?relay       6
-     ??ZStackTest_ProcessMSGCmd?relay    6
-     ??ZStackTest_Send?relay             6
-     ??ZStackTest_CallBack?relay         6
-     ?<Constant "Init Uart0\r\n">       13
-     ?<Constant "Connect!">              9
-     ?<Constant "\r\n">                  3
-     ?<Constant "Self:   ">              9
-     ?<Constant "Parent: ">              9
+     Function/Label                            Bytes
+     --------------                            -----
+     _A_P0                                        1
+     ZStackTest_ClusterList                       8
+     ZStackTest_SimpleDesc                       12
+     ZStackTest_epDesc                            6
+     ZStackTest_TaskID                            1
+     KeyFlag                                      1
+     shift                                        1
+     keys                                         1
+     ZStackTest_TransID                           1
+     ZStackTest_TxBuf                            81
+     ZStackTest_TxLen                             1
+     ZStackTest_RxAddr                           12
+     ZStackTest_RxSeq                             1
+     ZStackTest_RspBuf                            4
+     ZStackTest_NwkState                          1
+     ZStackTest_P2P_DstAddr                      12
+     ZStackTest_Broadcast_DstAddr                12
+     ZStackTest_Group_DstAddr                    12
+     ZStackTest_Group                            18
+     ZStackTest_Init                            290
+     ?Subroutine3                                 8
+     ZStackTest_ProcessEvent                    340
+     ?Subroutine1                                34
+     ?Subroutine2                                19
+     ZStackTest_HandleKeys                      352
+     ?Subroutine4                                10
+     ZStackTest_ProcessMSGCmd                   109
+     ??Subroutine6_0                              5
+     ZStackTest_Send                             63
+     ZStackTest_CallBack                         26
+     ZStackTest_Send_P2P_Message                106
+     ?Subroutine5                                 6
+     ?Subroutine0                                 3
+     ZStackTest_Send_Broadcast_Message
+                                                105
+     ZStackTest_Send_Group_Message              103
+     ??ZStackTest_Init?relay                      6
+     ??ZStackTest_ProcessEvent?relay              6
+     ??ZStackTest_HandleKeys?relay                6
+     ??ZStackTest_ProcessMSGCmd?relay             6
+     ??ZStackTest_Send?relay                      6
+     ??ZStackTest_CallBack?relay                  6
+     ??ZStackTest_Send_P2P_Message?relay          6
+     ??ZStackTest_Send_Broadcast_Message?relay    6
+     ??ZStackTest_Send_Group_Message?relay        6
+     ?<Constant "Init Uart0\r\n">                13
+     ?<Constant "Connect!">                       9
+     ?<Constant "\r\n">                           3
+     ?<Constant "Self:   ">                       9
+     ?<Constant "Parent: ">                       9
+     ?<Constant "Rx(p2p):">                       9
+     ?<Constant "Rx(broadcast):">                15
+     ?<Constant "Rx(group):">                    11
+     ?<Constant "Group1">                         7
+     ?<Constant "p2p_message">                   12
+     ?<Constant "broadcast_message">             18
+     ?<Constant "group_message">                 14
 
  
- 1 299 bytes in segment BANKED_CODE
-    36 bytes in segment BANK_RELAYS
+ 1 579 bytes in segment BANKED_CODE
+    54 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
-    65 bytes in segment XDATA_ROM_C
-   106 bytes in segment XDATA_Z
+   155 bytes in segment XDATA_ROM_C
+   159 bytes in segment XDATA_Z
  
- 1 335 bytes of CODE  memory
-    65 bytes of CONST memory
+ 1 633 bytes of CODE  memory
+   155 bytes of CONST memory
      0 bytes of DATA  memory (+ 1 byte shared)
-   106 bytes of XDATA memory
+   159 bytes of XDATA memory
 
 Errors: none
-Warnings: 2
+Warnings: 4
