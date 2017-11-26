@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         22/Nov/2017  21:16:12 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:50:22 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -39,10 +39,10 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Components\stack\zdo\ZDProfile.c -D    #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Components\stack\zdo\ZDProfile.c -D   #
 #                          NWK_AUTO_POLL -D HAL_UART=TRUE -D                  #
 #                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D              #
 #                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSta #
@@ -325,20 +325,24 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDProfile.c
    \                                 In  segment CODE_C, align 1
     169          CONST zdpMsgProcItem_t zdpMsgProcs[] =
    \                     zdpMsgProcs:
-   \   000000   0100         DW 1
+   \   000000   0000         DW 0
    \   000002   ....         DW ??zdpProcessAddrReq?relay
-   \   000004   0200         DW 2
-   \   000006   ....         DW ??ZDO_ProcessNodeDescReq?relay
-   \   000008   0300         DW 3
-   \   00000A   ....         DW ??ZDO_ProcessPowerDescReq?relay
-   \   00000C   0400         DW 4
-   \   00000E   ....         DW ??ZDO_ProcessSimpleDescReq?relay
-   \   000010   0500         DW 5
-   \   000012   ....         DW ??ZDO_ProcessActiveEPReq?relay
-   \   000014   0600         DW 6
-   \   000016   ....         DW ??ZDO_ProcessMatchDescReq?relay
-   \   000018   FFFF         DW 65535
-   \   00001A   0000         DW 0H
+   \   000004   1300         DW 19
+   \   000006   ....         DW ??ZDO_ProcessDeviceAnnce?relay
+   \   000008   0100         DW 1
+   \   00000A   ....         DW ??zdpProcessAddrReq?relay
+   \   00000C   0200         DW 2
+   \   00000E   ....         DW ??ZDO_ProcessNodeDescReq?relay
+   \   000010   0300         DW 3
+   \   000012   ....         DW ??ZDO_ProcessPowerDescReq?relay
+   \   000014   0400         DW 4
+   \   000016   ....         DW ??ZDO_ProcessSimpleDescReq?relay
+   \   000018   0500         DW 5
+   \   00001A   ....         DW ??ZDO_ProcessActiveEPReq?relay
+   \   00001C   0600         DW 6
+   \   00001E   ....         DW ??ZDO_ProcessMatchDescReq?relay
+   \   000020   FFFF         DW 65535
+   \   000022   0000         DW 0H
     170          {
     171          #if ( RFD_RCVC_ALWAYS_ON==TRUE ) || ( ZG_BUILD_RTR_TYPE )
     172            // These aren't processed by sleeping end devices.
@@ -6762,7 +6766,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDProfile.c
      ZDP_TmpBuf                          2
      ZDP_TxOptions                       1
      zdoMsgCBs                           2
-     zdpMsgProcs                        28
+     zdpMsgProcs                        36
      fillAndSend                       186
      ?Subroutine26                      14
      ?Subroutine0                        3
@@ -6964,12 +6968,12 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDProfile.c
  
  6 085 bytes in segment BANKED_CODE
    204 bytes in segment BANK_RELAYS
-    29 bytes in segment CODE_C
+    37 bytes in segment CODE_C
      2 bytes in segment XDATA_I
      2 bytes in segment XDATA_ID
     84 bytes in segment XDATA_Z
  
- 6 320 bytes of CODE  memory
+ 6 328 bytes of CODE  memory
     86 bytes of XDATA memory
 
 Errors: none

@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         22/Nov/2017  21:16:07 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:50:09 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -39,11 +39,11 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Projects\zstack\Utilities\SerialApp\So #
-#                          urce\OSAL_ZStackTest.c -D NWK_AUTO_POLL -D         #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\S #
+#                          ource\OSAL_ZStackTest.c -D NWK_AUTO_POLL -D        #
 #                          HAL_UART=TRUE -D SERIAL_APP_PORT=0 -D              #
 #                          LCD_SUPPORTED -D xPOWER_SAVING -lC                 #
 #                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
@@ -205,7 +205,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
    \   000006   ....         DW ??APS_event_loop?relay
    \   000008   ....         DW ??APSF_ProcessEvent?relay
    \   00000A   ....         DW ??ZDApp_event_loop?relay
-   \   00000C   ....         DW ??ZStackTest_ProcessEvent?relay
+   \   00000C   ....         DW ??ZDNwkMgr_event_loop?relay
+   \   00000E   ....         DW ??ZStackTest_ProcessEvent?relay
      73            macEventLoop,
      74            nwk_event_loop,
      75            Hal_ProcessEvent,
@@ -227,7 +228,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
    \                                 In  segment XDATA_ROM_C, align 1
      90          const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
    \                     tasksCnt:
-   \   000000   07           DB 7
+   \   000000   08           DB 8
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
      91          uint16 *tasksEvents;
@@ -261,7 +262,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
     109          
     110            tasksEvents = (uint16 *)osal_mem_alloc( sizeof( uint16 ) * tasksCnt);
    \   000004                ; Setup parameters for call to function osal_mem_alloc
-   \   000004   7A0E         MOV     R2,#0xe
+   \   000004   7A10         MOV     R2,#0x10
    \   000006   7B00         MOV     R3,#0x0
    \   000008   12....       LCALL   ??osal_mem_alloc?relay
    \   00000B   90....       MOV     DPTR,#tasksEvents
@@ -272,7 +273,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
    \   000012   F0           MOVX    @DPTR,A
     111            osal_memset( tasksEvents, 0, (sizeof( uint16 ) * tasksCnt));
    \   000013                ; Setup parameters for call to function osal_memset
-   \   000013   7C0E         MOV     R4,#0xe
+   \   000013   7C10         MOV     R4,#0x10
    \   000015   7D00         MOV     R5,#0x0
    \   000017   7900         MOV     R1,#0x0
    \   000019   12....       LCALL   ??osal_memset?relay
@@ -308,15 +309,18 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
    \   000037   12....       LCALL   ??ZDApp_Init?relay
     124          #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
     125            ZDNwkMgr_Init( taskID++ );
+   \   00003A                ; Setup parameters for call to function ZDNwkMgr_Init
+   \   00003A   7906         MOV     R1,#0x6
+   \   00003C   12....       LCALL   ??ZDNwkMgr_Init?relay
     126          #endif
     127            ZStackTest_Init( taskID );
-   \   00003A                ; Setup parameters for call to function ZStackTest_Init
-   \   00003A   7906         MOV     R1,#0x6
-   \   00003C   12....       LCALL   ??ZStackTest_Init?relay
+   \   00003F                ; Setup parameters for call to function ZStackTest_Init
+   \   00003F   7907         MOV     R1,#0x7
+   \   000041   12....       LCALL   ??ZStackTest_Init?relay
     128          }
-   \   00003F   D083         POP     DPH
-   \   000041   D082         POP     DPL
-   \   000043   02....       LJMP    ?BRET
+   \   000044   D083         POP     DPH
+   \   000046   D082         POP     DPL
+   \   000048   02....       LJMP    ?BRET
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??osalInitTasks?relay:
@@ -339,6 +343,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
        -> APS_Init            4      0      0
        -> APSF_Init           4      0      0
        -> ZDApp_Init          4      0      0
+       -> ZDNwkMgr_Init       4      0      0
        -> ZStackTest_Init     4      0      0
 
 
@@ -346,20 +351,20 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\Utilities\SerialApp\Sourc
 
      Function/Label        Bytes
      --------------        -----
-     tasksArr                14
+     tasksArr                16
      tasksCnt                 1
      tasksEvents              2
-     osalInitTasks           70
+     osalInitTasks           75
      ??osalInitTasks?relay    6
 
  
- 70 bytes in segment BANKED_CODE
+ 75 bytes in segment BANKED_CODE
   6 bytes in segment BANK_RELAYS
- 15 bytes in segment XDATA_ROM_C
+ 17 bytes in segment XDATA_ROM_C
   2 bytes in segment XDATA_Z
  
- 76 bytes of CODE  memory
- 15 bytes of CONST memory
+ 81 bytes of CODE  memory
+ 17 bytes of CONST memory
   2 bytes of XDATA memory
 
 Errors: none

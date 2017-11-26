@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         24/Nov/2017  15:12:54 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:19:08 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -40,10 +40,10 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Components\stack\zdo\ZDApp.c -D        #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Components\stack\zdo\ZDApp.c -D       #
 #                          HAL_UART=TRUE -D SERIAL_APP_PORT=0 -lC             #
 #                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zs #
 #                          tack\Utilities\SerialApp\CC2530DB\CoordinatorEB\Li #
@@ -1994,8 +1994,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000035   7C00         MOV     R4,#0x0
    \   000037   7D00         MOV     R5,#0x0
    \   000039   7A81         MOV     R2,#-0x7f
-   \   00003B   12....       LCALL   ?Subroutine32 & 0xFFFF
-   \                     ??CrossCallReturnLabel_40:
+   \   00003B   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \                     ??CrossCallReturnLabel_37:
    \   00003E   12....       LCALL   ?DEALLOC_XSTACK8
    \   000041   E9           MOV     A,R1
    \   000042   7010         JNZ     ??ZDApp_InitUserDesc_0
@@ -2038,7 +2038,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   00001F   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine32:
+   \                     ?Subroutine31:
    \   000000   7B00         MOV     R3,#0x0
    \   000002   12....       LCALL   ??osal_nv_read?relay
    \   000005   7404         MOV     A,#0x4
@@ -3406,8 +3406,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000027   7C00         MOV     R4,#0x0
    \   000029   7D00         MOV     R5,#0x0
    \   00002B   7A82         MOV     R2,#-0x7e
-   \   00002D   12....       LCALL   ?Subroutine32 & 0xFFFF
-   \                     ??CrossCallReturnLabel_41:
+   \   00002D   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \                     ??CrossCallReturnLabel_38:
    \   000030   12....       LCALL   ?DEALLOC_XSTACK8
    \   000033   E9           MOV     A,R1
    \   000034   703F         JNZ     ??ZDApp_RestoreNwkKey_0
@@ -3594,9 +3594,9 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000038   7C00         MOV     R4,#0x0
    \   00003A   7D00         MOV     R5,#0x0
    \   00003C   7A85         MOV     R2,#-0x7b
-   \   00003E   12....       LCALL   ?Subroutine32 & 0xFFFF
+   \   00003E   12....       LCALL   ?Subroutine31 & 0xFFFF
    1672            }
-   \                     ??CrossCallReturnLabel_42:
+   \                     ??CrossCallReturnLabel_39:
    \   000041   12....       LCALL   ?DEALLOC_XSTACK8
    1673          }
    \                     ??ZDApp_LeaveCtrlInit_0:
@@ -4132,8 +4132,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000032   7C14         MOV     R4,#0x14
    \   000034   7D00         MOV     R5,#0x0
    \   000036   7A21         MOV     R2,#0x21
-   \   000038   12....       LCALL   ?Subroutine32 & 0xFFFF
-   \                     ??CrossCallReturnLabel_43:
+   \   000038   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \                     ??CrossCallReturnLabel_40:
    \   00003B   12....       LCALL   ?DEALLOC_XSTACK8
    1897          
    1898            // Does the NIB have anything more than default?
@@ -4745,12 +4745,12 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000009   F0           MOVX    @DPTR,A
    2134          
    2135            if ( Status == ZSUCCESS )
-   \   00000A   7008         JNZ     ??ZDO_NetworkFormationConfirmCB_0
+   \   00000A   700A         JNZ     ??ZDO_NetworkFormationConfirmCB_0
    2136            {
    2137              // LED on shows Coordinator started
    2138              HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
    \   00000C                ; Setup parameters for call to function HalLedSet
-   \   00000C   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \   00000C   12....       LCALL   ?Subroutine33 & 0xFFFF
    2139          
    2140              // LED off forgets HOLD_AUTO_START
    2141              HalLedSet (HAL_LED_4, HAL_LED_MODE_OFF);
@@ -4760,31 +4760,37 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    2145          #endif
    2146          
    2147              if ( devState == DEV_HOLD )
-   \                     ??CrossCallReturnLabel_37:
-   \   00000F   7003         JNZ     ??ZDO_NetworkFormationConfirmCB_0
+   \                     ??CrossCallReturnLabel_44:
+   \   00000F   700C         JNZ     ??ZDO_NetworkFormationConfirmCB_1
    2148              {
    2149                // Began with HOLD_AUTO_START
    2150                devState = DEV_COORD_STARTING;
    \   000011   7408         MOV     A,#0x8
    \   000013   F0           MOVX    @DPTR,A
+   \   000014   8007         SJMP    ??ZDO_NetworkFormationConfirmCB_1
    2151              }
    2152            }
    2153          #if defined(BLINK_LEDS)
    2154            else
    2155            {
-   2156              //HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   2156              HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   \                     ??ZDO_NetworkFormationConfirmCB_0:
+   \   000016                ; Setup parameters for call to function HalLedSet
+   \   000016   7A04         MOV     R2,#0x4
+   \   000018   7904         MOV     R1,#0x4
+   \   00001A   12....       LCALL   ??HalLedSet?relay
    2157            }
    2158          #endif
    2159          
    2160            osal_set_event( ZDAppTaskID, ZDO_NETWORK_START );
-   \                     ??ZDO_NetworkFormationConfirmCB_0:
-   \   000014                ; Setup parameters for call to function osal_set_event
-   \   000014   7A02         MOV     R2,#0x2
-   \   000016   02....       LJMP    ?Subroutine0 & 0xFFFF
+   \                     ??ZDO_NetworkFormationConfirmCB_1:
+   \   00001D                ; Setup parameters for call to function osal_set_event
+   \   00001D   7A02         MOV     R2,#0x2
+   \   00001F   02....       LJMP    ?Subroutine0 & 0xFFFF
    2161          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine31:
+   \                     ?Subroutine33:
    \   000000   7A01         MOV     R2,#0x1
    \   000002   7904         MOV     R1,#0x4
    \   000004   12....       LCALL   ??HalLedSet?relay
@@ -5172,8 +5178,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000187   C3           CLR     C
    \   000188   98           SUBB    A,R0
    \   000189   500D         JNC     ??ZDO_beaconNotifyIndCB_11
-   \   00018B   12....       LCALL   ?Subroutine33 & 0xFFFF
-   \                     ??CrossCallReturnLabel_44:
+   \   00018B   12....       LCALL   ?Subroutine32 & 0xFFFF
+   \                     ??CrossCallReturnLabel_41:
    \   00018E   12....       LCALL   ??Subroutine53_0 & 0xFFFF
    \                     ??CrossCallReturnLabel_112:
    \   000191   C3           CLR     C
@@ -5210,8 +5216,8 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   0001B6   A3           INC     DPTR
    \   0001B7   E0           MOVX    A,@DPTR
    \   0001B8   F8           MOV     R0,A
-   \   0001B9   12....       LCALL   ?Subroutine33 & 0xFFFF
-   \                     ??CrossCallReturnLabel_45:
+   \   0001B9   12....       LCALL   ?Subroutine32 & 0xFFFF
+   \                     ??CrossCallReturnLabel_42:
    \   0001BC   12....       LCALL   ??Subroutine53_0 & 0xFFFF
    \                     ??CrossCallReturnLabel_113:
    \   0001BF   C3           CLR     C
@@ -5288,9 +5294,9 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \                     ??CrossCallReturnLabel_18:
    \   0001FC   F0           MOVX    @DPTR,A
    2294                  pNwkDesc->chosenRouterDepth       = pBeacon->depth;
-   \   0001FD   12....       LCALL   ?Subroutine33 & 0xFFFF
+   \   0001FD   12....       LCALL   ?Subroutine32 & 0xFFFF
    2295                }
-   \                     ??CrossCallReturnLabel_46:
+   \                     ??CrossCallReturnLabel_43:
    \   000200   12....       LCALL   ??Subroutine51_0 & 0xFFFF
    \                     ??CrossCallReturnLabel_105:
    \   000203   12....       LCALL   ?Subroutine19 & 0xFFFF
@@ -5348,7 +5354,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    2304          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine33:
+   \                     ?Subroutine32:
    \   000000   E5..         MOV     A,?V0 + 0
    \   000002   240B         ADD     A,#0xb
    \   000004   F582         MOV     DPL,A
@@ -5425,36 +5431,42 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   000009   F0           MOVX    @DPTR,A
    2319          
    2320            if ( Status == ZSUCCESS )
-   \   00000A   7008         JNZ     ??ZDO_StartRouterConfirmCB_0
+   \   00000A   700A         JNZ     ??ZDO_StartRouterConfirmCB_0
    2321            {
    2322              // LED on shows Router started
    2323              HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
    \   00000C                ; Setup parameters for call to function HalLedSet
-   \   00000C   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \   00000C   12....       LCALL   ?Subroutine33 & 0xFFFF
    2324              // LED off forgets HOLD_AUTO_START
    2325              HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF);
    2326              if ( devState == DEV_HOLD )
-   \                     ??CrossCallReturnLabel_38:
-   \   00000F   7003         JNZ     ??ZDO_StartRouterConfirmCB_0
+   \                     ??CrossCallReturnLabel_45:
+   \   00000F   700C         JNZ     ??ZDO_StartRouterConfirmCB_1
    2327              {
    2328                // Began with HOLD_AUTO_START
    2329                devState = DEV_END_DEVICE;
    \   000011   7406         MOV     A,#0x6
    \   000013   F0           MOVX    @DPTR,A
+   \   000014   8007         SJMP    ??ZDO_StartRouterConfirmCB_1
    2330              }
    2331            }
    2332          #if defined(BLINK_LEDS)
    2333            else
    2334            {
-   2335              //HalLedSet( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   2335              HalLedSet( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   \                     ??ZDO_StartRouterConfirmCB_0:
+   \   000016                ; Setup parameters for call to function HalLedSet
+   \   000016   7A04         MOV     R2,#0x4
+   \   000018   7904         MOV     R1,#0x4
+   \   00001A   12....       LCALL   ??HalLedSet?relay
    2336            }
    2337          #endif
    2338          
    2339            osal_set_event( ZDAppTaskID, ZDO_ROUTER_START );
-   \                     ??ZDO_StartRouterConfirmCB_0:
-   \   000014                ; Setup parameters for call to function osal_set_event
-   \   000014   7A20         MOV     R2,#0x20
-   \   000016   02....       LJMP    ?Subroutine0 & 0xFFFF
+   \                     ??ZDO_StartRouterConfirmCB_1:
+   \   00001D                ; Setup parameters for call to function osal_set_event
+   \   00001D   7A20         MOV     R2,#0x20
+   \   00001F   02....       LJMP    ?Subroutine0 & 0xFFFF
    2340          }
    2341          
    2342          /*********************************************************************
@@ -5488,22 +5500,23 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    \   00000F   F0           MOVX    @DPTR,A
    2358          
    2359            if ( Status == ZSUCCESS )
-   \   000010   7008         JNZ     ??ZDO_JoinConfirmCB_0
+   \   000010   700A         JNZ     ??ZDO_JoinConfirmCB_0
    2360            {
    2361              // LED on shows device joined
    2362              HalLedSet ( HAL_LED_3, HAL_LED_MODE_ON );
    \   000012                ; Setup parameters for call to function HalLedSet
-   \   000012   12....       LCALL   ?Subroutine31 & 0xFFFF
+   \   000012   12....       LCALL   ?Subroutine33 & 0xFFFF
    2363              // LED off forgets HOLD_AUTO_START
    2364              HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF);
    2365              if ( (devState == DEV_HOLD) )
-   \                     ??CrossCallReturnLabel_39:
-   \   000015   7003         JNZ     ??ZDO_JoinConfirmCB_0
+   \                     ??CrossCallReturnLabel_46:
+   \   000015   700C         JNZ     ??ZDO_JoinConfirmCB_1
    2366              {
    2367                // Began with HOLD_AUTO_START
    2368                devState = DEV_NWK_JOINING;
    \   000017   7403         MOV     A,#0x3
    \   000019   F0           MOVX    @DPTR,A
+   \   00001A   8007         SJMP    ??ZDO_JoinConfirmCB_1
    2369              }
    2370          
    2371              if ( !ZG_SECURE_ENABLED )
@@ -5515,70 +5528,75 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
    2377            else
    2378            {
    2379          #if defined(BLINK_LEDS)
-   2380              //HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   2380              HalLedSet ( HAL_LED_3, HAL_LED_MODE_FLASH );  // Flash LED to show failure
+   \                     ??ZDO_JoinConfirmCB_0:
+   \   00001C                ; Setup parameters for call to function HalLedSet
+   \   00001C   7A04         MOV     R2,#0x4
+   \   00001E   7904         MOV     R1,#0x4
+   \   000020   12....       LCALL   ??HalLedSet?relay
    2381          #endif
    2382            }
    2383          
    2384            // Pass the join confirm to higher layer if callback registered
    2385            if (zdoCBFunc[ZDO_JOIN_CNF_CBID] != NULL )
-   \                     ??ZDO_JoinConfirmCB_0:
-   \   00001A   90....       MOV     DPTR,#zdoCBFunc + 8
-   \   00001D   12....       LCALL   ?Subroutine12 & 0xFFFF
+   \                     ??ZDO_JoinConfirmCB_1:
+   \   000023   90....       MOV     DPTR,#zdoCBFunc + 8
+   \   000026   12....       LCALL   ?Subroutine12 & 0xFFFF
    \                     ??CrossCallReturnLabel_11:
-   \   000020   6033         JZ      ??ZDO_JoinConfirmCB_1
+   \   000029   6033         JZ      ??ZDO_JoinConfirmCB_2
    2386            {
    2387              zdoJoinCnf_t joinCnf;
    2388          
    2389              joinCnf.status = Status;
-   \   000022   EE           MOV     A,R6
-   \   000023   85..82       MOV     DPL,?XSP + 0
-   \   000026   85..83       MOV     DPH,?XSP + 1
-   \   000029   F0           MOVX    @DPTR,A
+   \   00002B   EE           MOV     A,R6
+   \   00002C   85..82       MOV     DPL,?XSP + 0
+   \   00002F   85..83       MOV     DPH,?XSP + 1
+   \   000032   F0           MOVX    @DPTR,A
    2390              joinCnf.deviceAddr = _NIB.nwkDevAddress;
-   \   00002A   90....       MOV     DPTR,#_NIB + 20
-   \   00002D   12....       LCALL   ??Subroutine46_0 & 0xFFFF
+   \   000033   90....       MOV     DPTR,#_NIB + 20
+   \   000036   12....       LCALL   ??Subroutine46_0 & 0xFFFF
    \                     ??CrossCallReturnLabel_81:
-   \   000030   7401         MOV     A,#0x1
-   \   000032   12....       LCALL   ?XSTACK_DISP0_8
-   \   000035   E8           MOV     A,R0
-   \   000036   F0           MOVX    @DPTR,A
-   \   000037   A3           INC     DPTR
-   \   000038   E9           MOV     A,R1
-   \   000039   F0           MOVX    @DPTR,A
+   \   000039   7401         MOV     A,#0x1
+   \   00003B   12....       LCALL   ?XSTACK_DISP0_8
+   \   00003E   E8           MOV     A,R0
+   \   00003F   F0           MOVX    @DPTR,A
+   \   000040   A3           INC     DPTR
+   \   000041   E9           MOV     A,R1
+   \   000042   F0           MOVX    @DPTR,A
    2391              joinCnf.parentAddr = _NIB.nwkCoordAddress;
-   \   00003A   90....       MOV     DPTR,#_NIB + 23
-   \   00003D   12....       LCALL   ??Subroutine46_0 & 0xFFFF
+   \   000043   90....       MOV     DPTR,#_NIB + 23
+   \   000046   12....       LCALL   ??Subroutine46_0 & 0xFFFF
    2392          
    2393              zdoCBFunc[ZDO_JOIN_CNF_CBID]( (void*)&joinCnf );
    2394            }
    \                     ??CrossCallReturnLabel_82:
-   \   000040   7403         MOV     A,#0x3
-   \   000042   12....       LCALL   ?XSTACK_DISP0_8
-   \   000045   E8           MOV     A,R0
-   \   000046   F0           MOVX    @DPTR,A
-   \   000047   A3           INC     DPTR
-   \   000048   E9           MOV     A,R1
-   \   000049   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \   000049   7403         MOV     A,#0x3
+   \   00004B   12....       LCALL   ?XSTACK_DISP0_8
+   \   00004E   E8           MOV     A,R0
+   \   00004F   F0           MOVX    @DPTR,A
+   \   000050   A3           INC     DPTR
+   \   000051   E9           MOV     A,R1
+   \   000052   12....       LCALL   ?Subroutine9 & 0xFFFF
    \                     ??CrossCallReturnLabel_1:
-   \   00004C   90....       MOV     DPTR,#zdoCBFunc + 8
-   \   00004F   12....       LCALL   ?Subroutine18 & 0xFFFF
+   \   000055   90....       MOV     DPTR,#zdoCBFunc + 8
+   \   000058   12....       LCALL   ?Subroutine18 & 0xFFFF
    \                     ??CrossCallReturnLabel_102:
-   \   000052   12....       LCALL   ?CALL_IND
+   \   00005B   12....       LCALL   ?CALL_IND
    2395          
    2396            // Notify ZDApp
    2397            ZDApp_SendMsg( ZDAppTaskID, ZDO_NWK_JOIN_IND, sizeof(osal_event_hdr_t), (byte*)NULL );
-   \                     ??ZDO_JoinConfirmCB_1:
-   \   000055                ; Setup parameters for call to function ZDApp_SendMsg
-   \   000055   7C00         MOV     R4,#0x0
-   \   000057   7D00         MOV     R5,#0x0
-   \   000059   7B02         MOV     R3,#0x2
-   \   00005B   7A02         MOV     R2,#0x2
-   \   00005D   12....       LCALL   ?Subroutine23 & 0xFFFF
+   \                     ??ZDO_JoinConfirmCB_2:
+   \   00005E                ; Setup parameters for call to function ZDApp_SendMsg
+   \   00005E   7C00         MOV     R4,#0x0
+   \   000060   7D00         MOV     R5,#0x0
+   \   000062   7B02         MOV     R3,#0x2
+   \   000064   7A02         MOV     R2,#0x2
+   \   000066   12....       LCALL   ?Subroutine23 & 0xFFFF
    2398          
    2399          }
    \                     ??CrossCallReturnLabel_27:
-   \   000060                REQUIRE ?Subroutine6
-   \   000060                ; // Fall through to label ?Subroutine6
+   \   000069                REQUIRE ?Subroutine6
+   \   000069                ; // Fall through to label ?Subroutine6
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine6:
@@ -7561,6 +7579,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
      ZDO_JoinConfirmCB                  1      0     14
        -> HalLedSet                     0      0     28
        -> HalLedSet                     0      0     28
+       -> HalLedSet                     0      0     28
        -> ZDApp_SendMsg                 0      0     28
      ZDO_JoinIndicationCB               0      0      1
      ZDO_LeaveCnf                       0      0     10
@@ -7582,11 +7601,13 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
      ZDO_NetworkFormationConfirmCB      0      0      9
        -> HalLedSet                     0      0     18
        -> HalLedSet                     0      0     18
+       -> HalLedSet                     0      0     18
        -> osal_set_event                0      0     18
      ZDO_PollConfirmCB                  0      0      0
      ZDO_RegisterForZdoCB               2      0      0
      ZDO_SrcRtgIndCB                    1      0     14
      ZDO_StartRouterConfirmCB           0      0      9
+       -> HalLedSet                     0      0     18
        -> HalLedSet                     0      0     18
        -> HalLedSet                     0      0     18
        -> osal_set_event                0      0     18
@@ -7656,7 +7677,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
      ?Subroutine12                                  8
      ZDApp_InitUserDesc                            89
      ?Subroutine26                                 32
-     ?Subroutine32                                  8
+     ?Subroutine31                                  8
      ZDAppCheckForHoldKey                          20
      ZDApp_ProcessOSALMsg                          50
      ??Subroutine49_0                               6
@@ -7704,17 +7725,17 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
      ?Subroutine21                                 10
      ??Subroutine47_0                               6
      ?Subroutine0                                   3
-     ZDO_NetworkFormationConfirmCB                 25
-     ?Subroutine31                                 19
+     ZDO_NetworkFormationConfirmCB                 34
+     ?Subroutine33                                 19
      ZDO_beaconNotifyIndCB                        575
-     ?Subroutine33                                  9
+     ?Subroutine32                                  9
      ?Subroutine24                                  4
      ?Subroutine35                                 11
      ?Subroutine19                                  8
      ?Subroutine10                                  7
      ?Subroutine34                                  9
-     ZDO_StartRouterConfirmCB                      25
-     ZDO_JoinConfirmCB                             96
+     ZDO_StartRouterConfirmCB                      34
+     ZDO_JoinConfirmCB                            105
      ?Subroutine6                                   8
      ZDO_AddrChangeIndicationCB                    90
      ?Subroutine17                                  1
@@ -7824,14 +7845,14 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\stack\zdo\ZDApp.c
      ??ZDO_DeregisterForZdoCB?relay                 6
 
  
- 5 173 bytes in segment BANKED_CODE
+ 5 200 bytes in segment BANKED_CODE
    390 bytes in segment BANK_RELAYS
     12 bytes in segment XDATA_I
     12 bytes in segment XDATA_ID
      8 bytes in segment XDATA_ROM_C
     53 bytes in segment XDATA_Z
  
- 5 575 bytes of CODE  memory
+ 5 602 bytes of CODE  memory
      0 bytes of CONST memory (+ 8 bytes shared)
     65 bytes of XDATA memory
 

@@ -12,45 +12,95 @@
 
 #include "uart.h"
 
+/*
+ * variables
+ */
+uint8 UART0_TX_BUFF[TX_BUFF_SZ];          // Rx buffer
+uint8 UART0_TX_STA = 0;                   // Rx state
+uint8 UART0_TX_LEN = 0;                   // Rx length
+
+/*
+ * Local functions
+ */
+void Uart0_Handle(void);
+void Uart0_Reset(void);
 void GetIeeeAddr(uint8 * pIeeeAddr, uint8 *pStr);
 void Delay_ms(uint8 Time);
 
-void Uart0_Handle(uint8* ZStackTest_TxBuf)
+uint8 Uart0_Process()
 {
-  uint8 cmd[256]={0};
-  uint8 tmpbuf[256]={0};
+  uint8 Res;
 
-  if(strstr((const char *)ZStackTest_TxBuf,"LED")!=NULL)  //receive cmd "LED"
+  while (Hal_UART_RxBufLen(SERIAL_APP_PORT) && ((UART0_TX_STA&0x3F) < TX_BUFF_SZ))
   {
-    if (strstr((const char*)ZStackTest_TxBuf, "LED1ON") != NULL)
+    HalUARTRead (SERIAL_APP_PORT, &Res, 1); // read one char from uart0
+    UART0_TX_BUFF[UART0_TX_STA & 0x3F]=Res ;
+    UART0_TX_STA++;
+
+    if((UART0_TX_STA & 0x80)==0) // receive not finish
+    {
+      if(UART0_TX_STA & 0x40)  // has received one '#'
+      {
+        if (Res==0x0D | Res == 0x0A)
+          UART0_TX_STA |= 0x80;  // receive one '#'
+        else
+          UART0_TX_STA &= 0xBF;  // next char isn't '#', cmd not end
+      }
+      else
+      {
+        if(Res==0x0D | Res == 0x0A)
+          UART0_TX_STA |= 0x40;
+      }
+    }
+
+    if((UART0_TX_STA & 0x80)==0x80)
+    {
+      UART0_TX_LEN = (UART0_TX_STA&0x3F)-2;
+      Uart0_Handle();
+      break;
+    }
+  }
+
+  Uart0_Reset();
+  return UART0_TX_LEN;
+}
+
+void Uart0_Handle()
+{
+  uint8 cmd[64]={0};
+  uint8 tmpbuf[64]={0};
+
+  if(strstr((const char *)UART0_TX_BUFF,"LED")!=NULL)  //receive cmd "LED"
+  {
+    if (strstr((const char*)UART0_TX_BUFF, "LED1ON") != NULL)
     {
       HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
     }
-    if (strstr((const char*)ZStackTest_TxBuf, "LED1OFF") != NULL)
+    if (strstr((const char*)UART0_TX_BUFF, "LED1OFF") != NULL)
     {
       HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
     }
-    if (strstr((const char*)ZStackTest_TxBuf, "LED2ON") != NULL)
+    if (strstr((const char*)UART0_TX_BUFF, "LED2ON") != NULL)
     {
       HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
     }
-    if (strstr((const char*)ZStackTest_TxBuf, "LED2OFF") != NULL)
+    if (strstr((const char*)UART0_TX_BUFF, "LED2OFF") != NULL)
     {
       HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
     }
-    if (strstr((const char*)ZStackTest_TxBuf, "LED3ON") != NULL)
+    if (strstr((const char*)UART0_TX_BUFF, "LED3ON") != NULL)
     {
       HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
     }
-    if (strstr((const char*)ZStackTest_TxBuf, "LED3OFF") != NULL)
+    if (strstr((const char*)UART0_TX_BUFF, "LED3OFF") != NULL)
     {
       HalLedSet(HAL_LED_3, HAL_LED_MODE_OFF);
     }
   }
 
-  if(strstr((const char *)ZStackTest_TxBuf,"AT") != NULL)  //receive cmd "AT"
+  if(strstr((const char *)UART0_TX_BUFF,"AT") != NULL)  //receive cmd "AT"
   {
-    sscanf((const char*)ZStackTest_TxBuf, "%*[^+]%*c%[^#]%*c%s", cmd, tmpbuf);
+    sscanf((const char*)UART0_TX_BUFF, "%*[^+]%*c%[^#]%*c%s", cmd, tmpbuf);
     if (strstr((const char*)cmd, "GETADDR") != NULL) {
       char addrbuff[20] = {0};
       sprintf(addrbuff, "SelfshortAddr:%04X", NLME_GetShortAddr());
@@ -66,6 +116,12 @@ void Uart0_Handle(uint8* ZStackTest_TxBuf)
       ZStackTest_Send_Group_Message();
     }
   }
+}
+
+void Uart0_Reset(void)
+{
+  memset(UART0_TX_BUFF, 0, 64);
+  UART0_TX_STA = 0;
 }
 
 //Print short address and IEEE address from UART

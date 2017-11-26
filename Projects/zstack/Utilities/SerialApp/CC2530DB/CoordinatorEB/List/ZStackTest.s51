@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  01:25:37 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:19:25 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -40,17 +40,17 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTr /
-//                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\ /
-//                          Source\ZStackTest.c -D HAL_UART=TRUE -D           /
-//                          SERIAL_APP_PORT=0 -lC D:\Zigbee\workspace\JustTry /
-//                          \ZStackTest\Projects\zstack\Utilities\SerialApp\C /
-//                          C2530DB\CoordinatorEB\List\ -lA                   /
+//                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000        /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100   /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
+//                          stack\Utilities\SerialApp\Source\ZStackTest.c -D  /
+//                          HAL_UART=TRUE -D SERIAL_APP_PORT=0 -lC            /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\CoordinatorEB\ /
-//                          List\ --diag_suppress Pe001,Pa010 -o              /
+//                          List\ -lA D:\Zigbee\workspace\JustTry\ZStackTest\ /
+//                          Projects\zstack\Utilities\SerialApp\CC2530DB\Coor /
+//                          dinatorEB\List\ --diag_suppress Pe001,Pa010 -o    /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\CoordinatorEB\ /
 //                          Obj\ -e --no_code_motion --debug --core=plain     /
@@ -400,13 +400,11 @@ aps_RemoveGroup     SYMBOL "aps_RemoveGroup"
 osal_stop_timerEx   SYMBOL "osal_stop_timerEx"
 ZDP_EndDeviceBindReq SYMBOL "ZDP_EndDeviceBindReq"
 ZDP_MatchDescReq    SYMBOL "ZDP_MatchDescReq"
-HalUARTRead         SYMBOL "HalUARTRead"
-Uart0_Handle        SYMBOL "Uart0_Handle"
+Uart0_Process       SYMBOL "Uart0_Process"
 osal_memset         SYMBOL "osal_memset"
 ??AF_DataRequest?relay SYMBOL "?relay", AF_DataRequest
 ??HalLedSet?relay   SYMBOL "?relay", HalLedSet
 ??HalUARTOpen?relay SYMBOL "?relay", HalUARTOpen
-??HalUARTRead?relay SYMBOL "?relay", HalUARTRead
 ??HalUARTWrite?relay SYMBOL "?relay", HalUARTWrite
 ??NLME_GetCoordExtAddr?relay SYMBOL "?relay", NLME_GetCoordExtAddr
 ??NLME_GetCoordShortAddr?relay SYMBOL "?relay", NLME_GetCoordShortAddr
@@ -414,7 +412,7 @@ osal_memset         SYMBOL "osal_memset"
 ??NLME_GetShortAddr?relay SYMBOL "?relay", NLME_GetShortAddr
 ??PrintAddrInfo?relay SYMBOL "?relay", PrintAddrInfo
 ??RegisterForKeys?relay SYMBOL "?relay", RegisterForKeys
-??Uart0_Handle?relay SYMBOL "?relay", Uart0_Handle
+??Uart0_Process?relay SYMBOL "?relay", Uart0_Process
 ??ZDO_RegisterForZDOMsg?relay SYMBOL "?relay", ZDO_RegisterForZDOMsg
 ??ZDP_EndDeviceBindReq?relay SYMBOL "?relay", ZDP_EndDeviceBindReq
 ??ZDP_MatchDescReq?relay SYMBOL "?relay", ZDP_MatchDescReq
@@ -601,15 +599,8 @@ ZStackTest_Send_P2P_Message SYMBOL "ZStackTest_Send_P2P_Message"
         ARGFRAME XSTACK, 30, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        EXTERN HalUARTRead
-        FUNCTION HalUARTRead,0202H
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        EXTERN Uart0_Handle
-        FUNCTION Uart0_Handle,0202H
+        EXTERN Uart0_Process
+        FUNCTION Uart0_Process,0202H
         ARGFRAME ISTACK, 2, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 0, STACK
@@ -628,8 +619,6 @@ ZStackTest_Send_P2P_Message SYMBOL "ZStackTest_Send_P2P_Message"
         FUNCTION ??HalLedSet?relay,00H
         EXTERN ??HalUARTOpen?relay
         FUNCTION ??HalUARTOpen?relay,00H
-        EXTERN ??HalUARTRead?relay
-        FUNCTION ??HalUARTRead?relay,00H
         EXTERN ??HalUARTWrite?relay
         FUNCTION ??HalUARTWrite?relay,00H
         EXTERN ??NLME_GetCoordExtAddr?relay
@@ -644,8 +633,8 @@ ZStackTest_Send_P2P_Message SYMBOL "ZStackTest_Send_P2P_Message"
         FUNCTION ??PrintAddrInfo?relay,00H
         EXTERN ??RegisterForKeys?relay
         FUNCTION ??RegisterForKeys?relay,00H
-        EXTERN ??Uart0_Handle?relay
-        FUNCTION ??Uart0_Handle?relay,00H
+        EXTERN ??Uart0_Process?relay
+        FUNCTION ??Uart0_Process?relay,00H
         EXTERN ??ZDO_RegisterForZDOMsg?relay
         FUNCTION ??ZDO_RegisterForZDOMsg?relay,00H
         EXTERN ??ZDP_EndDeviceBindReq?relay
@@ -1239,7 +1228,7 @@ ZStackTest_Init:
         MOV     R1,#0xb
         LCALL   ??aps_AddGroup?relay
         ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x1
+        MOV     R2,#0x0
         MOV     R1,#0x2
         LCALL   ??HalLedSet?relay
 //  233 
@@ -1619,7 +1608,7 @@ ZStackTest_ProcessEvent:
 //  292       		      NLME_GetCoordExtAddr(pIeeeAddr);
 //  293       		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
 //  294               }
-//  295 		break;
+//  295 		    break;
 //  296       case ZDO_CB_MSG:
 //  297         //ZStackTest_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
 //  298         break;
@@ -2222,17 +2211,18 @@ ZStackTest_HandleKeys:
 //  431           osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
 //  432         }
 //  433       #elif (SECOND_PART)
-//  434         ZStackTest_Send_P2P_Message();
-        ; Setup parameters for call to function ZStackTest_Send_P2P_Message
-        LCALL   ??ZStackTest_Send_P2P_Message?relay
-//  435         //ZStackTest_Send_Broadcast_Message();
-//  436         //ZStackTest_Send_Group_Message();
-//  437         if(KeyFlag == 0)
+//  434         if(KeyFlag == 0)
         MOV     DPTR,#KeyFlag
         MOVX    A,@DPTR
         JNZ     ??ZStackTest_HandleKeys_2
-//  438         {
+//  435         {
+//  436           ZStackTest_Send_P2P_Message();
+        ; Setup parameters for call to function ZStackTest_Send_P2P_Message
+        LCALL   ??ZStackTest_Send_P2P_Message?relay
+//  437           //ZStackTest_Send_Broadcast_Message();
+//  438           //ZStackTest_Send_Group_Message();
 //  439           KeyFlag = 1;
+        MOV     DPTR,#KeyFlag
         MOV     A,#0x1
         MOVX    @DPTR,A
 //  440           osal_start_timerEx( ZStackTest_TaskID,
@@ -2278,9 +2268,9 @@ ZStackTest_HandleKeys:
         MOV     R3,#0x0
         MOV     R1,#0xb
         LCALL   ??aps_RemoveGroup?relay
-//  454               HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+//  454               HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
         ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x0
+        MOV     R2,#0x1
         SJMP    ??ZStackTest_HandleKeys_5
 //  455             }
 //  456             else
@@ -2293,9 +2283,9 @@ ZStackTest_HandleKeys:
         MOV     R3,#(ZStackTest_Group >> 8) & 0xff
         MOV     R1,#0xb
         LCALL   ??aps_AddGroup?relay
-//  460               HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+//  460               HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
         ; Setup parameters for call to function HalLedSet
-        MOV     R2,#0x1
+        MOV     R2,#0x0
 ??ZStackTest_HandleKeys_5:
         MOV     R1,#0x2
         LCALL   ??HalLedSet?relay
@@ -3029,18 +3019,7 @@ ZStackTest_Send:
         CFI Function ZStackTest_Send
         CODE
 //  580 {
-        FUNCALL ZStackTest_Send, HalUARTRead
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL ZStackTest_Send, Uart0_Handle
+        FUNCALL ZStackTest_Send, Uart0_Process
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
         LOCFRAME XSTACK, 0, STACK
@@ -3091,18 +3070,13 @@ ZStackTest_Send:
 //  599   }
 //  600 #else
 //  601   if (!ZStackTest_TxLen &&
-//  602       (ZStackTest_TxLen = HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf, SERIAL_APP_TX_MAX)))
+//  602       (ZStackTest_TxLen = Uart0_Process()))
         MOV     DPTR,#ZStackTest_TxLen
         MOVX    A,@DPTR
         JNZ     ??ZStackTest_Send_0
-        ; Setup parameters for call to function HalUARTRead
-        MOV     R4,#0x50
-        MOV     R5,#0x0
-        MOV     R2,#ZStackTest_TxBuf & 0xff
-        MOV     R3,#(ZStackTest_TxBuf >> 8) & 0xff
-        MOV     R1,#0x0
-        LCALL   ??HalUARTRead?relay
-        MOV     A,R2
+        ; Setup parameters for call to function Uart0_Process
+        LCALL   ??Uart0_Process?relay
+        MOV     A,R1
         MOV     DPTR,#ZStackTest_TxLen
         MOVX    @DPTR,A
 //  603   {
@@ -3115,26 +3089,21 @@ ZStackTest_Send:
         MOVX    A,@DPTR
         JZ      ??ZStackTest_Send_1
 //  609   {
-//  610     Uart0_Handle(ZStackTest_TxBuf);
-        ; Setup parameters for call to function Uart0_Handle
-        MOV     R2,#ZStackTest_TxBuf & 0xff
-        MOV     R3,#(ZStackTest_TxBuf >> 8) & 0xff
-        LCALL   ??Uart0_Handle?relay
-//  611     osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_RX_SZ);
+//  610     osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_TX_MAX);
         ; Setup parameters for call to function osal_memset
-        MOV     R4,#-0x80
+        MOV     R4,#0x50
         MOV     R5,#0x0
         MOV     R1,#0x0
         MOV     R2,#ZStackTest_TxBuf & 0xff
         MOV     R3,#(ZStackTest_TxBuf >> 8) & 0xff
         LCALL   ??osal_memset?relay
-//  612     ZStackTest_TxLen = 0;
+//  611     ZStackTest_TxLen = 0;
         MOV     DPTR,#ZStackTest_TxLen
         CLR     A
         MOVX    @DPTR,A
-//  613   }
-//  614 #endif
-//  615 }
+//  612   }
+//  613 #endif
+//  614 }
 ??ZStackTest_Send_1:
         POP     DPH
         CFI DPH0 SameValue
@@ -3144,46 +3113,46 @@ ZStackTest_Send:
         CFI CFA_SP SP+-3
         LJMP    ?BRET
         CFI EndBlock cfiBlock17
-//  616 
-//  617 /*********************************************************************
-//  618  * @fn      ZStackTest_Resp
-//  619  *
-//  620  * @brief   Send data OTA.
-//  621  *
-//  622  * @param   none
-//  623  *
-//  624  * @return  none
-//  625  */
-//  626 static void ZStackTest_Resp(void)
-//  627 {
-//  628   if (afStatus_SUCCESS != AF_DataRequest(&ZStackTest_RxAddr,
-//  629                                          (endPointDesc_t *)&ZStackTest_epDesc,
-//  630                                          ZStackTest_CLUSTERID2,
-//  631                                          SERIAL_APP_RSP_CNT, ZStackTest_RspBuf,
-//  632                                          &ZStackTest_TransID, 0, AF_DEFAULT_RADIUS))
-//  633   {
-//  634     osal_set_event(ZStackTest_TaskID, ZStackTest_RESP_EVT);
-//  635   }
-//  636 }
-//  637 
-//  638 /*********************************************************************
-//  639  * @fn      ZStackTest_CallBack
-//  640  *
-//  641  * @brief   Send data OTA.
-//  642  *
-//  643  * @param   port - UART port.
-//  644  * @param   event - the UART port event flag.
-//  645  *
-//  646  * @return  none
-//  647  */
+//  615 
+//  616 /*********************************************************************
+//  617  * @fn      ZStackTest_Resp
+//  618  *
+//  619  * @brief   Send data OTA.
+//  620  *
+//  621  * @param   none
+//  622  *
+//  623  * @return  none
+//  624  */
+//  625 static void ZStackTest_Resp(void)
+//  626 {
+//  627   if (afStatus_SUCCESS != AF_DataRequest(&ZStackTest_RxAddr,
+//  628                                          (endPointDesc_t *)&ZStackTest_epDesc,
+//  629                                          ZStackTest_CLUSTERID2,
+//  630                                          SERIAL_APP_RSP_CNT, ZStackTest_RspBuf,
+//  631                                          &ZStackTest_TransID, 0, AF_DEFAULT_RADIUS))
+//  632   {
+//  633     osal_set_event(ZStackTest_TaskID, ZStackTest_RESP_EVT);
+//  634   }
+//  635 }
+//  636 
+//  637 /*********************************************************************
+//  638  * @fn      ZStackTest_CallBack
+//  639  *
+//  640  * @brief   Send data OTA.
+//  641  *
+//  642  * @param   port - UART port.
+//  643  * @param   event - the UART port event flag.
+//  644  *
+//  645  * @return  none
+//  646  */
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//  648 static void ZStackTest_CallBack(uint8 port, uint8 event)
+//  647 static void ZStackTest_CallBack(uint8 port, uint8 event)
 ZStackTest_CallBack:
         CFI Block cfiBlock18 Using cfiCommon0
         CFI Function ZStackTest_CallBack
         CODE
-//  649 {
+//  648 {
         FUNCALL ZStackTest_CallBack, ZStackTest_Send
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -3212,80 +3181,80 @@ ZStackTest_CallBack:
         ; Auto size: 0
         MOV     A,R2
         MOV     R6,A
-//  650   (void)port;
-//  651 
-//  652   if ((event & (HAL_UART_RX_FULL | HAL_UART_RX_ABOUT_FULL | HAL_UART_RX_TIMEOUT)) &&
-//  653 #if SERIAL_APP_LOOPBACK
-//  654       (ZStackTest_TxLen < SERIAL_APP_TX_MAX))
-//  655 #else
-//  656       !ZStackTest_TxLen)
+//  649   (void)port;
+//  650 
+//  651   if ((event & (HAL_UART_RX_FULL | HAL_UART_RX_ABOUT_FULL | HAL_UART_RX_TIMEOUT)) &&
+//  652 #if SERIAL_APP_LOOPBACK
+//  653       (ZStackTest_TxLen < SERIAL_APP_TX_MAX))
+//  654 #else
+//  655       !ZStackTest_TxLen)
         MOV     A,#0x7
         ANL     A,R6
         JZ      ??ZStackTest_CallBack_0
         MOV     DPTR,#ZStackTest_TxLen
         MOVX    A,@DPTR
         JNZ     ??ZStackTest_CallBack_0
-//  657 #endif
-//  658   {
-//  659     ZStackTest_Send();
+//  656 #endif
+//  657   {
+//  658     ZStackTest_Send();
         ; Setup parameters for call to function ZStackTest_Send
         LCALL   ??ZStackTest_Send?relay
-//  660   }
-//  661 }
+//  659   }
+//  660 }
 ??ZStackTest_CallBack_0:
         MOV     R7,#0x1
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock18
-//  662 
-//  663 /*********************************************************************
-//  664  * @fn      AddressInit
-//  665  *
-//  666  * @brief   set address
-//  667  *
-//  668  * @param   none
-//  669  *
-//  670  * @return  none
-//  671  */
-//  672 void AddressInit()
-//  673 {
-//  674   ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
-//  675   ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
-//  676   ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
-//  677 
-//  678   ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
-//  679   ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
-//  680   ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
-//  681 
-//  682   // Setup for the flash command's destination address - Group 1
-//  683   ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup;//组播
-//  684   ZStackTest_Group_DstAddr.endPoint = ZStackTest_ENDPOINT;
-//  685   ZStackTest_Group_DstAddr.addr.shortAddr = ZStackTest_GROUP;
-//  686 
-//  687   // Assign to group 1
-//  688   ZStackTest_Group.ID = 0x0001;
-//  689   ZStackTest_Group.name[0] = 6; // First byte is string length
-//  690   osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
-//  691   aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
-//  692   HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-//  693 }
-//  694 
-//  695 /*********************************************************************
-//  696  * @fn      ZStackTest_Send_P2P_Message
-//  697  *
-//  698  * @brief   point to point.
-//  699  *
-//  700  * @param   none
-//  701  *
-//  702  * @return  none
-//  703  */
+//  661 
+//  662 /*********************************************************************
+//  663  * @fn      AddressInit
+//  664  *
+//  665  * @brief   set address
+//  666  *
+//  667  * @param   none
+//  668  *
+//  669  * @return  none
+//  670  */
+//  671 void AddressInit()
+//  672 {
+//  673   ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
+//  674   ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
+//  675   ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
+//  676 
+//  677   ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
+//  678   ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
+//  679   ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
+//  680 
+//  681   // Setup for the flash command's destination address - Group 1
+//  682   ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup;//组播
+//  683   ZStackTest_Group_DstAddr.endPoint = ZStackTest_ENDPOINT;
+//  684   ZStackTest_Group_DstAddr.addr.shortAddr = ZStackTest_GROUP;
+//  685 
+//  686   // Assign to group 1
+//  687   ZStackTest_Group.ID = 0x0001;
+//  688   ZStackTest_Group.name[0] = 6; // First byte is string length
+//  689   osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
+//  690   aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
+//  691   HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+//  692 }
+//  693 
+//  694 /*********************************************************************
+//  695  * @fn      ZStackTest_Send_P2P_Message
+//  696  *
+//  697  * @brief   point to point.
+//  698  *
+//  699  * @param   none
+//  700  *
+//  701  * @return  none
+//  702  */
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//  704 void ZStackTest_Send_P2P_Message( void )
+//  703 void ZStackTest_Send_P2P_Message( void )
 ZStackTest_Send_P2P_Message:
         CFI Block cfiBlock19 Using cfiCommon0
         CFI Function ZStackTest_Send_P2P_Message
         CODE
-//  705 {
+//  704 {
         FUNCALL ZStackTest_Send_P2P_Message, AF_DataRequest
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -3295,6 +3264,17 @@ ZStackTest_Send_P2P_Message:
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 31, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL ZStackTest_Send_P2P_Message, HalUARTWrite
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 22, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 22, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         MOV     A,#-0xa
@@ -3316,7 +3296,7 @@ ZStackTest_Send_P2P_Message:
         MOV     A,#-0xc
         LCALL   ?ALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 22)
-//  706   uint8 data[12]="p2p_message";
+//  705   uint8 data[12]="p2p_message";
         MOV     DPL,?XSP + 0
         MOV     DPH,?XSP + 1
         MOV     R4,DPL
@@ -3325,15 +3305,15 @@ ZStackTest_Send_P2P_Message:
         MOV     DPL,#`?<Constant "p2p_message">` & 0xff
         MOV     A,#0xc
         LCALL   ?MOVE_LONG8_XDATA_XDATA
-//  707 
-//  708   if ( AF_DataRequest( &ZStackTest_P2P_DstAddr,
-//  709                        (endPointDesc_t *)&ZStackTest_epDesc,
-//  710                        ZStackTest_P2P_CLUSTERID,
-//  711                        11,
-//  712                        data,
-//  713                        &ZStackTest_TransID,
-//  714                        AF_DISCV_ROUTE,
-//  715                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+//  706 
+//  707   if ( AF_DataRequest( &ZStackTest_P2P_DstAddr,
+//  708                        (endPointDesc_t *)&ZStackTest_epDesc,
+//  709                        ZStackTest_P2P_CLUSTERID,
+//  710                        11,
+//  711                        data,
+//  712                        &ZStackTest_TransID,
+//  713                        AF_DISCV_ROUTE,
+//  714                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
         ; Setup parameters for call to function AF_DataRequest
         MOV     ?V0 + 0,#0x1e
         MOV     R0,#?V0 + 0
@@ -3369,13 +3349,24 @@ ZStackTest_Send_P2P_Message:
 ??CrossCallReturnLabel_10:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 22)
-//  716   {
+        MOV     A,R1
+        JNZ     ??ZStackTest_Send_P2P_Message_0
+//  715   {
+//  716     HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+        ; Setup parameters for call to function HalUARTWrite
+        MOV     R4,#0x11
+        MOV     R5,#0x0
+        MOV     R2,#`?<Constant "Send successful\\r\\n">` & 0xff
+        MOV     R3,#(`?<Constant "Send successful\\r\\n">` >> 8) & 0xff
+        MOV     R1,#0x0
+        LCALL   ??HalUARTWrite?relay
 //  717   }
 //  718   else
 //  719   {
 //  720     // Error occurred in request to send.
 //  721   }
 //  722 }
+??ZStackTest_Send_P2P_Message_0:
         MOV     A,#0xc
         LJMP    ?Subroutine0 & 0xFFFF
         CFI EndBlock cfiBlock19
@@ -3406,6 +3397,17 @@ ZStackTest_Send_Broadcast_Message:
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 37, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL ZStackTest_Send_Broadcast_Message, HalUARTWrite
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 28, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 28, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         MOV     A,#-0xa
@@ -3478,13 +3480,24 @@ ZStackTest_Send_Broadcast_Message:
 ??CrossCallReturnLabel_11:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 28)
+        MOV     A,R1
+        JNZ     ??ZStackTest_Send_Broadcast_Message_0
 //  743   {
-//  744   }
-//  745   else
-//  746   {
-//  747     // Error occurred in request to send.
-//  748   }
-//  749 }
+//  744     HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+        ; Setup parameters for call to function HalUARTWrite
+        MOV     R4,#0x11
+        MOV     R5,#0x0
+        MOV     R2,#`?<Constant "Send successful\\r\\n">` & 0xff
+        MOV     R3,#(`?<Constant "Send successful\\r\\n">` >> 8) & 0xff
+        MOV     R1,#0x0
+        LCALL   ??HalUARTWrite?relay
+//  745   }
+//  746   else
+//  747   {
+//  748     // Error occurred in request to send.
+//  749   }
+//  750 }
+??ZStackTest_Send_Broadcast_Message_0:
         MOV     A,#0x12
         SJMP    ?Subroutine0
         CFI EndBlock cfiBlock20
@@ -3566,24 +3579,24 @@ ZStackTest_Send_Broadcast_Message:
         CFI EndBlock cfiCond23
         CFI EndBlock cfiCond24
         CFI EndBlock cfiPicker25
-//  750 
-//  751 /*********************************************************************
-//  752  * @fn      ZStackTest_Send_Group_Message
-//  753  *
-//  754  * @brief   Send the group message to group 1.
-//  755  *
-//  756  * @param   flashTime - in milliseconds
-//  757  *
-//  758  * @return  none
-//  759  */
+//  751 
+//  752 /*********************************************************************
+//  753  * @fn      ZStackTest_Send_Group_Message
+//  754  *
+//  755  * @brief   Send the group message to group 1.
+//  756  *
+//  757  * @param   flashTime - in milliseconds
+//  758  *
+//  759  * @return  none
+//  760  */
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//  760 void ZStackTest_Send_Group_Message( void )
+//  761 void ZStackTest_Send_Group_Message( void )
 ZStackTest_Send_Group_Message:
         CFI Block cfiBlock26 Using cfiCommon0
         CFI Function ZStackTest_Send_Group_Message
         CODE
-//  761 {
+//  762 {
         FUNCALL ZStackTest_Send_Group_Message, AF_DataRequest
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -3593,6 +3606,17 @@ ZStackTest_Send_Group_Message:
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 33, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL ZStackTest_Send_Group_Message, HalUARTWrite
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 24, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 24, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         MOV     A,#-0xa
@@ -3614,7 +3638,7 @@ ZStackTest_Send_Group_Message:
         MOV     A,#-0xe
         LCALL   ?ALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 24)
-//  762   uint8 data[] = "group_message";
+//  763   uint8 data[] = "group_message";
         MOV     DPL,?XSP + 0
         MOV     DPH,?XSP + 1
         MOV     R4,DPL
@@ -3623,14 +3647,14 @@ ZStackTest_Send_Group_Message:
         MOV     DPL,#`?<Constant "group_message">` & 0xff
         MOV     A,#0xe
         LCALL   ?MOVE_LONG8_XDATA_XDATA
-//  763 
-//  764   if ( AF_DataRequest( &ZStackTest_Group_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
-//  765                        ZStackTest_GROUP_CLUSTERID,
-//  766                        13,
-//  767                        data,
-//  768                        &ZStackTest_TransID,
-//  769                        AF_DISCV_ROUTE,
-//  770                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+//  764 
+//  765   if ( AF_DataRequest( &ZStackTest_Group_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+//  766                        ZStackTest_GROUP_CLUSTERID,
+//  767                        13,
+//  768                        data,
+//  769                        &ZStackTest_TransID,
+//  770                        AF_DISCV_ROUTE,
+//  771                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
         ; Setup parameters for call to function AF_DataRequest
         MOV     ?V0 + 0,#0x1e
         MOV     R0,#?V0 + 0
@@ -3666,13 +3690,24 @@ ZStackTest_Send_Group_Message:
 ??CrossCallReturnLabel_12:
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 24)
-//  771   {
-//  772   }
-//  773   else
-//  774   {
-//  775     // Error occurred in request to send.
-//  776   }
-//  777 }
+        MOV     A,R1
+        JNZ     ??ZStackTest_Send_Group_Message_0
+//  772   {
+//  773     HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+        ; Setup parameters for call to function HalUARTWrite
+        MOV     R4,#0x11
+        MOV     R5,#0x0
+        MOV     R2,#`?<Constant "Send successful\\r\\n">` & 0xff
+        MOV     R3,#(`?<Constant "Send successful\\r\\n">` >> 8) & 0xff
+        MOV     R1,#0x0
+        LCALL   ??HalUARTWrite?relay
+//  774   }
+//  775   else
+//  776   {
+//  777     // Error occurred in request to send.
+//  778   }
+//  779 }
+??ZStackTest_Send_Group_Message_0:
         MOV     A,#0xe
         CFI EndBlock cfiBlock26
         REQUIRE ?Subroutine0
@@ -3826,6 +3861,11 @@ ZStackTest_Send_Group_Message:
 
         RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
         DATA8
+`?<Constant "Send successful\\r\\n">`:
+        DB "Send successful\015\012"
+
+        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        DATA8
 `?<Constant "broadcast_message">`:
         DB "broadcast_message"
 
@@ -3835,18 +3875,18 @@ ZStackTest_Send_Group_Message:
         DB "group_message"
 
         END
-//  778 
-//  779 /*********************************************************************
-//  780 *********************************************************************/
+//  780 
+//  781 /*********************************************************************
+//  782 *********************************************************************/
 // 
-// 1 579 bytes in segment BANKED_CODE
+// 1 613 bytes in segment BANKED_CODE
 //    54 bytes in segment BANK_RELAYS
 //     1 byte  in segment SFR_AN
-//   155 bytes in segment XDATA_ROM_C
+//   173 bytes in segment XDATA_ROM_C
 //   159 bytes in segment XDATA_Z
 // 
-// 1 633 bytes of CODE  memory
-//   155 bytes of CONST memory
+// 1 667 bytes of CODE  memory
+//   173 bytes of CONST memory
 //     0 bytes of DATA  memory (+ 1 byte shared)
 //   159 bytes of XDATA memory
 //

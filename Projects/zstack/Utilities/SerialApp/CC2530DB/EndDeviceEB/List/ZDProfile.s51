@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        22/Nov/2017  21:16:12 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:50:22 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -39,18 +39,18 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTr /
-//                          y\ZStackTest\Components\stack\zdo\ZDProfile.c -D  /
-//                          NWK_AUTO_POLL -D HAL_UART=TRUE -D                 /
-//                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D             /
-//                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSt /
-//                          ackTest\Projects\zstack\Utilities\SerialApp\CC253 /
-//                          0DB\EndDeviceEB\List\ -lA                         /
+//                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000        /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100   /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\Zigbee\workspace\JustTry\ZStackTest\Components /
+//                          \stack\zdo\ZDProfile.c -D NWK_AUTO_POLL -D        /
+//                          HAL_UART=TRUE -D SERIAL_APP_PORT=0 -D             /
+//                          LCD_SUPPORTED -D xPOWER_SAVING -lC                /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Li /
-//                          st\ --diag_suppress Pe001,Pa010 -o                /
+//                          st\ -lA D:\Zigbee\workspace\JustTry\ZStackTest\Pr /
+//                          ojects\zstack\Utilities\SerialApp\CC2530DB\EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Ob /
 //                          j\ -e --no_code_motion --debug --core=plain       /
@@ -579,14 +579,16 @@ ZDApp_InMsgCB       SYMBOL "ZDApp_InMsgCB"
 ??ZDApp_InMsgCB?relay SYMBOL "?relay", ZDApp_InMsgCB
 `?<Name ZDO_ProcessActiveEPR 17>` SYMBOL "ZDO_ProcessActiveEPReq"
 ??ZDO_ProcessActiveEPReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessActiveEPR 17>`
-`?<Name ZDO_ProcessMatchDesc 19>` SYMBOL "ZDO_ProcessMatchDescReq"
-??ZDO_ProcessMatchDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessMatchDesc 19>`
-`?<Name ZDO_ProcessNodeDescR 21>` SYMBOL "ZDO_ProcessNodeDescReq"
-??ZDO_ProcessNodeDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessNodeDescR 21>`
-`?<Name ZDO_ProcessPowerDesc 23>` SYMBOL "ZDO_ProcessPowerDescReq"
-??ZDO_ProcessPowerDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessPowerDesc 23>`
-`?<Name ZDO_ProcessSimpleDes 25>` SYMBOL "ZDO_ProcessSimpleDescReq"
-??ZDO_ProcessSimpleDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessSimpleDes 25>`
+`?<Name ZDO_ProcessDeviceAnn 19>` SYMBOL "ZDO_ProcessDeviceAnnce"
+??ZDO_ProcessDeviceAnnce?relay SYMBOL "?relay", `?<Name ZDO_ProcessDeviceAnn 19>`
+`?<Name ZDO_ProcessMatchDesc 21>` SYMBOL "ZDO_ProcessMatchDescReq"
+??ZDO_ProcessMatchDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessMatchDesc 21>`
+`?<Name ZDO_ProcessNodeDescR 23>` SYMBOL "ZDO_ProcessNodeDescReq"
+??ZDO_ProcessNodeDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessNodeDescR 23>`
+`?<Name ZDO_ProcessPowerDesc 25>` SYMBOL "ZDO_ProcessPowerDescReq"
+??ZDO_ProcessPowerDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessPowerDesc 25>`
+`?<Name ZDO_ProcessSimpleDes 27>` SYMBOL "ZDO_ProcessSimpleDescReq"
+??ZDO_ProcessSimpleDescReq?relay SYMBOL "?relay", `?<Name ZDO_ProcessSimpleDes 27>`
 ??osal_buffer_uint32?relay SYMBOL "?relay", osal_buffer_uint32
 ??osal_mem_alloc?relay SYMBOL "?relay", osal_mem_alloc
 ??osal_mem_free?relay SYMBOL "?relay", osal_mem_free
@@ -764,6 +766,8 @@ zdpProcessAddrReq   SYMBOL "zdpProcessAddrReq"
         FUNCTION ??ZDApp_InMsgCB?relay,00H
         EXTERN ??ZDO_ProcessActiveEPReq?relay
         FUNCTION ??ZDO_ProcessActiveEPReq?relay,00H
+        EXTERN ??ZDO_ProcessDeviceAnnce?relay
+        FUNCTION ??ZDO_ProcessDeviceAnnce?relay,00H
         EXTERN ??ZDO_ProcessMatchDescReq?relay
         FUNCTION ??ZDO_ProcessMatchDescReq?relay,00H
         EXTERN ??ZDO_ProcessNodeDescReq?relay
@@ -1005,6 +1009,10 @@ zdoMsgCBs:
 //  169 CONST zdpMsgProcItem_t zdpMsgProcs[] =
 zdpMsgProcs:
         DATA16
+        DW 0
+        DW ??zdpProcessAddrReq?relay
+        DW 19
+        DW ??ZDO_ProcessDeviceAnnce?relay
         DW 1
         DW ??zdpProcessAddrReq?relay
         DW 2
@@ -21202,12 +21210,12 @@ ZDP_IncomingData:
 // 
 // 6 085 bytes in segment BANKED_CODE
 //   204 bytes in segment BANK_RELAYS
-//    29 bytes in segment CODE_C
+//    37 bytes in segment CODE_C
 //     2 bytes in segment XDATA_I
 //     2 bytes in segment XDATA_ID
 //    84 bytes in segment XDATA_Z
 // 
-// 6 320 bytes of CODE  memory
+// 6 328 bytes of CODE  memory
 //    86 bytes of XDATA memory
 //
 //Errors: none

@@ -292,7 +292,7 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
       		      NLME_GetCoordExtAddr(pIeeeAddr);
       		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
               }
-		break;
+		    break;
       case ZDO_CB_MSG:
         //ZStackTest_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
         break;
@@ -431,11 +431,11 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
           osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
         }
       #elif (SECOND_PART)
-        ZStackTest_Send_P2P_Message();
-        //ZStackTest_Send_Broadcast_Message();
-        //ZStackTest_Send_Group_Message();
         if(KeyFlag == 0)
         {
+          //ZStackTest_Send_P2P_Message();
+          //ZStackTest_Send_Broadcast_Message();
+          //ZStackTest_Send_Group_Message();
           KeyFlag = 1;
           osal_start_timerEx( ZStackTest_TaskID,
                               ZStackTest_KEY_PRESS_EVT,
@@ -451,13 +451,13 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
             {
               // Remove from the group
               aps_RemoveGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
-              HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+              HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
             }
             else
             {
               // Add to the flash group
               aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
-              HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+              HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
             }
             (void) shift;
             (void) keys;
@@ -599,7 +599,7 @@ static void ZStackTest_Send(void)
   }
 #else
   if (!ZStackTest_TxLen &&
-      (ZStackTest_TxLen = HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf, SERIAL_APP_TX_MAX)))
+      (ZStackTest_TxLen = Uart0_Process()))
   {
     // Pre-pend sequence number to the Tx message.
     //ZStackTest_TxBuf[0] = ++ZStackTest_TxSeq;
@@ -607,8 +607,7 @@ static void ZStackTest_Send(void)
 
   if (ZStackTest_TxLen)
   {
-    Uart0_Handle(ZStackTest_TxBuf);
-    osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_RX_SZ);
+    osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_TX_MAX);
     ZStackTest_TxLen = 0;
   }
 #endif
@@ -689,7 +688,7 @@ void AddressInit()
   ZStackTest_Group.name[0] = 6; // First byte is string length
   osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
   aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
-  HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+  HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
 }
 
 /*********************************************************************
@@ -714,6 +713,7 @@ void ZStackTest_Send_P2P_Message( void )
                        AF_DISCV_ROUTE,
                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
   {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
   }
   else
   {
@@ -741,6 +741,7 @@ void ZStackTest_Send_Broadcast_Message( void )
                        AF_DISCV_ROUTE,
                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
   {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
   }
   else
   {
@@ -769,6 +770,7 @@ void ZStackTest_Send_Group_Message( void )
                        AF_DISCV_ROUTE,
                        AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
   {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
   }
   else
   {

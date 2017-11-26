@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        22/Nov/2017  21:16:14 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:50:25 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -39,18 +39,18 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTr /
-//                          y\ZStackTest\Components\hal\target\CC2530EB\hal_d /
-//                          ma.c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D         /
-//                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D             /
-//                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSt /
-//                          ackTest\Projects\zstack\Utilities\SerialApp\CC253 /
-//                          0DB\EndDeviceEB\List\ -lA                         /
+//                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000        /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100   /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\Zigbee\workspace\JustTry\ZStackTest\Components /
+//                          \hal\target\CC2530EB\hal_dma.c -D NWK_AUTO_POLL   /
+//                          -D HAL_UART=TRUE -D SERIAL_APP_PORT=0 -D          /
+//                          LCD_SUPPORTED -D xPOWER_SAVING -lC                /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Li /
-//                          st\ --diag_suppress Pe001,Pa010 -o                /
+//                          st\ -lA D:\Zigbee\workspace\JustTry\ZStackTest\Pr /
+//                          ojects\zstack\Utilities\SerialApp\CC2530DB\EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Ob /
 //                          j\ -e --no_code_motion --debug --core=plain       /

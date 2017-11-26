@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         22/Nov/2017  21:16:17 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:50:09 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -39,11 +39,11 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Components\mac\low_level\srf04\mac_aut #
-#                          opend.c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D       #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Components\mac\low_level\srf04\mac_au #
+#                          topend.c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D      #
 #                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D              #
 #                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSta #
 #                          ckTest\Projects\zstack\Utilities\SerialApp\CC2530D #

@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         22/Nov/2017  21:16:14 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:50:24 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -39,11 +39,11 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Components\hal\common\hal_assert.c -D  #
-#                          NWK_AUTO_POLL -D HAL_UART=TRUE -D                  #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Components\hal\common\hal_assert.c    #
+#                          -D NWK_AUTO_POLL -D HAL_UART=TRUE -D               #
 #                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D              #
 #                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSta #
 #                          ckTest\Projects\zstack\Utilities\SerialApp\CC2530D #
@@ -348,22 +348,22 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \   000031   906270       MOV     DPTR,#0x6270
    \   000034   7408         MOV     A,#0x8
    \   000036   F0           MOVX    @DPTR,A
-   \   000037   D290         SETB    0x90.0
+   \   000037   C290         CLR     0x90.0
    \   000039   43FE01       ORL     0xfe,#0x1
-   \   00003C   D291         SETB    0x90.1
+   \   00003C   C291         CLR     0x90.1
    \   00003E   43FE02       ORL     0xfe,#0x2
-   \   000041   D284         SETB    0x80.4
+   \   000041   C294         CLR     0x90.4
    \   000043   43FD10       ORL     0xfd,#0x10
    \   000046   438F01       ORL     0x8f,#0x1
     127          
     128            HAL_TURN_OFF_LED1();
-   \   000049   D290         SETB    0x90.0
+   \   000049   C290         CLR     0x90.0
     129            HAL_TURN_OFF_LED2();
-   \   00004B   D291         SETB    0x90.1
+   \   00004B   C291         CLR     0x90.1
     130            HAL_TURN_OFF_LED3();
-   \   00004D   D284         SETB    0x80.4
+   \   00004D   C294         CLR     0x90.4
     131            HAL_TURN_OFF_LED4();
-   \   00004F   D291         SETB    0x90.1
+   \   00004F   C291         CLR     0x90.1
    \   000051   8019         SJMP    ??halAssertHazardLights_3
     132          
     133            /*-------------------------------------------------------------------------------
@@ -505,7 +505,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
     269                  {
     270                    HAL_TURN_OFF_LED1();
    \                     ??halAssertHazardLights_4:
-   \   000053   D290         SETB    0x90.0
+   \   000053   C290         CLR     0x90.0
     271                  }
     272          
     273                  /* advance to next bit */
@@ -537,7 +537,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
     286               *  the flashing loop which uses a toggle operation to change LED states.
     287               */
     288              HAL_TURN_OFF_LED1();
-   \   00006A   D290         SETB    0x90.0
+   \   00006A   C290         CLR     0x90.0
    \                     ??halAssertHazardLights_3:
    \   00006C   7900         MOV     R1,#0x0
    \                     ??halAssertHazardLights_7:
@@ -582,12 +582,12 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \                     ??halAssertHazardLights_12:
    \   0000BE   D291         SETB    0x90.1
    \                     ??halAssertHazardLights_13:
-   \   0000C0   A284         MOV     C,0x80.4
+   \   0000C0   A294         MOV     C,0x90.4
    \   0000C2   5004         JNC     ??halAssertHazardLights_14
-   \   0000C4   C284         CLR     0x80.4
+   \   0000C4   C294         CLR     0x90.4
    \   0000C6   8002         SJMP    ??halAssertHazardLights_15
    \                     ??halAssertHazardLights_14:
-   \   0000C8   D284         SETB    0x80.4
+   \   0000C8   D294         SETB    0x90.4
    \                     ??halAssertHazardLights_15:
    \   0000CA   90....       MOV     DPTR,#??escape
    \   0000CD   E0           MOVX    A,@DPTR
@@ -605,10 +605,10 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \   0000E1   740A         MOV     A,#0xa
    \   0000E3   69           XRL     A,R1
    \   0000E4   7088         JNZ     ??halAssertHazardLights_7
-   \   0000E6   D290         SETB    0x90.0
-   \   0000E8   D291         SETB    0x90.1
-   \   0000EA   D284         SETB    0x80.4
-   \   0000EC   D291         SETB    0x90.1
+   \   0000E6   C290         CLR     0x90.0
+   \   0000E8   C291         CLR     0x90.1
+   \   0000EA   C294         CLR     0x90.4
+   \   0000EC   C291         CLR     0x90.1
    \   0000EE   7800         MOV     R0,#0x0
    \   0000F0   7900         MOV     R1,#0x0
    \                     ??halAssertHazardLights_17:
@@ -653,15 +653,15 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \                     ??halAssertHazardLights_6:
    \   00013B   A281         MOV     C,0x80.1
    \   00013D   40FC         JC      ??halAssertHazardLights_6
-   \   00013F   C290         CLR     0x90.0
-   \   000141   C291         CLR     0x90.1
-   \   000143   C284         CLR     0x80.4
+   \   00013F   D290         SETB    0x90.0
+   \   000141   D291         SETB    0x90.1
+   \   000143   D294         SETB    0x90.4
    \   000145   EB           MOV     A,R3
    \   000146   7004         JNZ     ??halAssertHazardLights_19
-   \   000148   C291         CLR     0x90.1
+   \   000148   D291         SETB    0x90.1
    \   00014A   8002         SJMP    ??halAssertHazardLights_20
    \                     ??halAssertHazardLights_19:
-   \   00014C   D291         SETB    0x90.1
+   \   00014C   C291         CLR     0x90.1
    \                     ??halAssertHazardLights_20:
    \   00014E   7800         MOV     R0,#0x0
    \   000150   7900         MOV     R1,#0x0
@@ -674,10 +674,10 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \   00015A   12....       LCALL   ?Subroutine0 & 0xFFFF
    \                     ??CrossCallReturnLabel_1:
    \   00015D   40F3         JC      ??halAssertHazardLights_21
-   \   00015F   D290         SETB    0x90.0
-   \   000161   D291         SETB    0x90.1
-   \   000163   D284         SETB    0x80.4
-   \   000165   D291         SETB    0x90.1
+   \   00015F   C290         CLR     0x90.0
+   \   000161   C291         CLR     0x90.1
+   \   000163   C294         CLR     0x90.4
+   \   000165   C291         CLR     0x90.1
    \   000167   75..01       MOV     ?V0 + 0,#0x1
    \   00016A   75..00       MOV     ?V0 + 1,#0x0
    \   00016D   7407         MOV     A,#0x7
@@ -698,7 +698,7 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \   00018B   55..         ANL     A,?V0 + 0
    \   00018D   7003         JNZ     $+5
    \   00018F   02....       LJMP    ??halAssertHazardLights_4 & 0xFFFF
-   \   000192   C290         CLR     0x90.0
+   \   000192   D290         SETB    0x90.0
    \   000194   02....       LJMP    ??halAssertHazardLights_5 & 0xFFFF
    \   000197                REQUIRE _A_IEN0
    \   000197                REQUIRE SLEEPCMD
@@ -707,9 +707,9 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Components\hal\common\hal_assert.c
    \   000197                REQUIRE CLKCONSTA
    \   000197                REQUIRE _A_P1
    \   000197                REQUIRE P1DIR
-   \   000197                REQUIRE _A_P0
    \   000197                REQUIRE P0DIR
    \   000197                REQUIRE P0INP
+   \   000197                REQUIRE _A_P0
     289            }
     290          }
 
