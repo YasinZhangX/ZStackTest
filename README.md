@@ -53,14 +53,17 @@
 
 4、单播通信
 
-发送函数为 `ZStackTest_Send_P2P_Message` , 设置地址为 `ZStackTest_P2P_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
+- 发送函数为 `ZStackTest_Send_P2P_Message` , 设置地址为 `ZStackTest_P2P_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
 
 5、广播通信
 
-发送函数为 `ZStackTest_Send_Broadcast_Message` , 设置地址为 `ZStackTest_Broadcast_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
+- 发送函数为 `ZStackTest_Send_Broadcast_Message` , 设置地址为 `ZStackTest_Broadcast_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
 
 6、组播通信
 
-- 组播通信的验证可以通过长按 `S1` 键来将 设备移出 `Group1`（长按`S1`亦可添加到 `Group1`）,移出 `Group1` 的设备 `LED2` 将会亮起
-发送函数为 `ZStackTest_Send_Group_Message` , 设置地址为 `ZStackTest_Group_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
+- 发送函数为 `ZStackTest_Send_Group_Message` , 设置地址为 `ZStackTest_Group_DstAddr` ,设置 `endpoint` 为 `ZStackTest_epDesc`。
+
+组播通信的验证可以通过长按 `S1` 键来将 设备移出 `Group1`（长按`S1`亦可添加到 `Group1`）,移出 `Group1` 的设备 `LED2` 将会亮起。
+
+
 
