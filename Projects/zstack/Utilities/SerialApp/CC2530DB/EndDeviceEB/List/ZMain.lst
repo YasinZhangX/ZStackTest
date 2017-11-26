@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         22/Nov/2017  21:16:13 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:50:24 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -39,11 +39,11 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTry #
-#                          \ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c #
-#                           -D NWK_AUTO_POLL -D HAL_UART=TRUE -D              #
+#                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000         #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100    #
+#                          -DREJOIN_POLL_RATE=440) D:\Zigbee\workspace\JustTr #
+#                          y\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain. #
+#                          c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D             #
 #                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D              #
 #                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSta #
 #                          ckTest\Projects\zstack\Utilities\SerialApp\CC2530D #
@@ -172,11 +172,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
      47          #endif
      48          #include "hal_adc.h"
 
-   \                                 In  segment SFR_AN, at 0x80
-   \   union <unnamed> volatile __sfr _A_P0
-   \                     _A_P0:
-   \   000000                DS 1
-
    \                                 In  segment SFR_AN, at 0x8f
    \   unsigned char volatile __sfr P0INP
    \                     P0INP:
@@ -287,11 +282,11 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
    \   00002A   906270       MOV     DPTR,#0x6270
    \   00002D   7408         MOV     A,#0x8
    \   00002F   F0           MOVX    @DPTR,A
-   \   000030   D290         SETB    0x90.0
+   \   000030   C290         CLR     0x90.0
    \   000032   43FE01       ORL     0xfe,#0x1
-   \   000035   D291         SETB    0x90.1
+   \   000035   C291         CLR     0x90.1
    \   000037   43FE02       ORL     0xfe,#0x2
-   \   00003A   D284         SETB    0x80.4
+   \   00003A   C294         CLR     0x90.4
    \   00003C   43FD10       ORL     0xfd,#0x10
    \   00003F   438F01       ORL     0x8f,#0x1
      86          
@@ -397,7 +392,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
    \   000082                REQUIRE CLKCONSTA
    \   000082                REQUIRE _A_P1
    \   000082                REQUIRE P1DIR
-   \   000082                REQUIRE _A_P0
    \   000082                REQUIRE P0DIR
    \   000082                REQUIRE P0INP
     143          } // main()
@@ -1004,7 +998,6 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
 
      Function/Label                                 Bytes
      --------------                                 -----
-     _A_P0                                             1
      P0INP                                             1
      _A_P1                                             1
      SLEEPSTA                                          1
@@ -1027,12 +1020,12 @@ D:\Zigbee\workspace\JustTry\ZStackTest\Projects\zstack\ZMain\TI2530DB\ZMain.c
  
  687 bytes in segment BANKED_CODE
   18 bytes in segment BANK_RELAYS
-   9 bytes in segment SFR_AN
+   8 bytes in segment SFR_AN
   15 bytes in segment XDATA_ROM_C
  
  705 bytes of CODE  memory
   15 bytes of CONST memory
-   0 bytes of DATA  memory (+ 9 bytes shared)
+   0 bytes of DATA  memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: none

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        22/Nov/2017  21:16:07 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:50:09 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -40,18 +40,19 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTr /
-//                          y\ZStackTest\Projects\zstack\Utilities\SerialApp\ /
-//                          Source\OSAL_ZStackTest.c -D NWK_AUTO_POLL -D      /
-//                          HAL_UART=TRUE -D SERIAL_APP_PORT=0 -D             /
-//                          LCD_SUPPORTED -D xPOWER_SAVING -lC                /
+//                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000        /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100   /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
+//                          stack\Utilities\SerialApp\Source\OSAL_ZStackTest. /
+//                          c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D            /
+//                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D             /
+//                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSt /
+//                          ackTest\Projects\zstack\Utilities\SerialApp\CC253 /
+//                          0DB\EndDeviceEB\List\ -lA                         /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Li /
-//                          st\ -lA D:\Zigbee\workspace\JustTry\ZStackTest\Pr /
-//                          ojects\zstack\Utilities\SerialApp\CC2530DB\EndDev /
-//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
+//                          st\ --diag_suppress Pe001,Pa010 -o                /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Ob /
 //                          j\ -e --no_code_motion --debug --core=plain       /
@@ -254,27 +255,31 @@ Hal_Init            SYMBOL "Hal_Init"
 APS_Init            SYMBOL "APS_Init"
 APSF_Init           SYMBOL "APSF_Init"
 ZDApp_Init          SYMBOL "ZDApp_Init"
+ZDNwkMgr_Init       SYMBOL "ZDNwkMgr_Init"
 ZStackTest_Init     SYMBOL "ZStackTest_Init"
 ??APSF_Init?relay   SYMBOL "?relay", APSF_Init
-`?<Name APSF_ProcessEvent 10>` SYMBOL "APSF_ProcessEvent"
-??APSF_ProcessEvent?relay SYMBOL "?relay", `?<Name APSF_ProcessEvent 10>`
+`?<Name APSF_ProcessEvent 11>` SYMBOL "APSF_ProcessEvent"
+??APSF_ProcessEvent?relay SYMBOL "?relay", `?<Name APSF_ProcessEvent 11>`
 ??APS_Init?relay    SYMBOL "?relay", APS_Init
-`?<Name APS_event_loop 13>` SYMBOL "APS_event_loop"
-??APS_event_loop?relay SYMBOL "?relay", `?<Name APS_event_loop 13>`
+`?<Name APS_event_loop 14>` SYMBOL "APS_event_loop"
+??APS_event_loop?relay SYMBOL "?relay", `?<Name APS_event_loop 14>`
 ??Hal_Init?relay    SYMBOL "?relay", Hal_Init
-`?<Name Hal_ProcessEvent 16>` SYMBOL "Hal_ProcessEvent"
-??Hal_ProcessEvent?relay SYMBOL "?relay", `?<Name Hal_ProcessEvent 16>`
+`?<Name Hal_ProcessEvent 17>` SYMBOL "Hal_ProcessEvent"
+??Hal_ProcessEvent?relay SYMBOL "?relay", `?<Name Hal_ProcessEvent 17>`
 ??ZDApp_Init?relay  SYMBOL "?relay", ZDApp_Init
-`?<Name ZDApp_event_loop 19>` SYMBOL "ZDApp_event_loop"
-??ZDApp_event_loop?relay SYMBOL "?relay", `?<Name ZDApp_event_loop 19>`
+`?<Name ZDApp_event_loop 20>` SYMBOL "ZDApp_event_loop"
+??ZDApp_event_loop?relay SYMBOL "?relay", `?<Name ZDApp_event_loop 20>`
+??ZDNwkMgr_Init?relay SYMBOL "?relay", ZDNwkMgr_Init
+`?<Name ZDNwkMgr_event_loop 23>` SYMBOL "ZDNwkMgr_event_loop"
+??ZDNwkMgr_event_loop?relay SYMBOL "?relay", `?<Name ZDNwkMgr_event_loop 23>`
 ??ZStackTest_Init?relay SYMBOL "?relay", ZStackTest_Init
-`?<Name ZStackTest_ProcessEv 22>` SYMBOL "ZStackTest_ProcessEvent"
-??ZStackTest_ProcessEvent?relay SYMBOL "?relay", `?<Name ZStackTest_ProcessEv 22>`
-`?<Name macEventLoop 24>` SYMBOL "macEventLoop"
-??macEventLoop?relay SYMBOL "?relay", `?<Name macEventLoop 24>`
+`?<Name ZStackTest_ProcessEv 26>` SYMBOL "ZStackTest_ProcessEvent"
+??ZStackTest_ProcessEvent?relay SYMBOL "?relay", `?<Name ZStackTest_ProcessEv 26>`
+`?<Name macEventLoop 28>` SYMBOL "macEventLoop"
+??macEventLoop?relay SYMBOL "?relay", `?<Name macEventLoop 28>`
 ??macTaskInit?relay SYMBOL "?relay", macTaskInit
-`?<Name nwk_event_loop 27>` SYMBOL "nwk_event_loop"
-??nwk_event_loop?relay SYMBOL "?relay", `?<Name nwk_event_loop 27>`
+`?<Name nwk_event_loop 31>` SYMBOL "nwk_event_loop"
+??nwk_event_loop?relay SYMBOL "?relay", `?<Name nwk_event_loop 31>`
 ??nwk_init?relay    SYMBOL "?relay", nwk_init
 ??osal_mem_alloc?relay SYMBOL "?relay", osal_mem_alloc
 ??osal_memset?relay SYMBOL "?relay", osal_memset
@@ -337,6 +342,13 @@ osalInitTasks       SYMBOL "osalInitTasks"
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN ZDNwkMgr_Init
+        FUNCTION ZDNwkMgr_Init,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         EXTERN ZStackTest_Init
         FUNCTION ZStackTest_Init,0202H
         ARGFRAME ISTACK, 2, STACK
@@ -360,6 +372,10 @@ osalInitTasks       SYMBOL "osalInitTasks"
         FUNCTION ??ZDApp_Init?relay,00H
         EXTERN ??ZDApp_event_loop?relay
         FUNCTION ??ZDApp_event_loop?relay,00H
+        EXTERN ??ZDNwkMgr_Init?relay
+        FUNCTION ??ZDNwkMgr_Init?relay,00H
+        EXTERN ??ZDNwkMgr_event_loop?relay
+        FUNCTION ??ZDNwkMgr_event_loop?relay,00H
         EXTERN ??ZStackTest_Init?relay
         FUNCTION ??ZStackTest_Init?relay,00H
         EXTERN ??ZStackTest_ProcessEvent?relay
@@ -461,6 +477,7 @@ tasksArr:
         DW ??APS_event_loop?relay
         DW ??APSF_ProcessEvent?relay
         DW ??ZDApp_event_loop?relay
+        DW ??ZDNwkMgr_event_loop?relay
         DW ??ZStackTest_ProcessEvent?relay
 //   73   macEventLoop,
 //   74   nwk_event_loop,
@@ -484,7 +501,7 @@ tasksArr:
         DATA8
 //   90 const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
 tasksCnt:
-        DB 7
+        DB 8
 
         RSEG XDATA_Z:XDATA:NOROOT(0)
         DATA16
@@ -602,6 +619,17 @@ osalInitTasks:
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL osalInitTasks, ZDNwkMgr_Init
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL osalInitTasks, ZStackTest_Init
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -625,7 +653,7 @@ osalInitTasks:
 //  109 
 //  110   tasksEvents = (uint16 *)osal_mem_alloc( sizeof( uint16 ) * tasksCnt);
         ; Setup parameters for call to function osal_mem_alloc
-        MOV     R2,#0xe
+        MOV     R2,#0x10
         MOV     R3,#0x0
         LCALL   ??osal_mem_alloc?relay
         MOV     DPTR,#tasksEvents
@@ -636,7 +664,7 @@ osalInitTasks:
         MOVX    @DPTR,A
 //  111   osal_memset( tasksEvents, 0, (sizeof( uint16 ) * tasksCnt));
         ; Setup parameters for call to function osal_memset
-        MOV     R4,#0xe
+        MOV     R4,#0x10
         MOV     R5,#0x0
         MOV     R1,#0x0
         LCALL   ??osal_memset?relay
@@ -672,10 +700,13 @@ osalInitTasks:
         LCALL   ??ZDApp_Init?relay
 //  124 #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
 //  125   ZDNwkMgr_Init( taskID++ );
+        ; Setup parameters for call to function ZDNwkMgr_Init
+        MOV     R1,#0x6
+        LCALL   ??ZDNwkMgr_Init?relay
 //  126 #endif
 //  127   ZStackTest_Init( taskID );
         ; Setup parameters for call to function ZStackTest_Init
-        MOV     R1,#0x6
+        MOV     R1,#0x7
         LCALL   ??ZStackTest_Init?relay
 //  128 }
         POP     DPH
@@ -698,13 +729,13 @@ osalInitTasks:
 //  130 /*********************************************************************
 //  131 *********************************************************************/
 // 
-// 70 bytes in segment BANKED_CODE
+// 75 bytes in segment BANKED_CODE
 //  6 bytes in segment BANK_RELAYS
-// 15 bytes in segment XDATA_ROM_C
+// 17 bytes in segment XDATA_ROM_C
 //  2 bytes in segment XDATA_Z
 // 
-// 76 bytes of CODE  memory
-// 15 bytes of CONST memory
+// 81 bytes of CODE  memory
+// 17 bytes of CONST memory
 //  2 bytes of XDATA memory
 //
 //Errors: none

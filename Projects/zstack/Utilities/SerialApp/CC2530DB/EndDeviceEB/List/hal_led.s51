@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        22/Nov/2017  21:16:15 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:50:25 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -39,18 +39,18 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\Zigbee\workspace\JustTr /
-//                          y\ZStackTest\Components\hal\target\CC2530EB\hal_l /
-//                          ed.c -D NWK_AUTO_POLL -D HAL_UART=TRUE -D         /
-//                          SERIAL_APP_PORT=0 -D LCD_SUPPORTED -D             /
-//                          xPOWER_SAVING -lC D:\Zigbee\workspace\JustTry\ZSt /
-//                          ackTest\Projects\zstack\Utilities\SerialApp\CC253 /
-//                          0DB\EndDeviceEB\List\ -lA                         /
+//                          -DRFD_RCVC_ALWAYS_ON=TRUE -DPOLL_RATE=1000        /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100   /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\Zigbee\workspace\JustTry\ZStackTest\Components /
+//                          \hal\target\CC2530EB\hal_led.c -D NWK_AUTO_POLL   /
+//                          -D HAL_UART=TRUE -D SERIAL_APP_PORT=0 -D          /
+//                          LCD_SUPPORTED -D xPOWER_SAVING -lC                /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Li /
-//                          st\ --diag_suppress Pe001,Pa010 -o                /
+//                          st\ -lA D:\Zigbee\workspace\JustTry\ZStackTest\Pr /
+//                          ojects\zstack\Utilities\SerialApp\CC2530DB\EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\Zigbee\workspace\JustTry\ZStackTest\Projects\z /
 //                          stack\Utilities\SerialApp\CC2530DB\EndDeviceEB\Ob /
 //                          j\ -e --no_code_motion --debug --core=plain       /
@@ -218,7 +218,6 @@
         ARGFRAME DOVERLAY, 0, STATIC
         LOCFRAME ISTACK, 1, STACK
         LOCFRAME XSTACK, 25, STACK
-        PUBWEAK _A_P0
         PUBWEAK _A_P1
         PUBWEAK __Constant_64
         
@@ -484,12 +483,6 @@ HalLedUpdate        SYMBOL "HalLedUpdate"
 //   41  *                                             INCLUDES
 //   42  ***************************************************************************************************/
 //   43 #include "hal_mcu.h"
-
-        ASEGN SFR_AN:DATA:NOROOT,080H
-// union <unnamed> volatile __sfr _A_P0
-_A_P0:
-        DATA8
-        DS 1
 
         ASEGN SFR_AN:DATA:NOROOT,090H
 // union <unnamed> volatile __sfr _A_P1
@@ -1656,14 +1649,14 @@ HalLedOnOff:
         JNZ     ??HalLedOnOff_1
 //  383     {
 //  384       HAL_TURN_ON_LED1();
-        CLR     0x90.0
+        SETB    0x90.0
         SJMP    ??HalLedOnOff_0
 //  385     }
 //  386     else
 //  387     {
 //  388       HAL_TURN_OFF_LED1();
 ??HalLedOnOff_1:
-        SETB    0x90.0
+        CLR     0x90.0
 //  389     }
 //  390   }
 //  391 
@@ -1679,14 +1672,14 @@ HalLedOnOff:
         JNZ     ??HalLedOnOff_3
 //  395     {
 //  396       HAL_TURN_ON_LED2();
-        CLR     0x90.1
+        SETB    0x90.1
         SJMP    ??HalLedOnOff_2
 //  397     }
 //  398     else
 //  399     {
 //  400       HAL_TURN_OFF_LED2();
 ??HalLedOnOff_3:
-        SETB    0x90.1
+        CLR     0x90.1
 //  401     }
 //  402   }
 //  403 
@@ -1702,14 +1695,14 @@ HalLedOnOff:
         JNZ     ??HalLedOnOff_5
 //  407     {
 //  408       HAL_TURN_ON_LED3();
-        CLR     0x80.4
+        SETB    0x90.4
         SJMP    ??HalLedOnOff_4
 //  409     }
 //  410     else
 //  411     {
 //  412       HAL_TURN_OFF_LED3();
 ??HalLedOnOff_5:
-        SETB    0x80.4
+        CLR     0x90.4
 //  413     }
 //  414   }
 //  415 
@@ -1725,14 +1718,14 @@ HalLedOnOff:
         JNZ     ??HalLedOnOff_7
 //  419     {
 //  420       HAL_TURN_ON_LED4();
-        CLR     0x90.1
+        SETB    0x90.1
         SJMP    ??HalLedOnOff_8
 //  421     }
 //  422     else
 //  423     {
 //  424       HAL_TURN_OFF_LED4();
 ??HalLedOnOff_7:
-        SETB    0x90.1
+        CLR     0x90.1
 //  425     }
 //  426   }
 //  427 
@@ -1764,7 +1757,6 @@ HalLedOnOff:
         SJMP    ??Subroutine2_0
         CFI EndBlock cfiBlock7
         REQUIRE _A_P1
-        REQUIRE _A_P0
 //  437 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
@@ -1900,37 +1892,55 @@ HalLedEnterSleep:
         MOV     A,0x90
         MOV     R0,A
 //  479   HalSleepLedState |= HAL_STATE_LED3() << 2;
-        MOV     A,0x80
+        MOV     A,0x90
         MOV     R1,A
 //  480   HalSleepLedState |= HAL_STATE_LED4() << 3;
+        MOV     A,0x90
+        MOV     R2,A
+        MOV     A,R0
+        MOV     C,0xE0 /* A   */.1
+        JNC     ??HalLedEnterSleep_0
         SETB    B.0
-        MOV     C,0x90.1
-        JNB     B.0,??HalLedEnterSleep_0
-        CPL     C
+        SJMP    ??HalLedEnterSleep_1
 ??HalLedEnterSleep_0:
+        CLR     B.0
+??HalLedEnterSleep_1:
+        MOV     A,R1
+        MOV     C,0xE0 /* A   */.4
+        JNC     ??HalLedEnterSleep_2
+        SETB    B.1
+        SJMP    ??HalLedEnterSleep_3
+??HalLedEnterSleep_2:
+        CLR     B.1
+??HalLedEnterSleep_3:
+        MOV     A,R2
+        MOV     C,0xE0 /* A   */.1
+        JNC     ??HalLedEnterSleep_4
+        SETB    B.2
+        SJMP    ??HalLedEnterSleep_5
+??HalLedEnterSleep_4:
+        CLR     B.2
+??HalLedEnterSleep_5:
+        MOV     C,B.2
         CLR     A
         RLC     A
         RLC     A
         RLC     A
         RLC     A
         MOV     R2,A
-        MOV     A,R1
-        MOV     C,0xE0 /* A   */.4
+        MOV     C,B.1
         CLR     A
         RLC     A
         RLC     A
         RLC     A
-        XRL     A,#0x4
         MOV     R1,A
-        MOV     A,#0x2
-        XRL     A,R0
-        ANL     A,#0x2
+        MOV     C,B.0
+        CLR     A
+        RLC     A
+        RLC     A
         MOV     R0,A
         MOV     A,R3
         MOV     C,0xE0 /* A   */.0
-        JNB     B.0,??HalLedEnterSleep_1
-        CPL     C
-??HalLedEnterSleep_1:
         CLR     A
         RLC     A
         ORL     A,R0
@@ -1951,7 +1961,6 @@ HalLedEnterSleep:
         SJMP    ??Subroutine3_0
         CFI EndBlock cfiBlock12
         REQUIRE _A_P1
-        REQUIRE _A_P0
 //  487 
 //  488 /***************************************************************************************************
 //  489  * @fn      HalLedExitSleep
@@ -2019,7 +2028,7 @@ HalLedExitSleep:
 //  507 #ifdef BLINK_LEDS
 //  508   /* Sleep OFF */
 //  509   HalLedStatusControl.sleepActive = FALSE;
-        SJMP    ?Subroutine0
+        LJMP    ?Subroutine0 & 0xFFFF
         CFI EndBlock cfiBlock13
 //  510 #endif /* BLINK_LEDS */
 //  511 }
@@ -2086,15 +2095,15 @@ __Constant_64:
 //  517 
 //  518 
 // 
-// 1 010 bytes in segment BANKED_CODE
+// 1 034 bytes in segment BANKED_CODE
 //    48 bytes in segment BANK_RELAYS
-//     2 bytes in segment SFR_AN
+//     1 byte  in segment SFR_AN
 //     4 bytes in segment XDATA_ROM_C
 //    40 bytes in segment XDATA_Z
 // 
-// 1 058 bytes of CODE  memory
+// 1 082 bytes of CODE  memory
 //     0 bytes of CONST memory (+ 4 bytes shared)
-//     0 bytes of DATA  memory (+ 2 bytes shared)
+//     0 bytes of DATA  memory (+ 1 byte  shared)
 //    40 bytes of XDATA memory
 //
 //Errors: none

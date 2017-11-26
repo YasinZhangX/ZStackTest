@@ -67,6 +67,7 @@
 #include "ZDApp.h"
 #include "ZDObject.h"
 #include "ZDProfile.h"
+#include "aps_groups.h"
 
 #include "hal_drivers.h"
 #include "hal_key.h"
@@ -128,7 +129,9 @@
 // This list should be filled with Application specific Cluster IDs.
 const cId_t ZStackTest_ClusterList[ZStackTest_MAX_CLUSTERS] =
 {
-  ZStackTest_CLUSTERID1,
+  ZStackTest_P2P_CLUSTERID,
+  ZStackTest_BROADCAST_CLUSTERID,
+  ZStackTest_GROUP_CLUSTERID,
   ZStackTest_CLUSTERID2
 };
 
@@ -174,8 +177,11 @@ uint8 ZStackTest_TaskID;    // Task ID for internal task/event processing.
 /*********************************************************************
  * LOCAL VARIABLES
  */
+static bool KeyFlag = 0;
+static uint8 shift;
+static uint8 keys;
 
-static uint8 ZStackTest_MsgID;
+static uint8 ZStackTest_TransID;
 
 static afAddrType_t ZStackTest_TxAddr;
 static uint8 ZStackTest_TxSeq;
@@ -188,6 +194,12 @@ static uint8 ZStackTest_RspBuf[SERIAL_APP_RSP_CNT];
 
 static devStates_t ZStackTest_NwkState;
 
+static afAddrType_t ZStackTest_P2P_DstAddr;       //单播
+static afAddrType_t ZStackTest_Broadcast_DstAddr; //广播
+static afAddrType_t ZStackTest_Group_DstAddr;     //组播
+
+static aps_Group_t ZStackTest_Group;
+
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -198,6 +210,7 @@ static void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt );
 static void ZStackTest_Send(void);
 static void ZStackTest_Resp(void);
 static void ZStackTest_CallBack(uint8 port, uint8 event);
+static void AddressInit(void);
 
 /*********************************************************************
  * @fn      ZStackTest_Init
@@ -214,6 +227,9 @@ void ZStackTest_Init( uint8 task_id )
 
   ZStackTest_TaskID = task_id;
   ZStackTest_RxSeq = 0xC3;
+  ZStackTest_TransID = 0;
+
+  AddressInit();
 
   afRegister( (endPointDesc_t *)&ZStackTest_epDesc );
 
@@ -276,13 +292,15 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
       		      NLME_GetCoordExtAddr(pIeeeAddr);
       		      PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
               }
-		break;
+		    break;
       case ZDO_CB_MSG:
         //ZStackTest_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
         break;
 
       case KEY_CHANGE:
         ZStackTest_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
+        shift = ((keyChange_t *)MSGpkt)->state;
+        keys = ((keyChange_t *)MSGpkt)->keys;
         break;
 
       case AF_INCOMING_MSG_CMD:
@@ -309,6 +327,12 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
   {
     ZStackTest_Resp();
     return ( events ^ ZStackTest_RESP_EVT );
+  }
+
+  if (events & ZStackTest_KEY_PRESS_EVT)
+  {
+    ZStackTest_HandleKeys( shift, keys );
+    return ( events ^ ZStackTest_KEY_PRESS_EVT );
   }
 
   return ( 0 );  // Discard unknown events.
@@ -383,7 +407,64 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_6 )
     {
-      HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
+      #if FIRST_PART
+        HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
+        if(KeyFlag == 0)
+        {
+          KeyFlag = 1;
+          osal_start_timerEx( ZStackTest_TaskID,
+                              ZStackTest_KEY_PRESS_EVT,
+                              ZStackTest_KEY_PRESS_DELAY );
+        }
+        else
+        {
+          KeyFlag = 0;
+          if (HAL_PUSH_BUTTON1()) {
+            HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
+            PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
+            HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
+            NLME_GetCoordExtAddr(pIeeeAddr);
+            PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
+            (void) shift;
+            (void) keys;
+          }
+          osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
+        }
+      #elif (SECOND_PART)
+        if(KeyFlag == 0)
+        {
+          //ZStackTest_Send_P2P_Message();
+          //ZStackTest_Send_Broadcast_Message();
+          //ZStackTest_Send_Group_Message();
+          KeyFlag = 1;
+          osal_start_timerEx( ZStackTest_TaskID,
+                              ZStackTest_KEY_PRESS_EVT,
+                              ZStackTest_KEY_PRESS_DELAY );
+        }
+        else
+        {
+          KeyFlag = 0;
+          if (HAL_PUSH_BUTTON1()) {
+            aps_Group_t *grp;
+            grp = aps_FindGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
+            if ( grp )
+            {
+              // Remove from the group
+              aps_RemoveGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
+              HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+            }
+            else
+            {
+              // Add to the flash group
+              aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
+              HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+            }
+            (void) shift;
+            (void) keys;
+          }
+          osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
+        }
+      #endif
     }
     if ( keys & HAL_KEY_SW_1 )
     {
@@ -458,66 +539,27 @@ void ZStackTest_HandleKeys( uint8 shift, uint8 keys )
  */
 void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt )
 {
-  uint8 stat;
-  uint8 seqnb;
-  uint8 delay;
-
   switch ( pkt->clusterId )
   {
-  // A message with a serial data block to be transmitted on the serial port.
-  case ZStackTest_CLUSTERID1:
-    // Store the address for sending and retrying.
-    osal_memcpy(&ZStackTest_RxAddr, &(pkt->srcAddr), sizeof( afAddrType_t ));
-
-    seqnb = pkt->cmd.Data[0];
-
-    // Keep message if not a repeat packet
-    if ( (seqnb > ZStackTest_RxSeq) ||                    // Normal
-         ((seqnb < 0x80 ) && ( ZStackTest_RxSeq > 0x80)) ) // Wrap-around
-    {
-      // Transmit the data on the serial port.
-      if ( HalUARTWrite( SERIAL_APP_PORT, pkt->cmd.Data+1, (pkt->cmd.DataLength-1) ) )
-      {
-        // Save for next incoming message
-        ZStackTest_RxSeq = seqnb;
-        stat = OTA_SUCCESS;
-      }
-      else
-      {
-        stat = OTA_SER_BUSY;
-      }
-    }
-    else
-    {
-      stat = OTA_DUP_MSG;
-    }
-
-    // Select approproiate OTA flow-control delay.
-    delay = (stat == OTA_SER_BUSY) ? ZStackTest_NAK_DELAY : ZStackTest_ACK_DELAY;
-
-    // Build & send OTA response message.
-    ZStackTest_RspBuf[0] = stat;
-    ZStackTest_RspBuf[1] = seqnb;
-    ZStackTest_RspBuf[2] = LO_UINT16( delay );
-    ZStackTest_RspBuf[3] = HI_UINT16( delay );
-    osal_set_event( ZStackTest_TaskID, ZStackTest_RESP_EVT );
-    osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_RESP_EVT);
+  // Process P2P message
+  case ZStackTest_P2P_CLUSTERID:
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(p2p):", 8);     //提示接收到数��?
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
     break;
 
-  // A response to a received serial data block.
-  case ZStackTest_CLUSTERID2:
-    if ((pkt->cmd.Data[1] == ZStackTest_TxSeq) &&
-        ((pkt->cmd.Data[0] == OTA_SUCCESS) || (pkt->cmd.Data[0] == OTA_DUP_MSG)))
-    {
-      ZStackTest_TxLen = 0;
-      osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_SEND_EVT);
-    }
-    else
-    {
-      // Re-start timeout according to delay sent from other device.
-      delay = BUILD_UINT16( pkt->cmd.Data[2], pkt->cmd.Data[3] );
-      osal_start_timerEx( ZStackTest_TaskID, ZStackTest_SEND_EVT, delay );
-    }
+  // Process broadcast message
+  case ZStackTest_BROADCAST_CLUSTERID:
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(broadcast):", 14);   //提示接收到数��?
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    break;
+
+  // Process group messages
+  case ZStackTest_GROUP_CLUSTERID:
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(group):", 10); //提示接收到数��?
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
     break;
 
   default:
@@ -557,7 +599,7 @@ static void ZStackTest_Send(void)
   }
 #else
   if (!ZStackTest_TxLen &&
-      (ZStackTest_TxLen = HalUARTRead(SERIAL_APP_PORT, ZStackTest_TxBuf, SERIAL_APP_TX_MAX)))
+      (ZStackTest_TxLen = Uart0_Process()))
   {
     // Pre-pend sequence number to the Tx message.
     //ZStackTest_TxBuf[0] = ++ZStackTest_TxSeq;
@@ -565,8 +607,7 @@ static void ZStackTest_Send(void)
 
   if (ZStackTest_TxLen)
   {
-    Uart0_Handle(ZStackTest_TxBuf);
-    osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_RX_SZ);
+    osal_memset(ZStackTest_TxBuf, 0, SERIAL_APP_TX_MAX);
     ZStackTest_TxLen = 0;
   }
 #endif
@@ -587,7 +628,7 @@ static void ZStackTest_Resp(void)
                                          (endPointDesc_t *)&ZStackTest_epDesc,
                                          ZStackTest_CLUSTERID2,
                                          SERIAL_APP_RSP_CNT, ZStackTest_RspBuf,
-                                         &ZStackTest_MsgID, 0, AF_DEFAULT_RADIUS))
+                                         &ZStackTest_TransID, 0, AF_DEFAULT_RADIUS))
   {
     osal_set_event(ZStackTest_TaskID, ZStackTest_RESP_EVT);
   }
@@ -615,6 +656,125 @@ static void ZStackTest_CallBack(uint8 port, uint8 event)
 #endif
   {
     ZStackTest_Send();
+  }
+}
+
+/*********************************************************************
+ * @fn      AddressInit
+ *
+ * @brief   set address
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+void AddressInit()
+{
+  ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
+  ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
+  ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
+
+  ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
+  ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
+  ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
+
+  // Setup for the flash command's destination address - Group 1
+  ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup;//组播
+  ZStackTest_Group_DstAddr.endPoint = ZStackTest_ENDPOINT;
+  ZStackTest_Group_DstAddr.addr.shortAddr = ZStackTest_GROUP;
+
+  // Assign to group 1
+  ZStackTest_Group.ID = 0x0001;
+  ZStackTest_Group.name[0] = 6; // First byte is string length
+  osal_memcpy( &(ZStackTest_Group.name[1]), "Group1", 6);
+  aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
+  HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
+}
+
+/*********************************************************************
+ * @fn      ZStackTest_Send_P2P_Message
+ *
+ * @brief   point to point.
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+void ZStackTest_Send_P2P_Message( void )
+{
+  uint8 data[12]="p2p_message";
+
+  if ( AF_DataRequest( &ZStackTest_P2P_DstAddr,
+                       (endPointDesc_t *)&ZStackTest_epDesc,
+                       ZStackTest_P2P_CLUSTERID,
+                       11,
+                       data,
+                       &ZStackTest_TransID,
+                       AF_DISCV_ROUTE,
+                       AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+  {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+  }
+  else
+  {
+    // Error occurred in request to send.
+  }
+}
+
+/*********************************************************************
+ * @fn      ZStackTest_Send_Broadcast_Message
+ *
+ * @brief   Send the broadcast message.
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+void ZStackTest_Send_Broadcast_Message( void )
+{
+  uint8 data[] = "broadcast_message";
+  if ( AF_DataRequest( &ZStackTest_Broadcast_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+                       ZStackTest_BROADCAST_CLUSTERID,
+                       17,
+                       data,
+                       &ZStackTest_TransID,
+                       AF_DISCV_ROUTE,
+                       AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+  {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+  }
+  else
+  {
+    // Error occurred in request to send.
+  }
+}
+
+/*********************************************************************
+ * @fn      ZStackTest_Send_Group_Message
+ *
+ * @brief   Send the group message to group 1.
+ *
+ * @param   flashTime - in milliseconds
+ *
+ * @return  none
+ */
+void ZStackTest_Send_Group_Message( void )
+{
+  uint8 data[] = "group_message";
+
+  if ( AF_DataRequest( &ZStackTest_Group_DstAddr, (endPointDesc_t *)&ZStackTest_epDesc,
+                       ZStackTest_GROUP_CLUSTERID,
+                       13,
+                       data,
+                       &ZStackTest_TransID,
+                       AF_DISCV_ROUTE,
+                       AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
+  {
+    HalUARTWrite (SERIAL_APP_PORT, "Send successful\r\n", 17);
+  }
+  else
+  {
+    // Error occurred in request to send.
   }
 }
 
