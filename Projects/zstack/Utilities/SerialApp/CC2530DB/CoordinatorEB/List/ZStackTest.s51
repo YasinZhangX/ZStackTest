@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  17:19:25 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        26/Nov/2017  18:49:08 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -212,9 +212,7 @@
         LOCFRAME XSTACK, 33, STACK
         PUBLIC ZStackTest_Send_P2P_Message
         FUNCTION ZStackTest_Send_P2P_Message,021203H
-        ARGFRAME XSTACK, 22, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
+        ARGFRAME XSTACK, 0, STACK
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME XSTACK, 31, STACK
         PUBLIC ZStackTest_SimpleDesc
@@ -1920,17 +1918,6 @@ ZStackTest_HandleKeys:
         CFI Function ZStackTest_HandleKeys
         CODE
 //  402 {
-        FUNCALL ZStackTest_HandleKeys, ZStackTest_Send_P2P_Message
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 22, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 22, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL ZStackTest_HandleKeys, osal_start_timerEx
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -2216,13 +2203,10 @@ ZStackTest_HandleKeys:
         MOVX    A,@DPTR
         JNZ     ??ZStackTest_HandleKeys_2
 //  435         {
-//  436           ZStackTest_Send_P2P_Message();
-        ; Setup parameters for call to function ZStackTest_Send_P2P_Message
-        LCALL   ??ZStackTest_Send_P2P_Message?relay
+//  436           //ZStackTest_Send_P2P_Message();
 //  437           //ZStackTest_Send_Broadcast_Message();
 //  438           //ZStackTest_Send_Group_Message();
 //  439           KeyFlag = 1;
-        MOV     DPTR,#KeyFlag
         MOV     A,#0x1
         MOVX    @DPTR,A
 //  440           osal_start_timerEx( ZStackTest_TaskID,
@@ -3879,13 +3863,13 @@ ZStackTest_Send_Group_Message:
 //  781 /*********************************************************************
 //  782 *********************************************************************/
 // 
-// 1 613 bytes in segment BANKED_CODE
+// 1 607 bytes in segment BANKED_CODE
 //    54 bytes in segment BANK_RELAYS
 //     1 byte  in segment SFR_AN
 //   173 bytes in segment XDATA_ROM_C
 //   159 bytes in segment XDATA_Z
 // 
-// 1 667 bytes of CODE  memory
+// 1 661 bytes of CODE  memory
 //   173 bytes of CONST memory
 //     0 bytes of DATA  memory (+ 1 byte shared)
 //   159 bytes of XDATA memory

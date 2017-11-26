@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  17:19:25 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         26/Nov/2017  18:49:08 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -1080,7 +1080,7 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     408              if ( keys & HAL_KEY_SW_6 )
    \   000012   EA           MOV     A,R2
    \   000013   A2E5         MOV     C,0xE0 /* A   */.5
-   \   000015   505F         JNC     ??ZStackTest_HandleKeys_1
+   \   000015   5059         JNC     ??ZStackTest_HandleKeys_1
     409              {
     410                #if FIRST_PART
     411                  HalLedSet(HAL_LED_1, HAL_LED_MODE_TOGGLE);
@@ -1109,123 +1109,120 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     434                  if(KeyFlag == 0)
    \   000017   90....       MOV     DPTR,#KeyFlag
    \   00001A   E0           MOVX    A,@DPTR
-   \   00001B   701B         JNZ     ??ZStackTest_HandleKeys_2
+   \   00001B   7015         JNZ     ??ZStackTest_HandleKeys_2
     435                  {
-    436                    ZStackTest_Send_P2P_Message();
-   \   00001D                ; Setup parameters for call to function ZStackTest_Send_P2P_Message
-   \   00001D   12....       LCALL   ??ZStackTest_Send_P2P_Message?relay
+    436                    //ZStackTest_Send_P2P_Message();
     437                    //ZStackTest_Send_Broadcast_Message();
     438                    //ZStackTest_Send_Group_Message();
     439                    KeyFlag = 1;
-   \   000020   90....       MOV     DPTR,#KeyFlag
-   \   000023   7401         MOV     A,#0x1
-   \   000025   F0           MOVX    @DPTR,A
+   \   00001D   7401         MOV     A,#0x1
+   \   00001F   F0           MOVX    @DPTR,A
     440                    osal_start_timerEx( ZStackTest_TaskID,
     441                                        ZStackTest_KEY_PRESS_EVT,
     442                                        ZStackTest_KEY_PRESS_DELAY );
-   \   000026                ; Setup parameters for call to function osal_start_timerEx
-   \   000026   7CDC         MOV     R4,#-0x24
-   \   000028   7D05         MOV     R5,#0x5
-   \   00002A   7A04         MOV     R2,#0x4
-   \   00002C   7B00         MOV     R3,#0x0
-   \   00002E   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   000031   E0           MOVX    A,@DPTR
-   \   000032   F9           MOV     R1,A
-   \   000033   12....       LCALL   ??osal_start_timerEx?relay
-   \   000036   803E         SJMP    ??ZStackTest_HandleKeys_1
+   \   000020                ; Setup parameters for call to function osal_start_timerEx
+   \   000020   7CDC         MOV     R4,#-0x24
+   \   000022   7D05         MOV     R5,#0x5
+   \   000024   7A04         MOV     R2,#0x4
+   \   000026   7B00         MOV     R3,#0x0
+   \   000028   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   00002B   E0           MOVX    A,@DPTR
+   \   00002C   F9           MOV     R1,A
+   \   00002D   12....       LCALL   ??osal_start_timerEx?relay
+   \   000030   803E         SJMP    ??ZStackTest_HandleKeys_1
     443                  }
     444                  else
     445                  {
     446                    KeyFlag = 0;
    \                     ??ZStackTest_HandleKeys_2:
-   \   000038   E4           CLR     A
-   \   000039   F0           MOVX    @DPTR,A
+   \   000032   E4           CLR     A
+   \   000033   F0           MOVX    @DPTR,A
     447                    if (HAL_PUSH_BUTTON1()) {
-   \   00003A   A281         MOV     C,0x80.1
-   \   00003C   402C         JC      ??ZStackTest_HandleKeys_3
+   \   000034   A281         MOV     C,0x80.1
+   \   000036   402C         JC      ??ZStackTest_HandleKeys_3
     448                      aps_Group_t *grp;
     449                      grp = aps_FindGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
     450                      if ( grp )
-   \   00003E                ; Setup parameters for call to function aps_FindGroup
-   \   00003E   7A01         MOV     R2,#0x1
-   \   000040   FB           MOV     R3,A
-   \   000041   790B         MOV     R1,#0xb
-   \   000043   12....       LCALL   ??aps_FindGroup?relay
-   \   000046   8B..         MOV     ?V0 + 1,R3
-   \   000048   EA           MOV     A,R2
-   \   000049   45..         ORL     A,?V0 + 1
-   \   00004B   600D         JZ      ??ZStackTest_HandleKeys_4
+   \   000038                ; Setup parameters for call to function aps_FindGroup
+   \   000038   7A01         MOV     R2,#0x1
+   \   00003A   FB           MOV     R3,A
+   \   00003B   790B         MOV     R1,#0xb
+   \   00003D   12....       LCALL   ??aps_FindGroup?relay
+   \   000040   8B..         MOV     ?V0 + 1,R3
+   \   000042   EA           MOV     A,R2
+   \   000043   45..         ORL     A,?V0 + 1
+   \   000045   600D         JZ      ??ZStackTest_HandleKeys_4
     451                      {
     452                        // Remove from the group
     453                        aps_RemoveGroup( ZStackTest_ENDPOINT, ZStackTest_GROUP );
-   \   00004D                ; Setup parameters for call to function aps_RemoveGroup
-   \   00004D   7A01         MOV     R2,#0x1
-   \   00004F   7B00         MOV     R3,#0x0
-   \   000051   790B         MOV     R1,#0xb
-   \   000053   12....       LCALL   ??aps_RemoveGroup?relay
+   \   000047                ; Setup parameters for call to function aps_RemoveGroup
+   \   000047   7A01         MOV     R2,#0x1
+   \   000049   7B00         MOV     R3,#0x0
+   \   00004B   790B         MOV     R1,#0xb
+   \   00004D   12....       LCALL   ??aps_RemoveGroup?relay
     454                        HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-   \   000056                ; Setup parameters for call to function HalLedSet
-   \   000056   7A01         MOV     R2,#0x1
-   \   000058   800B         SJMP    ??ZStackTest_HandleKeys_5
+   \   000050                ; Setup parameters for call to function HalLedSet
+   \   000050   7A01         MOV     R2,#0x1
+   \   000052   800B         SJMP    ??ZStackTest_HandleKeys_5
     455                      }
     456                      else
     457                      {
     458                        // Add to the flash group
     459                        aps_AddGroup( ZStackTest_ENDPOINT, &ZStackTest_Group );
    \                     ??ZStackTest_HandleKeys_4:
-   \   00005A                ; Setup parameters for call to function aps_AddGroup
-   \   00005A   7A..         MOV     R2,#ZStackTest_Group & 0xff
-   \   00005C   7B..         MOV     R3,#(ZStackTest_Group >> 8) & 0xff
-   \   00005E   790B         MOV     R1,#0xb
-   \   000060   12....       LCALL   ??aps_AddGroup?relay
+   \   000054                ; Setup parameters for call to function aps_AddGroup
+   \   000054   7A..         MOV     R2,#ZStackTest_Group & 0xff
+   \   000056   7B..         MOV     R3,#(ZStackTest_Group >> 8) & 0xff
+   \   000058   790B         MOV     R1,#0xb
+   \   00005A   12....       LCALL   ??aps_AddGroup?relay
     460                        HalLedSet(HAL_LED_2, HAL_LED_MODE_OFF);
-   \   000063                ; Setup parameters for call to function HalLedSet
-   \   000063   7A00         MOV     R2,#0x0
+   \   00005D                ; Setup parameters for call to function HalLedSet
+   \   00005D   7A00         MOV     R2,#0x0
    \                     ??ZStackTest_HandleKeys_5:
-   \   000065   7902         MOV     R1,#0x2
-   \   000067   12....       LCALL   ??HalLedSet?relay
+   \   00005F   7902         MOV     R1,#0x2
+   \   000061   12....       LCALL   ??HalLedSet?relay
     461                      }
     462                      (void) shift;
     463                      (void) keys;
     464                    }
     465                    osal_stop_timerEx(ZStackTest_TaskID, ZStackTest_KEY_PRESS_EVT);
    \                     ??ZStackTest_HandleKeys_3:
-   \   00006A                ; Setup parameters for call to function osal_stop_timerEx
-   \   00006A   7A04         MOV     R2,#0x4
-   \   00006C   7B00         MOV     R3,#0x0
-   \   00006E   90....       MOV     DPTR,#ZStackTest_TaskID
-   \   000071   E0           MOVX    A,@DPTR
-   \   000072   F9           MOV     R1,A
-   \   000073   12....       LCALL   ??osal_stop_timerEx?relay
+   \   000064                ; Setup parameters for call to function osal_stop_timerEx
+   \   000064   7A04         MOV     R2,#0x4
+   \   000066   7B00         MOV     R3,#0x0
+   \   000068   90....       MOV     DPTR,#ZStackTest_TaskID
+   \   00006B   E0           MOVX    A,@DPTR
+   \   00006C   F9           MOV     R1,A
+   \   00006D   12....       LCALL   ??osal_stop_timerEx?relay
     466                  }
     467                #endif
     468              }
     469              if ( keys & HAL_KEY_SW_1 )
    \                     ??ZStackTest_HandleKeys_1:
-   \   000076   E5..         MOV     A,?V0 + 3
-   \   000078   A2E0         MOV     C,0xE0 /* A   */.0
-   \   00007A   4003         JC      $+5
-   \   00007C   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
+   \   000070   E5..         MOV     A,?V0 + 3
+   \   000072   A2E0         MOV     C,0xE0 /* A   */.0
+   \   000074   4003         JC      $+5
+   \   000076   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
     470              {
     471                HalUARTWrite(SERIAL_APP_PORT, "Self:   ", 8);
-   \   00007F                ; Setup parameters for call to function HalUARTWrite
-   \   00007F   7C08         MOV     R4,#0x8
-   \   000081   7D00         MOV     R5,#0x0
-   \   000083   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
-   \   000085   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
-   \   000087   7900         MOV     R1,#0x0
-   \   000089   12....       LCALL   ??HalUARTWrite?relay
+   \   000079                ; Setup parameters for call to function HalUARTWrite
+   \   000079   7C08         MOV     R4,#0x8
+   \   00007B   7D00         MOV     R5,#0x0
+   \   00007D   7A..         MOV     R2,#`?<Constant "Self:   ">` & 0xff
+   \   00007F   7B..         MOV     R3,#(`?<Constant "Self:   ">` >> 8) & 0xff
+   \   000081   7900         MOV     R1,#0x0
+   \   000083   12....       LCALL   ??HalUARTWrite?relay
     472                PrintAddrInfo(NLME_GetShortAddr(), NLME_GetExtAddr());
-   \   00008C                ; Setup parameters for call to function NLME_GetExtAddr
-   \   00008C   12....       LCALL   ??NLME_GetExtAddr?relay
-   \   00008F   8A..         MOV     ?V0 + 0,R2
-   \   000091   8B..         MOV     ?V0 + 1,R3
-   \   000093                ; Setup parameters for call to function PrintAddrInfo
-   \   000093                ; Setup parameters for call to function NLME_GetShortAddr
-   \   000093   12....       LCALL   ??NLME_GetShortAddr?relay
-   \   000096   AC..         MOV     R4,?V0 + 0
-   \   000098   AD..         MOV     R5,?V0 + 1
-   \   00009A   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \   000086                ; Setup parameters for call to function NLME_GetExtAddr
+   \   000086   12....       LCALL   ??NLME_GetExtAddr?relay
+   \   000089   8A..         MOV     ?V0 + 0,R2
+   \   00008B   8B..         MOV     ?V0 + 1,R3
+   \   00008D                ; Setup parameters for call to function PrintAddrInfo
+   \   00008D                ; Setup parameters for call to function NLME_GetShortAddr
+   \   00008D   12....       LCALL   ??NLME_GetShortAddr?relay
+   \   000090   AC..         MOV     R4,?V0 + 0
+   \   000092   AD..         MOV     R5,?V0 + 1
+   \   000094   12....       LCALL   ?Subroutine1 & 0xFFFF
     473                HalUARTWrite(SERIAL_APP_PORT, "Parent: ", 8);
     474                NLME_GetCoordExtAddr(pIeeeAddr);
     475                PrintAddrInfo(NLME_GetCoordShortAddr(), pIeeeAddr);
@@ -1241,7 +1238,7 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     485              }
     486            }
    \                     ??CrossCallReturnLabel_1:
-   \   00009D   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
+   \   000097   02....       LJMP    ??ZStackTest_HandleKeys_6 & 0xFFFF
     487            else
     488            {
     489              if ( keys & HAL_KEY_SW_1 )
@@ -1250,22 +1247,22 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     492          
     493              if ( keys & HAL_KEY_SW_2 )
    \                     ??ZStackTest_HandleKeys_0:
-   \   0000A0   EA           MOV     A,R2
-   \   0000A1   A2E1         MOV     C,0xE0 /* A   */.1
-   \   0000A3   505C         JNC     ??ZStackTest_HandleKeys_7
+   \   00009A   EA           MOV     A,R2
+   \   00009B   A2E1         MOV     C,0xE0 /* A   */.1
+   \   00009D   505C         JNC     ??ZStackTest_HandleKeys_7
     494              {
     495                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
-   \   0000A5                ; Setup parameters for call to function HalLedSet
-   \   0000A5   7A00         MOV     R2,#0x0
-   \   0000A7   7908         MOV     R1,#0x8
-   \   0000A9   12....       LCALL   ??HalLedSet?relay
+   \   00009F                ; Setup parameters for call to function HalLedSet
+   \   00009F   7A00         MOV     R2,#0x0
+   \   0000A1   7908         MOV     R1,#0x8
+   \   0000A3   12....       LCALL   ??HalLedSet?relay
     496          
     497                // Initiate an End Device Bind Request for the mandatory endpoint
     498                txAddr.addrMode = Addr16Bit;
-   \   0000AC   7408         MOV     A,#0x8
-   \   0000AE   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000B1   7402         MOV     A,#0x2
-   \   0000B3   12....       LCALL   ?Subroutine3 & 0xFFFF
+   \   0000A6   7408         MOV     A,#0x8
+   \   0000A8   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000AB   7402         MOV     A,#0x2
+   \   0000AD   12....       LCALL   ?Subroutine3 & 0xFFFF
     499                txAddr.addr.shortAddr = 0x0000; // Coordinator
     500                ZDP_EndDeviceBindReq( &txAddr, NLME_GetShortAddr(),
     501                                      ZStackTest_epDesc.endPoint,
@@ -1275,42 +1272,42 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     505                                      FALSE );
     506              }
    \                     ??CrossCallReturnLabel_5:
-   \   0000B6   E4           CLR     A
-   \   0000B7   12....       LCALL   ?Subroutine4 & 0xFFFF
+   \   0000B0   E4           CLR     A
+   \   0000B1   12....       LCALL   ?Subroutine4 & 0xFFFF
    \                     ??CrossCallReturnLabel_7:
-   \   0000BA                ; Setup parameters for call to function ZDP_EndDeviceBindReq
-   \   0000BA   F5..         MOV     ?V0 + 4,A
-   \   0000BC   78..         MOV     R0,#?V0 + 4
-   \   0000BE   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000C1   78..         MOV     R0,#?V0 + 0
-   \   0000C3   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000C6   75..04       MOV     ?V0 + 4,#0x4
-   \   0000C9   78..         MOV     R0,#?V0 + 4
-   \   0000CB   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000CE   78..         MOV     R0,#?V0 + 0
-   \   0000D0   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000D3   75..04       MOV     ?V0 + 0,#0x4
-   \   0000D6   78..         MOV     R0,#?V0 + 0
-   \   0000D8   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   0000DB   75..05       MOV     ?V0 + 0,#0x5
-   \   0000DE   75..0F       MOV     ?V0 + 1,#0xf
-   \   0000E1   78..         MOV     R0,#?V0 + 0
-   \   0000E3   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   0000E6                ; Setup parameters for call to function NLME_GetShortAddr
-   \   0000E6   12....       LCALL   ??NLME_GetShortAddr?relay
-   \   0000E9   EA           MOV     A,R2
-   \   0000EA   FC           MOV     R4,A
-   \   0000EB   EB           MOV     A,R3
-   \   0000EC   FD           MOV     R5,A
-   \   0000ED   740B         MOV     A,#0xb
-   \   0000EF   F9           MOV     R1,A
-   \   0000F0   7409         MOV     A,#0x9
-   \   0000F2   12....       LCALL   ?XSTACK_DISP0_8
-   \   0000F5   AA82         MOV     R2,DPL
-   \   0000F7   AB83         MOV     R3,DPH
-   \   0000F9   12....       LCALL   ??ZDP_EndDeviceBindReq?relay
-   \   0000FC   7409         MOV     A,#0x9
-   \   0000FE   12....       LCALL   ?DEALLOC_XSTACK8
+   \   0000B4                ; Setup parameters for call to function ZDP_EndDeviceBindReq
+   \   0000B4   F5..         MOV     ?V0 + 4,A
+   \   0000B6   78..         MOV     R0,#?V0 + 4
+   \   0000B8   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000BB   78..         MOV     R0,#?V0 + 0
+   \   0000BD   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000C0   75..04       MOV     ?V0 + 4,#0x4
+   \   0000C3   78..         MOV     R0,#?V0 + 4
+   \   0000C5   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000C8   78..         MOV     R0,#?V0 + 0
+   \   0000CA   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000CD   75..04       MOV     ?V0 + 0,#0x4
+   \   0000D0   78..         MOV     R0,#?V0 + 0
+   \   0000D2   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   0000D5   75..05       MOV     ?V0 + 0,#0x5
+   \   0000D8   75..0F       MOV     ?V0 + 1,#0xf
+   \   0000DB   78..         MOV     R0,#?V0 + 0
+   \   0000DD   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000E0                ; Setup parameters for call to function NLME_GetShortAddr
+   \   0000E0   12....       LCALL   ??NLME_GetShortAddr?relay
+   \   0000E3   EA           MOV     A,R2
+   \   0000E4   FC           MOV     R4,A
+   \   0000E5   EB           MOV     A,R3
+   \   0000E6   FD           MOV     R5,A
+   \   0000E7   740B         MOV     A,#0xb
+   \   0000E9   F9           MOV     R1,A
+   \   0000EA   7409         MOV     A,#0x9
+   \   0000EC   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000EF   AA82         MOV     R2,DPL
+   \   0000F1   AB83         MOV     R3,DPH
+   \   0000F3   12....       LCALL   ??ZDP_EndDeviceBindReq?relay
+   \   0000F6   7409         MOV     A,#0x9
+   \   0000F8   12....       LCALL   ?DEALLOC_XSTACK8
     507          
     508              if ( keys & HAL_KEY_SW_3 )
     509              {
@@ -1318,22 +1315,22 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     511          
     512              if ( keys & HAL_KEY_SW_4 )
    \                     ??ZStackTest_HandleKeys_7:
-   \   000101   E5..         MOV     A,?V0 + 3
-   \   000103   A2E3         MOV     C,0xE0 /* A   */.3
-   \   000105   5052         JNC     ??ZStackTest_HandleKeys_6
+   \   0000FB   E5..         MOV     A,?V0 + 3
+   \   0000FD   A2E3         MOV     C,0xE0 /* A   */.3
+   \   0000FF   5052         JNC     ??ZStackTest_HandleKeys_6
     513              {
     514                HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
-   \   000107                ; Setup parameters for call to function HalLedSet
-   \   000107   7A00         MOV     R2,#0x0
-   \   000109   7908         MOV     R1,#0x8
-   \   00010B   12....       LCALL   ??HalLedSet?relay
+   \   000101                ; Setup parameters for call to function HalLedSet
+   \   000101   7A00         MOV     R2,#0x0
+   \   000103   7908         MOV     R1,#0x8
+   \   000105   12....       LCALL   ??HalLedSet?relay
     515          
     516                // Initiate a Match Description Request (Service Discovery)
     517                txAddr.addrMode = AddrBroadcast;
-   \   00010E   7408         MOV     A,#0x8
-   \   000110   12....       LCALL   ?XSTACK_DISP0_8
-   \   000113   740F         MOV     A,#0xf
-   \   000115   12....       LCALL   ?Subroutine3 & 0xFFFF
+   \   000108   7408         MOV     A,#0x8
+   \   00010A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00010D   740F         MOV     A,#0xf
+   \   00010F   12....       LCALL   ?Subroutine3 & 0xFFFF
     518                txAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
     519                ZDP_MatchDescReq( &txAddr, NWK_BROADCAST_SHORTADDR,
     520                                  ZStackTest_PROFID,
@@ -1343,41 +1340,41 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
     524              }
     525            }
    \                     ??CrossCallReturnLabel_6:
-   \   000118   74FF         MOV     A,#-0x1
-   \   00011A   12....       LCALL   ?Subroutine4 & 0xFFFF
+   \   000112   74FF         MOV     A,#-0x1
+   \   000114   12....       LCALL   ?Subroutine4 & 0xFFFF
    \                     ??CrossCallReturnLabel_8:
-   \   00011D                ; Setup parameters for call to function ZDP_MatchDescReq
-   \   00011D   75..00       MOV     ?V0 + 4,#0x0
-   \   000120   78..         MOV     R0,#?V0 + 4
-   \   000122   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   000125   78..         MOV     R0,#?V0 + 0
-   \   000127   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   00012A   75..04       MOV     ?V0 + 4,#0x4
-   \   00012D   78..         MOV     R0,#?V0 + 4
-   \   00012F   12....       LCALL   ?PUSH_XSTACK_I_ONE
-   \   000132   78..         MOV     R0,#?V0 + 0
-   \   000134   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000137   75..05       MOV     ?V0 + 0,#0x5
-   \   00013A   75..0F       MOV     ?V0 + 1,#0xf
-   \   00013D   78..         MOV     R0,#?V0 + 0
-   \   00013F   12....       LCALL   ?PUSH_XSTACK_I_TWO
-   \   000142   7904         MOV     R1,#0x4
-   \   000144   7CFF         MOV     R4,#-0x1
-   \   000146   7DFF         MOV     R5,#-0x1
-   \   000148   7408         MOV     A,#0x8
-   \   00014A   12....       LCALL   ?XSTACK_DISP0_8
-   \   00014D   AA82         MOV     R2,DPL
-   \   00014F   AB83         MOV     R3,DPH
-   \   000151   12....       LCALL   ??ZDP_MatchDescReq?relay
-   \   000154   7408         MOV     A,#0x8
-   \   000156   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000117                ; Setup parameters for call to function ZDP_MatchDescReq
+   \   000117   75..00       MOV     ?V0 + 4,#0x0
+   \   00011A   78..         MOV     R0,#?V0 + 4
+   \   00011C   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   00011F   78..         MOV     R0,#?V0 + 0
+   \   000121   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000124   75..04       MOV     ?V0 + 4,#0x4
+   \   000127   78..         MOV     R0,#?V0 + 4
+   \   000129   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   00012C   78..         MOV     R0,#?V0 + 0
+   \   00012E   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000131   75..05       MOV     ?V0 + 0,#0x5
+   \   000134   75..0F       MOV     ?V0 + 1,#0xf
+   \   000137   78..         MOV     R0,#?V0 + 0
+   \   000139   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00013C   7904         MOV     R1,#0x4
+   \   00013E   7CFF         MOV     R4,#-0x1
+   \   000140   7DFF         MOV     R5,#-0x1
+   \   000142   7408         MOV     A,#0x8
+   \   000144   12....       LCALL   ?XSTACK_DISP0_8
+   \   000147   AA82         MOV     R2,DPL
+   \   000149   AB83         MOV     R3,DPH
+   \   00014B   12....       LCALL   ??ZDP_MatchDescReq?relay
+   \   00014E   7408         MOV     A,#0x8
+   \   000150   12....       LCALL   ?DEALLOC_XSTACK8
     526          }
    \                     ??ZStackTest_HandleKeys_6:
-   \   000159   7409         MOV     A,#0x9
-   \   00015B   12....       LCALL   ?DEALLOC_XSTACK8
-   \   00015E   7F05         MOV     R7,#0x5
-   \   000160   02....       LJMP    ?BANKED_LEAVE_XDATA
-   \   000163                REQUIRE _A_P0
+   \   000153   7409         MOV     A,#0x9
+   \   000155   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000158   7F05         MOV     R7,#0x5
+   \   00015A   02....       LJMP    ?BANKED_LEAVE_XDATA
+   \   00015D                REQUIRE _A_P0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine4:
@@ -2102,8 +2099,6 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
      ZStackTest_CallBack                0      0      9
        -> ZStackTest_Send               0      0     18
      ZStackTest_HandleKeys              0      0     45
-       -> ZStackTest_Send_P2P_Message
-                                        0      0     44
        -> osal_start_timerEx            0      0     44
        -> aps_FindGroup                 0      0     44
        -> aps_RemoveGroup               0      0     44
@@ -2173,7 +2168,7 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
      ZStackTest_Send_Group_Message      2      0     33
        -> AF_DataRequest                0      0     66
        -> HalUARTWrite                  0      0     48
-     ZStackTest_Send_P2P_Message        2      0     53
+     ZStackTest_Send_P2P_Message        2      0     31
        -> AF_DataRequest                0      0     62
        -> HalUARTWrite                  0      0     44
 
@@ -2206,7 +2201,7 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
      ZStackTest_ProcessEvent                    340
      ?Subroutine1                                34
      ?Subroutine2                                19
-     ZStackTest_HandleKeys                      355
+     ZStackTest_HandleKeys                      349
      ?Subroutine4                                10
      ZStackTest_ProcessMSGCmd                   109
      ??Subroutine6_0                              5
@@ -2242,13 +2237,13 @@ Warning[Pe177]: function "ZStackTest_ProcessZDOMsgs" was declared but never
      ?<Constant "group_message">                 14
 
  
- 1 613 bytes in segment BANKED_CODE
+ 1 607 bytes in segment BANKED_CODE
     54 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
    173 bytes in segment XDATA_ROM_C
    159 bytes in segment XDATA_Z
  
- 1 667 bytes of CODE  memory
+ 1 661 bytes of CODE  memory
    173 bytes of CONST memory
      0 bytes of DATA  memory (+ 1 byte shared)
    159 bytes of XDATA memory
