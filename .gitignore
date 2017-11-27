@@ -50,5 +50,6 @@ tags
 *.dep
 *.pbd
 *.tmp
+*.TMP
 *.map
 *.d51
