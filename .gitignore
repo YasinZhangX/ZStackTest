@@ -1,0 +1,54 @@
+# don't ignore source project files
+!.gitignore
+!*.c
+!*.C
+!*.cpp
+!*.CPP
+!*.h
+!*.H
+!*.ewp
+!*.ewd
+!*.eww
+!*.txt
+!*.s51
+!*.cfg
+
+
+# ignore document files
+*.pdf
+*.PDF
+
+# ignore compressed files
+*.rar
+*.zip
+*.7z
+
+# ignore bak files
+*.bak
+
+# ignore project compile files
+/Projects/zstack/Utilities/SerialApp/CC2530DB/CoordinatorEB
+/Projects/zstack/Utilities/SerialApp/CC2530DB/RouterEB
+/Projects/zstack/Utilities/SerialApp/CC2530DB/EndDeviceEB
+/Projects/zstack/Utilities/SerialApp/CC2530DB/settings
+*.pbi
+*.lib
+*.dll
+*.r51
+*.chm
+*.ico
+*.dat
+*.zjs
+*.xml
+*.hex
+*.bin
+cscope.files
+cscope.out
+tags
+*.swp
+*.wsdt
+*.dep
+*.pbd
+*.tmp
+*.map
+*.d51
