@@ -194,9 +194,9 @@ static uint8 ZStackTest_RspBuf[SERIAL_APP_RSP_CNT];
 
 static devStates_t ZStackTest_NwkState;
 
-static afAddrType_t ZStackTest_P2P_DstAddr;       //单播
-static afAddrType_t ZStackTest_Broadcast_DstAddr; //广播
-static afAddrType_t ZStackTest_Group_DstAddr;     //组播
+static afAddrType_t ZStackTest_P2P_DstAddr;       // p2p address
+static afAddrType_t ZStackTest_Broadcast_DstAddr; // broadcast address
+static afAddrType_t ZStackTest_Group_DstAddr;     // group broadcast address
 
 static aps_Group_t ZStackTest_Group;
 
@@ -543,23 +543,23 @@ void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt )
   {
   // Process P2P message
   case ZStackTest_P2P_CLUSTERID:
-    HalUARTWrite(SERIAL_APP_PORT, "Rx(p2p):", 8);     //提示接收到数��?
-    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
-    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(p2p):", 8);     // remind receive data
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // UART0 output the received data
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // line feed(CRLF)
     break;
 
   // Process broadcast message
   case ZStackTest_BROADCAST_CLUSTERID:
-    HalUARTWrite(SERIAL_APP_PORT, "Rx(broadcast):", 14);   //提示接收到数��?
-    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
-    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(broadcast):", 14);   // remind receive data
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // UART0 output the received data
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // line feed(CRLF)
     break;
 
   // Process group messages
   case ZStackTest_GROUP_CLUSTERID:
-    HalUARTWrite(SERIAL_APP_PORT, "Rx(group):", 10); //提示接收到数��?
-    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // 串口输出接收到的数据
-    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // 回车换行
+    HalUARTWrite(SERIAL_APP_PORT, "Rx(group):", 10); // remind receive data
+    HalUARTWrite(SERIAL_APP_PORT, pkt->cmd.Data, pkt->cmd.DataLength); // UART0 output the received data
+    HalUARTWrite(SERIAL_APP_PORT, "\r\n", 2);      // line feed(CRLF)
     break;
 
   default:
@@ -670,16 +670,16 @@ static void ZStackTest_CallBack(uint8 port, uint8 event)
  */
 void AddressInit()
 {
-  ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; //单播
+  ZStackTest_P2P_DstAddr.addrMode = (afAddrMode_t)Addr16Bit; // set p2p address type
   ZStackTest_P2P_DstAddr.endPoint = ZStackTest_ENDPOINT;
-  ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            //发给协调��?
+  ZStackTest_P2P_DstAddr.addr.shortAddr = 0x0000;            // send to coordinator
 
-  ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;//广播
+  ZStackTest_Broadcast_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;// set broadcast address type
   ZStackTest_Broadcast_DstAddr.endPoint = ZStackTest_ENDPOINT;
   ZStackTest_Broadcast_DstAddr.addr.shortAddr = 0xFFFF;
 
   // Setup for the flash command's destination address - Group 1
-  ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup;//组播
+  ZStackTest_Group_DstAddr.addrMode = (afAddrMode_t)afAddrGroup; // set group broadcast address type
   ZStackTest_Group_DstAddr.endPoint = ZStackTest_ENDPOINT;
   ZStackTest_Group_DstAddr.addr.shortAddr = ZStackTest_GROUP;
 
