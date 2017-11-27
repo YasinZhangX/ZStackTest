@@ -183,13 +183,13 @@ static uint8 keys;
 
 static uint8 ZStackTest_TransID;
 
-static afAddrType_t ZStackTest_TxAddr;
-static uint8 ZStackTest_TxSeq;
+// static afAddrType_t ZStackTest_TxAddr;
+// static uint8 ZStackTest_TxSeq;
 static uint8 ZStackTest_TxBuf[SERIAL_APP_TX_MAX+1];
 static uint8 ZStackTest_TxLen;
 
 static afAddrType_t ZStackTest_RxAddr;
-static uint8 ZStackTest_RxSeq;
+// static uint8 ZStackTest_RxSeq;
 static uint8 ZStackTest_RspBuf[SERIAL_APP_RSP_CNT];
 
 static devStates_t ZStackTest_NwkState;
@@ -204,7 +204,7 @@ static aps_Group_t ZStackTest_Group;
  * LOCAL FUNCTIONS
  */
 
-static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
+// static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
 static void ZStackTest_HandleKeys( uint8 shift, uint8 keys );
 static void ZStackTest_ProcessMSGCmd( afIncomingMSGPacket_t *pkt );
 static void ZStackTest_Send(void);
@@ -226,7 +226,7 @@ void ZStackTest_Init( uint8 task_id )
   halUARTCfg_t uartConfig;
 
   ZStackTest_TaskID = task_id;
-  ZStackTest_RxSeq = 0xC3;
+  // ZStackTest_RxSeq = 0xC3;
   ZStackTest_TransID = 0;
 
   AddressInit();
@@ -347,6 +347,7 @@ UINT16 ZStackTest_ProcessEvent( uint8 task_id, UINT16 events )
  *
  * @return  none
  */
+/*
 static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
 {
   switch ( inMsg->clusterID )
@@ -386,7 +387,7 @@ static void ZStackTest_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
   }
   break;
   }
-}
+} */
 
 /*********************************************************************
  * @fn      ZStackTest_HandleKeys

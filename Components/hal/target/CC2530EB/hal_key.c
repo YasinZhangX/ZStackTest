@@ -22,7 +22,7 @@
   its documentation for any purpose.
 
   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-  PROVIDED “AS IS? WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+  PROVIDED ï¿½AS IS? WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
@@ -106,12 +106,15 @@
 /* CPU port interrupt */
 #define HAL_KEY_CPU_PORT_0_IF P0IF
 #define HAL_KEY_CPU_PORT_2_IF P2IF
+#define HAL_KEY_UP_DOWN_PULL  P2INP
 
 /* SW_6 is at P0.1 */
 #define HAL_KEY_SW_6_PORT   P0
 #define HAL_KEY_SW_6_BIT    BV(1)
 #define HAL_KEY_SW_6_SEL    P0SEL
 #define HAL_KEY_SW_6_DIR    P0DIR
+#define HAL_KEY_SW_6_INP      P0INP
+#define HAL_KEY_SW_6_INPBIT   BV(5)
 
 /* edge interrupt */
 #define HAL_KEY_SW_6_EDGEBIT  BV(0)
@@ -130,6 +133,8 @@
 #define HAL_KEY_JOY_MOVE_BIT    BV(0)
 #define HAL_KEY_JOY_MOVE_SEL    P2SEL
 #define HAL_KEY_JOY_MOVE_DIR    P2DIR
+#define HAL_KEY_JOY_MOVE_INP      P2INP
+#define HAL_KEY_JOY_MOVE_INPBIT   BV(7)
 
 /* edge interrupt */
 #define HAL_KEY_JOY_MOVE_EDGEBIT  BV(3)
@@ -187,9 +192,13 @@ void HalKeyInit( void )
 
   HAL_KEY_SW_6_SEL &= ~(HAL_KEY_SW_6_BIT);    /* Set pin function to GPIO */
   HAL_KEY_SW_6_DIR &= ~(HAL_KEY_SW_6_BIT);    /* Set pin direction to Input */
+  HAL_KEY_SW_6_INP &= ~(HAL_KEY_SW_6_BIT);
+  HAL_KEY_UP_DOWN_PULL &= ~(HAL_KEY_SW_6_INPBIT); // UP PULL
 
   HAL_KEY_JOY_MOVE_SEL &= ~(HAL_KEY_JOY_MOVE_BIT); /* Set pin function to GPIO */
   HAL_KEY_JOY_MOVE_DIR &= ~(HAL_KEY_JOY_MOVE_BIT); /* Set pin direction to Input */
+  HAL_KEY_JOY_MOVE_INP &= ~(HAL_KEY_JOY_MOVE_BIT);
+  HAL_KEY_UP_DOWN_PULL |= HAL_KEY_JOY_MOVE_INPBIT; // DOWN PULL
 
 
   /* Initialize callback function */
@@ -336,7 +345,7 @@ void HalKeyPoll (void)
   {
   	keys |= HAL_KEY_SW_1;
   }
-  
+
   //if ((HAL_KEY_JOY_MOVE_PORT & HAL_KEY_JOY_MOVE_BIT))  /* Key is active HIGH */
   /*{
     keys = halGetJoyKeyInput();
@@ -509,7 +518,7 @@ HAL_ISR_FUNCTION( halKeyPort0Isr, P0INT_VECTOR )
   */
   HAL_KEY_SW_6_PXIFG = 0;
   HAL_KEY_CPU_PORT_0_IF = 0;
-  
+
   CLEAR_SLEEP_MODE();
   HAL_EXIT_ISR();
 }
@@ -527,7 +536,7 @@ HAL_ISR_FUNCTION( halKeyPort0Isr, P0INT_VECTOR )
 HAL_ISR_FUNCTION( halKeyPort2Isr, P2INT_VECTOR )
 {
   HAL_ENTER_ISR();
-  
+
   if (HAL_KEY_JOY_MOVE_PXIFG & HAL_KEY_JOY_MOVE_BIT)
   {
     halProcessKeyInterrupt();
@@ -561,6 +570,3 @@ void HalKeyPoll(void){}
 
 /**************************************************************************************************
 **************************************************************************************************/
-
-
-
